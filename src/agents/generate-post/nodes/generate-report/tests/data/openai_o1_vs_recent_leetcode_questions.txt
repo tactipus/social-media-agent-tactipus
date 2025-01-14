@@ -1,0 +1,168 @@
+Post:
+OpenAI o1 vs Recent LeetCode Questions
+Experiments done with o1 mini using C++. Only the title, problem description, examples, constraints, and the starter code are given. No hints whatsoever. For failed submissions, I would feed the error and the test case to model and ask it to correct for itself, and give it 3-4 tries. All the questions are at most 14 days old when o1 came out so there should be minimal contamination.
+
+OpenAI o1 solved 21 out of 22 questions. I think this is a much bigger release than many people realized.
+
+https://preview.redd.it/xigym8kfgaqd1.png?width=1415&amp;format=png&amp;auto=webp&amp;s=03b4dcdc32b752c2741d2f8e5188dd1f07a6c33a
+
+Replies:
+meister2983: This seems consistent with how well it was scoring on Codeforces.
+
+How many did it get zero shot?
+meister2983: This seems consistent with how well it was scoring on Codeforces.
+
+How many did it get zero shot?
+vincentz42: 60% passed on first try.
+meister2983: This seems consistent with how well it was scoring on Codeforces.
+
+How many did it get zero shot?
+vincentz42: 60% passed on first try.
+theywereonabreak69: Were you able to get an idea of how many tries it would take GPT4o (of whether 4o could even do it)?
+meister2983: This seems consistent with how well it was scoring on Codeforces.
+
+How many did it get zero shot?
+vincentz42: 60% passed on first try.
+theywereonabreak69: Were you able to get an idea of how many tries it would take GPT4o (of whether 4o could even do it)?
+vincentz42: Haven't tested the same questions on GPT-4o, but from my previous experience 4o could probably solve \~30-40% LC questions when given 4-5 tries.
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+[deleted]: [deleted]
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+[deleted]: [deleted]
+[deleted]: [removed]
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+Floccini: You mean the only OpenAI browser model. GPT-4o will give you correct links if you connect your own browsing API.
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+Floccini: You mean the only OpenAI browser model. GPT-4o will give you correct links if you connect your own browsing API.
+FullOf_Bad_Ideas: Is o1 preview grounded with RAG by default or something like this? I am not sure what browsing API is, I guess some rag for OpaqueAI models?
+
+I don't really use proprietary models, just a few exchanges with o1 preview, so I wouldn't know if Claude or some variant if gpt-4o was able to do it (without RAG grounding)
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+Floccini: You mean the only OpenAI browser model. GPT-4o will give you correct links if you connect your own browsing API.
+FullOf_Bad_Ideas: Is o1 preview grounded with RAG by default or something like this? I am not sure what browsing API is, I guess some rag for OpaqueAI models?
+
+I don't really use proprietary models, just a few exchanges with o1 preview, so I wouldn't know if Claude or some variant if gpt-4o was able to do it (without RAG grounding)
+Floccini: I meant that if you make GPT use your own tool for browsing the web, he gets the links right. 
+
+OpenAI's models that work in the browser use RAG-based browsing tools, which causes them to get links wrong (a known bug). I'm guessing Chain-of-Thought training made them use a different implementation of RAG for the o1 models.
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+qrios: The model looks stuff up, then reads the stuff.
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+qrios: The model looks stuff up, then reads the stuff.
+FullOf_Bad_Ideas: How do you know? Do you see it in UI when it does that? I use it through proxy so I don't see any of that.
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+qrios: The model looks stuff up, then reads the stuff.
+Ok-386: that's not how it works. Officially at least. It doesn't have access to web, only its training data.
+
+edit: if you meant RAG, why would they use RAG, doesn't make sense.
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+qrios: The model looks stuff up, then reads the stuff.
+Ok-386: that's not how it works. Officially at least. It doesn't have access to web, only its training data.
+
+edit: if you meant RAG, why would they use RAG, doesn't make sense.
+Eheheh12: How do you know it doesn't have access to web?
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+qrios: The model looks stuff up, then reads the stuff.
+Ok-386: that's not how it works. Officially at least. It doesn't have access to web, only its training data.
+
+edit: if you meant RAG, why would they use RAG, doesn't make sense.
+qrios: &gt;  if you meant RAG, why would they use RAG, doesn't make sense.
+
+It makes plenty of sense. The model is intended to specialize in reasoning, as opposed to just knowing a bunch of stuff it could look up.
+cashmate: The o1 models are the only ones that come even close to solving the niche coding problems I give them. It feels like the only model that can infer knowledge without it being abundant in the training data.
+FullOf_Bad_Ideas: O1 preview is the only model I've seen so far that will give you working links and DOI to scientific papers, and also tell you about content of specific Figure in the paper, I have no idea how they do it
+[deleted]: Probably used Microsoft Academic Knowledge Graph somewhere in their RL COT training
+Independent-Cover316: And yet I still have to solve hard problems on a whiteboard for job interviews 😔
+Independent-Cover316: And yet I still have to solve hard problems on a whiteboard for job interviews 😔
+[deleted]: Hopefully, it would get so negatively correlated with good performance (idiots tend to cheat) that they will stop asking us for this BS.
+Independent-Cover316: And yet I still have to solve hard problems on a whiteboard for job interviews 😔
+[deleted]: Hopefully, it would get so negatively correlated with good performance (idiots tend to cheat) that they will stop asking us for this BS.
+qrios: How you gonna cheat on a whiteboard?
+Independent-Cover316: And yet I still have to solve hard problems on a whiteboard for job interviews 😔
+[deleted]: Hopefully, it would get so negatively correlated with good performance (idiots tend to cheat) that they will stop asking us for this BS.
+qrios: How you gonna cheat on a whiteboard?
+[deleted]: Probably often remote (at least for some rounds) nowadays. But it is definitely not easy to cheat in this context.
+JadeSerpant: This is actually far more impressive than that idiot hyping Claude for solving 600 leetcode questions or something like that. Those old questions are literally in Claude's base model training data with like 50 example solutions for each one. That's not impressive in the slightest. This on the other hand is much more validating of the model's prowess at coding questions.
+zeaussiestew: Is this O1 or O1 mini?
+ThreeKiloZero: Are these never-before-seen scenarios developed specifically for this test?  If so that's impressive.
+ThreeKiloZero: Are these never-before-seen scenarios developed specifically for this test?  If so that's impressive.
+7734128: It's of course impossible to know how original they actually are.
+ThreeKiloZero: Are these never-before-seen scenarios developed specifically for this test?  If so that's impressive.
+[deleted]: I think if the older 4o model is only getting half the accuracy even in 4-5 tries, then these questions can be considered to be having novel enough scenarios.
+ThreeKiloZero: Are these never-before-seen scenarios developed specifically for this test?  If so that's impressive.
+[deleted]: I think if the older 4o model is only getting half the accuracy even in 4-5 tries, then these questions can be considered to be having novel enough scenarios.
+ThreeKiloZero: I thought I read somewhere that they trained on leet code and other benchmark material this time around.
+Ylsid: That's crazy but how does this relate to local LLMs
+Born_Fox6153: How do you know O1 is not trained on Leetcode questions ? Claude is a better out of the box coding assistant any day !!
+Born_Fox6153: How do you know O1 is not trained on Leetcode questions ? Claude is a better out of the box coding assistant any day !!
+vincentz42: 1. All modern LLMs are heavily trained on leetcode questions.
+
+2. The question is whether it generalizes to leetcode style questions unseen during training, which is exactly what I am testing here.
+Born_Fox6153: How do you know O1 is not trained on Leetcode questions ? Claude is a better out of the box coding assistant any day !!
+vincentz42: 1. All modern LLMs are heavily trained on leetcode questions.
+
+2. The question is whether it generalizes to leetcode style questions unseen during training, which is exactly what I am testing here.
+Born_Fox6153: And are you sure there are no questions in the LC database that would follow a similar CoT to answer these questions ? A later release date doesn’t mean they aren’t similar.
+Real world use cases of developing software is a lot more than solving puzzles.
+Born_Fox6153: How do you know O1 is not trained on Leetcode questions ? Claude is a better out of the box coding assistant any day !!
+vincentz42: 1. All modern LLMs are heavily trained on leetcode questions.
+
+2. The question is whether it generalizes to leetcode style questions unseen during training, which is exactly what I am testing here.
+Born_Fox6153: And are you sure there are no questions in the LC database that would follow a similar CoT to answer these questions ? A later release date doesn’t mean they aren’t similar.
+Real world use cases of developing software is a lot more than solving puzzles.
+vincentz42: None of the questions are older than 14 days with o1 mini was released. More than half of the questions do not exist on the day that o1 released. So it is very unlikely that any question is in o1 training set.
+
+Regarding whether there are "similar" questions in previous LC databases - you can make an argument that all LC questions are similar to some extent and I would agree with you. However, none of the previous LLMs could solve even half of the LC questions unseen in the training set. So I would say o1 made a milestone here in terms of generalizing across competitive programming questions.
+
+Re "developing software is a lot more than solving puzzles": I fully agree. No one is arguing the models today can replace human software engineers - not even close.   
+  
+But another thing to note here is that o1 also demostrated unprecedented efficiency in terms of number of training samples needed. There are probably only 20K-30K competitive programming questions out there, and a human programmer needs to practice on 2-3K questions to get to the level of o1, so the sample efficiency for o1 is about 1/10 of humans which is amazing compared to previous ML systems.
+trialgreenseven: so next time you have actual scaling coding problem, you'd just feed it top 50~100 leetcode questions then prompt it to implement appropriate algo for my use case and bam, saved yourself from hiring 200k/yr programmer.
+krakoi90: The new O1-preview/mini model is really a step forward regarding reasoning, so it's perfect for tasks where reasoning is important, and the prompt size is fairly small – coding interview questions, small standalone Tetris-like games, and coding for scientific papers all fit its capabilities.
+
+However, I'm afraid it's not really good for real-world programming tasks where you have a fairly large coding base that cannot fit in the context window. In fact, O1 could actually be even worse for these kinds of tasks because the chain of thought it does in the background takes up many tokens. Basically you can fit even less of the existing code in the context window.
+
+If the real O1/GPT-5 will have a substantially larger token context window (1 million+ tokens and it can effectively use all of it, not just score high on the useless needle-in-a-haystack test), then it could really replace some developer jobs.
+Fit_Fold_7275: Wow! That better than what I imagined.
+falconandeagle: I might be missing something here? I have been trying to use it for my projects and it's just worse than sonnet 3.5. Like for example I asked it make an in memory cache that would be usable for my project and it failed spectacularly. Another experiment I did was I asked it to create a simple wsysiwyg editor using div contenteditable and again it did worse than Sonnet 3.5 which btw was also really bad at this tast. (I tried with both cursor and directly through api using vscode)
+
+I think coming together with a full front to back solution is where these LLM's fail. However thay are actually getting quite good at solving leetcode style problems. Once you recognize patterns in leetcode even you can start solving most of these problems and LLM's are actually really good at finding them from memory. There is only so many ways you can phrase a graph or a sliding window problem.
+
+I want to ask you, where did these solutions rank? It's one thing to solve the problem and another to solve it efficently.
+falconandeagle: I might be missing something here? I have been trying to use it for my projects and it's just worse than sonnet 3.5. Like for example I asked it make an in memory cache that would be usable for my project and it failed spectacularly. Another experiment I did was I asked it to create a simple wsysiwyg editor using div contenteditable and again it did worse than Sonnet 3.5 which btw was also really bad at this tast. (I tried with both cursor and directly through api using vscode)
+
+I think coming together with a full front to back solution is where these LLM's fail. However thay are actually getting quite good at solving leetcode style problems. Once you recognize patterns in leetcode even you can start solving most of these problems and LLM's are actually really good at finding them from memory. There is only so many ways you can phrase a graph or a sliding window problem.
+
+I want to ask you, where did these solutions rank? It's one thing to solve the problem and another to solve it efficently.
+qrios: Your first task would require it having expertise on your project and its requirements.
+
+Your second task is super non-trivial and inherently full of edge-cases.
+
+Even the hardest leet code problems are vetted to be easy to understand, well-specified, and have reasonably elegant solutions.
+
+
+In short: do not ask the models for code that solves your problem, ask them for code that passes your unit tests.
+Eheheh12: How good does Claude 3.5 do?!
+Eheheh12: How good does Claude 3.5 do?!
+Lindayz: Fails most of them. Claude is notoriously bad at competitive programming.
+boxingdog: you can solve any leetcode memorizing ~14 different algorithms
+boxingdog: you can solve any leetcode memorizing ~14 different algorithms
+uhuge: the holy SOTA(≈set of the algorithms)
+segmond: Did you try this experiment with previous GPT4 or claude?
+ilangge: I think that o1 must have seen the answers on LeetCode long ago. There are many solutions for doing LeetCode problems on GitHub.
+kingp1ng: I swear, more than half the "people" here are bots. Also, how does this relate to local LLM's? You didn't even attempt to tie the conversation into local LLM's.
+kingp1ng: I swear, more than half the "people" here are bots. Also, how does this relate to local LLM's? You didn't even attempt to tie the conversation into local LLM's.
+3ntrope: We need to stay informed regarding the performance of SOTA models, local or not, in order for new open, local models to improve and catch up.

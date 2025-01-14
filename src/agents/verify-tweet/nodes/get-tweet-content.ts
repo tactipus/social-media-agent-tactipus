@@ -18,7 +18,11 @@ export async function getTweetContent(
 
   let twitterClient: TwitterClient;
   const useArcadeAuth = process.env.USE_ARCADE_AUTH;
-  if (useArcadeAuth === "true") {
+  const useTwitterApiOnly = process.env.USE_TWITTER_API_ONLY;
+
+  if (useTwitterApiOnly === "true" || useArcadeAuth !== "true") {
+    twitterClient = TwitterClient.fromBasicTwitterAuth();
+  } else {
     const twitterToken = process.env.TWITTER_USER_TOKEN;
     const twitterTokenSecret = process.env.TWITTER_USER_TOKEN_SECRET;
     if (!twitterToken || !twitterTokenSecret) {
@@ -31,20 +35,30 @@ export async function getTweetContent(
       twitterToken,
       twitterTokenSecret,
     });
-  } else {
-    twitterClient = TwitterClient.fromBasicTwitterAuth();
   }
 
-  const tweetContent = await twitterClient.getTweet(tweetId);
-  const mediaUrls = tweetContent.data.attachments?.media_keys?.map(
-    (k) => `https://pbs.twimg.com/media/${k}?format=jpg&name=medium`,
-  );
+  const tweetContent = await twitterClient.getTweet(tweetId, {
+    includeMedia: true,
+  });
+  const mediaUrls: string[] =
+    tweetContent.includes?.media
+      ?.filter((m) => (m.url && m.type === "photo") || m.type.includes("gif"))
+      .flatMap((m) => (m.url ? [m.url] : [])) || [];
+
+  let tweetContentText = "";
+  if (tweetContent.data.note_tweet?.text) {
+    tweetContentText = tweetContent.data.note_tweet.text;
+  } else {
+    tweetContentText = tweetContent.data.text;
+  }
+
   // Extract any links from inside the tweet content.
   // Then, fetch the content of those links to include in the main content.
-  const urlsInTweet = extractUrls(tweetContent.data.text);
+  const urlsInTweet = extractUrls(tweetContentText);
+
   if (!urlsInTweet.length) {
     return {
-      tweetContent: tweetContent.data.text,
+      tweetContent: tweetContentText,
       imageOptions: mediaUrls,
     };
   }
@@ -75,7 +89,7 @@ export async function getTweetContent(
   ).flat();
 
   return {
-    tweetContent: tweetContent.data.text,
+    tweetContent: tweetContentText,
     tweetContentUrls: cleanedUrls,
     imageOptions: mediaUrls,
   };

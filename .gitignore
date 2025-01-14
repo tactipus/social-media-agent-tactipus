@@ -23,3 +23,4 @@ yarn-error.log
 # Screenshots taken during tests
 src/tests/data/screenshots/
 src/agents/verify-reddit-post/nodes/tests/data/
+src/agents/verify-reddit-post/nodes/tests/data/openai_o1_vs_recent_leetcode_questions.json

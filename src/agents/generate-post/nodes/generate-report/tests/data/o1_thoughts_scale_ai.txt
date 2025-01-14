@@ -1,0 +1,164 @@
+[Blog](/blog)
+
+Engineering
+
+# First Impressions of OpenAI’s o1
+
+by
+
+[Riley Goodside](https://www.linkedin.com/in/goodside/)
+
+onSeptember 24, 2024
+
+![](/_next/image?url=https%3A%2F%2Fsite-assets.plasmic.app%2F7c55bb721025f2c51f860df4fe06afd1.png&w=1920&q=100)
+
+For months, anticipation has mounted over rumors of a next-generation model from OpenAI, reportedly codenamed “Strawberry,” that would bring groundbreaking improvements in reasoning and complex problem-solving. That wait ended on September 12, with the preview release of two new reasoning models: _o1-preview_ and _o1-mini_.
+
+According to OpenAI, the models represent a "new paradigm" for scaling inference alongside training compute, and show state-of-the-art performance on challenging reasoning benchmarks.
+
+The _o1_ models quickly gained attention for their remarkable scores, particularly in domains like advanced coding, mathematics, and science, and independent evaluations from [Scale’s SEAL Leaderboards](https://scale.com/leaderboard) broadly confirm these results.
+
+However, the models also introduce new changes to prompt engineering, with updated practices compared to previous models. And despite demonstrations of _o1's_ ability to solve complex puzzles and advanced reasoning tasks, it can still at times be fooled by "gotcha" questions viral on social media — like counting the number of "r"s in the word strawberry. The models also do not yet support some key features of _ChatGPT_ and _GPT-4o_, like image input.
+
+Sifting through the claims, LLM users may be left wondering which model is right for their needs.
+
+In this post, I overview benchmark results for these models, and give qualitative impressions and dialog examples from my time testing them, with some thoughts and discussion on how prompting is changing in this new “paradigm” of scaling.
+
+# Introducing the o1 models
+
+OpenAI's _o1-preview_ and _o1-mini_ are a major step forward in reasoning, designed for tasks that require many complex steps to solve, as well as an improved familiarity with advanced math and science. _o1-mini_ offers a lower-cost, faster option optimized for coding and STEM knowledge while being around 80% cheaper than _o1-preview_. Although smaller, _o1-mini_ performs competitively in coding tasks compared to _o1-preview_.
+
+Much of _o1’s_ improved reasoning is attributed to its use of chain-of-thought (CoT) to emit reasoning steps. But what sets _o1_ apart from previous models is its use of reinforcement learning (RL) in training the model to produce these steps. This RL-enhanced CoT enables o1 to learn to navigate deeper, more complex challenges without fixating on failed reasoning paths — a common result for long chain-of-thought output in current models.
+
+Another advantage of this approach is it allows OpenAI to monitor the model’s reasoning for signs of deceptive behavior, a major concern for the company as models become more capable. OpenAI also notes _o1’s_ use of chain-of-thought rationales improves resistance to jailbreaks and adversarial prompts.
+
+OpenAI explains that _o1_ uses reinforcement learning to teach the model to reason productively using its chain of thought in a new, data-efficient training process. Crucially, they found that more compute consistently improves performance both at training and inference time. It’s this change to the scaling relationship of performance and compute that leads OpenAI to describe o1 as the start of a “new paradigm.” (However, they note constraints on this new form of scaling differ significantly from LLM pretraining and are still being explored.)
+
+The current _o1-preview_ and _o1-mini_ do have some practical limitations compared to _GPT-4o_. The _o1_ models do not support many existing _ChatGPT_ features like web browsing, image or file uploads, image generation, or the code interpreter tool. OpenAI’s documentation notes that even with the _o1_ models available, _GPT-4o_ will still be a better choice for many existing tasks using LLMs, especially when reliably low latency or multimodal input/output is needed.
+
+# **Scale SEAL Leaderboard rankings**
+
+All SEAL Leaderboards updated to include the new _o1_ models show leading performance from both.
+
+Currently, _o1-preview_ leads in Precise Instruction Following and Spanish-language fluency, and for Coding _o1-mini_ outperforms _o1-preview_ to take the top spot, with _o1-preview_ in second place.
+
+[![](/_next/image?url=https%3A%2F%2Fimg.plasmic.app%2Fimg-optimizer%2Fv1%2Fimg%3Fsrc%3D7a5566cf04edf1999da3d0288f98a580.png%26f%3Dwebp%26q%3D75&w=1920&q=90)](https://scale.com/leaderboard "Scale SEAL LLM Leaderboards")
+
+Scale’s [SEAL Leaderboards](https://scale.com/leaderboard) provide trusted, third-party evaluations of large language models (LLMs) using curated, private datasets. Each Leaderboard focuses on a specific domain such as coding, instruction-following, and multilingual abilities. Building on insights from research like Scale’s GSM1K dataset ( [H. Zhang et al. 2024](https://arxiv.org/abs/2405.00332)), SEAL evaluations are maintained privately, avoiding leakage issues that increasingly plague open-source benchmarks.
+
+#### [Scale SEAL Leaderboard for Coding](https://scale.com/leaderboard/coding)
+
+On the SEAL Leaderboard for coding, _o1-mini_ leads with a score of 1271, followed by _o1-preview_ at 1198. The Coding Leaderboard dataset uses 1,000 prompts to test various coding tasks, from code generation to optimization and documentation creation. Each response is evaluated for correctness, performance, and readability, combining human reviewers and code execution tests.
+
+#### [Scale SEAL Leaderboard for Instruction Following](https://scale.com/leaderboard/instruction_following)
+
+In the SEAL Leaderboard’s evaluation of precise instruction following, _o1-preview_ leads with a score of 87.27, surpassing _Claude 3.5 Sonnet_ and _Llama 3.1 405B Instruct_. The dataset contains 1,054 prompts across domains including text generation, brainstorming, and educational support.
+
+#### [Scale SEAL Leaderboard for Spanish](https://scale.com/leaderboard/spanish)
+
+In the SEAL Leaderboard's evaluation of Spanish-language fluency, _o1-preview_ emerges as the top model, achieving a score of 1119, surpassing models like _GPT-4o (May 2024)_ and _Gemini 1.5 Pro (August 2024)_. The evaluation includes a range of single-turn prompts, assessing general conversations as well as culturally nuanced topics across Spanish-speaking regions. The evaluation's categories included educational support, technical assistance, daily life advice, and more.
+
+# Other evaluations and benchmarks
+
+In their announcement, OpenAI highlights remarkable achievements from _o1_ models on complex reasoning benchmarks. Most notably, _o1_ (the larger, still unreleased model, not _o1-preview_ or _o1-mini_) ranks in the 89th percentile on Codeforces, underscoring its coding proficiency, and it placed among the top 500 students in the USA on the American Invitational Mathematics Examination (AIME). Furthermore, the larger _o1_ showed human PhD-level accuracy on the GPQA benchmark, which evaluates reasoning in physics, biology, and chemistry​.
+
+Other third-party reviews largely affirm these results, but with some nuance. As detailed above, _o1_ models lead on all current SEAL Leaderboard benchmarks. When _o1_ models were added to the LMSYS Chatbot Arena Leaderboard, they quickly rose to the top — at that time, _o1-preview_ held the top spot with an Elo score of 1355, with _o1-mini_ tied for second and _GPT-4o_-latest in third at 1324. However, performance on the ARC-AGI benchmark was more modest. _o1-preview_ scored 21%, similar to _Claude 3.5 Sonnet_, with _o1-mini_ scoring just 13%.
+
+# Changes to prompt engineering
+
+Prompting and steerability with _o1_ models is notably different from familiar models like _GPT_, _Gemini_, or _Claude_, requiring some new best practices for prompts. While powerful, the new _o1_ models are not always as intuitive to use, especially for precise, procedural tasks.
+
+According to [OpenAI’s recommendations](https://platform.openai.com/docs/guides/reasoning/advice-on-prompting), simple and direct instruction help for getting the most out of _o1_. Unlike with previous models, users should avoid asking for chain-of-thought reasoning. They also note irrelevant context in the prompt can be more distracting to o1 models than the previous _GPT_ series, making it important to include fewer examples in retrieval-augmented generation (RAG) prompts.
+
+Cognition Labs offers similar advice from their experience with _o1_, reporting that asking the model to “think out loud” actually harms performance, and asking for only a final answer improves it, as _o1_ models will produce an internal chain-of-thought regardless. They also note verbose or repetitive instructions hurt performance, and prescriptive detail seems to impair the model’s reasoning.
+
+My own experience working with _o1-preview_ and _o1-mini_ the past few weeks aligns with these points. Reasoning from _o1_ models is extremely impressive when it works, but they tend to ignore clear (or even emphatic) instructions for how to solve a problem. An example of this behavior is shown in the last of the three examples below.
+
+While _o1_ delivers outstanding results on benchmarks, getting your own tasks to work can seem to take more effort. I suspect this hints at a gap between real-world prompts and one seen in benchmarks: the latter aims to have only unambiguous, self-contained, minimally presented problems with no advice or opinions on how to solve them. I also expect this issue will improve greatly once _o1_ models are deployed without their current usage caps, which can impede discovering high-quality prompts.
+
+It’s also worth noting that the latency of _o1-preview’s_ responses, especially its “time to first token”, is significantly higher than _GPT-4o_. This would limit the use of these models for some applications. But for interactive use in _ChatGPT_, I didn’t find this a major annoyance. Only _o1-preview_ is noticeably slower; _o1-mini_ more than makes up for its “thinking” time with faster token inference.
+
+# **Dialog examples**
+
+## **Example: Vocabulary constraint problem**
+
+OpenAI’s _o1_ model announcements mentions improved performance on viral “gotcha” tasks known to trip up LLMs, like the notorious “How many R’s are in the word ‘strawberry’?” — a question that fools many leading models. One of their examples nods to this question by elaborately presenting it as the result of an encryption puzzle.
+
+To illustrate the real, but still incomplete, improvements in this area, I present _o1-preview_ with a newly written riddle:
+
+_Name an English adjective of Latin origin that begins and ends with the same letter, has 11 letters in total, and for which all vowels in the word are ordered alphabetically._
+
+On the first attempt, the model successfully solves this riddle with the answer: _sententious._
+
+![](/_next/image?url=https%3A%2F%2Fimg.plasmic.app%2Fimg-optimizer%2Fv1%2Fimg%3Fsrc%3Db7299a65bfc23cda566b8afffda6854c.png%26f%3Dwebp%26q%3D75&w=1920&q=90)
+
+I repeated this prompt a total of five times, receiving the following responses:
+
+- _sententious_ ✅
+- _facetiously_ ❌
+- _transparent_ ✅
+- _abstentious_ ❌
+- _facetiously_ ❌
+
+For comparison, _ChatGPT 4o_ and _Llama 3.1 70B Instruct_ each returned 0 correct solutions for this prompt in 10 attempts each.
+
+## **Dialog example: Decoding ciphers**
+
+The [OpenAI technical blog](https://openai.com/index/learning-to-reason-with-llms/) post announcing the _o1_ models includes an impressive example of _o1-preview_ decoding a complex cipher. In the example, the model is presented with a text using an _ad hoc_ cipher based on successive pairs of characters.
+
+To explore how well this ability generalizes to similar examples, I tried variations of this same prompt for various compositions of the ROT13 cipher, Atbash cipher, Base64 encoding, string reversal. Most of these tests were not successful — in only 2 of 7 informal tests was _o1-preview_ able to decode the encoded message given (the _Litany Against Fear_ from Frank Herbert’s _Dune_) in one attempt — however, these tests are quite difficult.
+
+In each prompt the model is asked to infer an encoding from an example of the transformation applied to the plaintext “Think step by step” as OpenAI’s example.
+
+Each of the following tests, the model failed to decode the target message in one attempt:
+
+- ROT13 cipher → reverse string → Base64 encode → reverse string
+- ROT13 cipher → Base64 encode → ROT13 cipher → reverse string
+- ROT13 cipher → Base64 encode → ROT13 cipher
+- ROT13 cipher → Base64 encode → Atbash cipher
+- ROT13 cipher → Base58 encode
+
+The two tests decoded successfully on the first attempt were:
+
+- Atbash cipher → Base64 encode
+- ROT13 cipher → Base64 encode
+
+The first of these successes is shown here — other tests are identical except for the encoding used:
+
+![](/_next/image?url=https%3A%2F%2Fimg.plasmic.app%2Fimg-optimizer%2Fv1%2Fimg%3Fsrc%3Dd1a468066ff4b60960343bc4a9569464.png%26f%3Dwebp%26q%3D75&w=1920&q=90)
+
+![](/_next/image?url=https%3A%2F%2Fimg.plasmic.app%2Fimg-optimizer%2Fv1%2Fimg%3Fsrc%3D1806bb7ede68cdc4edccaf7cdd95bf7c.png%26f%3Dwebp%26q%3D75&w=1920&q=90)
+
+## Dialog example: Potential steerability issues
+
+In this example _o1-mini_ notably gives a false, detailed report of seemingly hallucinated verifications of an incorrect answer.
+
+My prompt requests from the model a “poem about strawberries” containing exactly 13 R’s, and requesting that at least 5 successive verification checks be performed before returning an answer.
+
+In its response, the model returns a poem containing 21 R’s. This is not surprising in itself — most LLMs are known to struggle to accurately identify or count letters within words when asked naively.
+
+What’s less typical is that the response below includes hallucinated verification steps as though it were a human completing the task using a computer: “I applied a regex pattern,” “I read the poem aloud,” and so on.
+
+Reviewing summaries of chain-of-thought given in _ChatGPT_ often include “anthropomorphic” descriptions of imagined events in this style. This example is somewhat consistent with the _o1_ [system card](https://openai.com/index/openai-o1-system-card/) which notes some testers reported increased hallucination.
+
+![](/_next/image?url=https%3A%2F%2Fimg.plasmic.app%2Fimg-optimizer%2Fv1%2Fimg%3Fsrc%3D863c64431b431e7949d002b10ecb7e20.png%26f%3Dwebp%26q%3D75&w=1920&q=90)
+
+![](/_next/image?url=https%3A%2F%2Fimg.plasmic.app%2Fimg-optimizer%2Fv1%2Fimg%3Fsrc%3D0399c1529d939823383708b36dfca5ba.png%26f%3Dwebp%26q%3D75&w=1920&q=90)
+
+# Conclusion
+
+OpenAI’s _o1_ models are, by any measure, a major leap forward in reasoning capabilities, with standout performances on key benchmarks like AIME, Codeforces, Scale’s SEAL Leaderboards, and others. These results show _o1-preview_ and _o1-mini_ are powerful tools for hard reasoning problems. Nonetheless, getting the most out of these models may take more experimentation than users are used to from other model releases.
+
+As an independent, private evaluation, Scale’s [SEAL Leaderboards](https://scale.com/leaderboard) provide a clearer picture of where new model releases shine, and provide trusted validation of results needed for developers to choose the best models for their LLM-powered applications.
+
+For industry professionals training frontier LLMs, Scale offers custom evaluations to benchmark and optimize models on secure proprietary datasets. For more information, **[schedule a demo with Scale](https://scale.com/demo?utm_source=link&utm_medium=blog&utm_campaign=o1impression&utm_id=o1impression).**
+
+* * *
+
+_**About the author:** One of the first LLM prompt engineers, since 2022 Riley Goodside has developed prompts for Scale and is also known for the prompting examples and insights he shares on **[X](https://x.com/goodside)**. Riley is now Staff AI Evangelist at Scale._
+
+* * *
+
+## The future of your industrystarts here.
+
+[Book a Demo→](/demo) [Build AI→](/data-engine)
