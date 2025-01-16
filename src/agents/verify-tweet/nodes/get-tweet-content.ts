@@ -25,11 +25,6 @@ export async function getTweetContent(
   } else {
     const twitterToken = process.env.TWITTER_USER_TOKEN;
     const twitterTokenSecret = process.env.TWITTER_USER_TOKEN_SECRET;
-    if (!twitterToken || !twitterTokenSecret) {
-      throw new Error(
-        "Twitter token or token secret not found in configurable fields.",
-      );
-    }
 
     twitterClient = await TwitterClient.fromArcade(twitterUserId, {
       twitterToken,
