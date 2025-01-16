@@ -2,6 +2,7 @@ import Arcade from "@arcadeai/arcadejs";
 import { CreateTweetRequest, TwitterClientArgs } from "./types.js";
 import {
   Tweetv2FieldsParams,
+  TweetV2ListTweetsPaginator,
   TweetV2SingleResult,
   TwitterApi,
   TwitterApiReadWrite,
@@ -439,5 +440,44 @@ export class TwitterClient {
     }
 
     return this.getTweetArcade(id, fieldsWithDefaults.twitterUserId);
+  }
+
+  /**
+   * Get tweets from a Twitter list.
+   * @param listId The ID of the Twitter list
+   * @param fields
+   * @param fields.includeMedia Whether to include media attachments in the response
+   * @param fields.maxResults The maximum number of tweets to fetch
+   * @returns {Promise<TweetV2ListTweetsPaginator>} A paginator for the list of tweets
+   */
+  async getListTweets(
+    listId: string,
+    fields?: {
+      includeMedia?: boolean;
+      maxResults?: number;
+    },
+  ): Promise<TweetV2ListTweetsPaginator> {
+    const fieldsWithDefaults = {
+      includeMedia: true,
+      maxResults: 100,
+      ...fields,
+    };
+    const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
+      // This allows us to access the full text of the Tweet, and the created_at date.
+      // Access via `response.data.note_tweet.text`
+      "tweet.fields": ["note_tweet", "created_at"],
+    };
+
+    if (fieldsWithDefaults.includeMedia) {
+      fetchTweetOptions.expansions = ["attachments.media_keys"];
+      fetchTweetOptions["media.fields"] = ["type", "url"];
+    }
+
+    const listTweets = await this.twitterClient.v2.listTweets(listId, {
+      max_results: fieldsWithDefaults.maxResults,
+      ...fetchTweetOptions,
+    });
+
+    return listTweets;
   }
 }
