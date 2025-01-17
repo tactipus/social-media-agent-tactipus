@@ -81,12 +81,10 @@ export class RedditClient {
   ): Promise<Snoowrap.Submission[]> {
     const limitWithDefaults = options?.limit != null ? options.limit : 10;
 
-    const posts = (await (this.snoowrapClient
-      .getSubreddit(subreddit)
-      .getTop({
-        time: "day",
-        limit: limitWithDefaults,
-      }) as any)) as Snoowrap.Submission[];
+    const posts = (await (this.snoowrapClient.getSubreddit(subreddit).getTop({
+      time: "day",
+      limit: limitWithDefaults,
+    }) as any)) as Snoowrap.Submission[];
 
     return posts;
   }
