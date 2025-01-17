@@ -1,10 +1,18 @@
+import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { RedditClient } from "../../../clients/reddit/client.js";
 import { SavedRedditPost } from "../types.js";
+import {
+  getRedditPostIds,
+  putRedditPostIds,
+} from "../utils/stores/reddit-post-ids.js";
+import { getUniqueArrayItems } from "../utils/get-unique-array.js";
 
-export async function getRedditPosts(): Promise<SavedRedditPost[]> {
+export async function getRedditPosts(
+  config: LangGraphRunnableConfig,
+): Promise<SavedRedditPost[]> {
   const client = await RedditClient.fromUserless();
   const topPosts = await client.getTopPosts("LocalLLaMA", { limit: 15 });
-  let data: SavedRedditPost[] = [];
+  const data: SavedRedditPost[] = [];
   for (const post of topPosts) {
     const comments = await client.getPostComments(post.id, {
       limit: 10, // default
@@ -16,5 +24,14 @@ export async function getRedditPosts(): Promise<SavedRedditPost[]> {
     });
   }
 
-  return data;
+  const processedPostIds = await getRedditPostIds(config);
+  const postIds = data.map((post) => post.post.id);
+  const uniquePostIds = getUniqueArrayItems(processedPostIds, postIds);
+  const allPostIds = Array.from(
+    new Set([...processedPostIds, ...uniquePostIds]),
+  );
+
+  await putRedditPostIds(allPostIds, config);
+
+  return data.filter((post) => uniquePostIds.includes(post.post.id));
 }

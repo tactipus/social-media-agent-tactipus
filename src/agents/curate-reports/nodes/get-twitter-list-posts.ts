@@ -2,7 +2,7 @@ import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { TwitterClient } from "../../../clients/twitter/client.js";
 import { CurateReportsState } from "../state.js";
 import { SavedTweet } from "../types.js";
-import { putSavedTweets } from "../utils/saved-tweets-store.js";
+import { putSavedTweets } from "../utils/stores/saved-tweets.js";
 
 const LIST_ID = "1585430245762441216";
 
@@ -11,7 +11,6 @@ function createdAtAfter(createdAt: string, referenceDate: Date) {
 }
 
 export async function getTwitterListPosts(
-  _state: CurateReportsState,
   config: LangGraphRunnableConfig,
 ): Promise<Partial<CurateReportsState>> {
   const client = TwitterClient.fromBasicTwitterAuth();

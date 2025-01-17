@@ -1,12 +1,11 @@
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
-import { SavedTweet } from "../types.js";
 
-export const NAMESPACE = ["saved_data", "tweets"];
-export const KEY = "saved_tweets";
+export const NAMESPACE = ["saved_data", "github_repos"];
+export const KEY = "urls";
 export const OBJECT_KEY = "data";
 
-export async function putSavedTweets(
-  savedTweets: SavedTweet[],
+export async function putGitHubRepoURLs(
+  repoUrls: string[],
   config: LangGraphRunnableConfig,
 ) {
   const store = config.store;
@@ -14,20 +13,20 @@ export async function putSavedTweets(
     throw new Error("No store provided");
   }
   await store.put(NAMESPACE, KEY, {
-    [OBJECT_KEY]: savedTweets,
+    [OBJECT_KEY]: repoUrls,
   });
 }
 
-export async function getSavedTweets(
+export async function getGitHubRepoURLs(
   config: LangGraphRunnableConfig,
-): Promise<SavedTweet[]> {
+): Promise<string[]> {
   const store = config.store;
   if (!store) {
     throw new Error("No store provided");
   }
-  const savedTweets = await store.get(NAMESPACE, KEY);
-  if (!savedTweets) {
+  const repoUrls = await store.get(NAMESPACE, KEY);
+  if (!repoUrls) {
     return [];
   }
-  return savedTweets.value?.[OBJECT_KEY] || [];
+  return repoUrls.value?.[OBJECT_KEY] || [];
 }

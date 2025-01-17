@@ -1,7 +1,7 @@
 import { test, expect } from "@jest/globals";
 import { latentSpaceLoader } from "../latent-space.js";
 import { InMemoryStore } from "@langchain/langgraph";
-import { putLatentSpaceLinks } from "../../utils/latent-space-links.js";
+import { putLatentSpaceLinks } from "../../utils/stores/latent-space-links.js";
 
 test("Latent space loader", async () => {
   const store = new InMemoryStore();

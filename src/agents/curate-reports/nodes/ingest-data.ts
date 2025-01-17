@@ -1,14 +1,49 @@
-import { CurateReportsState } from "../state.js";
+import { CurateReportsConfigurable, CurateReportsState } from "../state.js";
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
-import { getTwitterListPosts } from "./get-twitter-list-posts.js";
+import { aiNewsBlogLoader } from "../loaders/ai-news-blog.js";
+import { twitterLoader } from "../loaders/twitter.js";
+import { getLatentSpaceLinks } from "../utils/stores/latent-space-links.js";
+import { getRedditPosts } from "../loaders/reddit.js";
+import { githubTrendingLoader } from "../loaders/github-trending.js";
+import { SavedRedditPost, SavedTweet } from "../types.js";
 
 export async function ingestData(
-  state: CurateReportsState,
+  _state: CurateReportsState,
   config: LangGraphRunnableConfig,
 ): Promise<Partial<CurateReportsState>> {
-  if (state.sources.includes("twitter")) {
-    await getTwitterListPosts(state, config);
+  const sources = (config.configurable as CurateReportsConfigurable | undefined)
+    ?.sources;
+  if (!sources) {
+    throw new Error("No sources provided");
   }
 
-  return {};
+  let tweets: SavedTweet[] = [];
+  let trendingRepos: string[] = [];
+  let latentSpaceLinks: string[] = [];
+  let aiNewsPosts: string[] = [];
+  let redditPosts: SavedRedditPost[] = [];
+
+  if (sources.includes("twitter")) {
+    tweets = await twitterLoader();
+  }
+  if (sources.includes("github")) {
+    trendingRepos = await githubTrendingLoader(config);
+  }
+  if (sources.includes("latent_space")) {
+    latentSpaceLinks = await getLatentSpaceLinks(config);
+  }
+  if (sources.includes("ai_news")) {
+    aiNewsPosts = await aiNewsBlogLoader();
+  }
+  if (sources.includes("reddit")) {
+    redditPosts = await getRedditPosts(config);
+  }
+
+  return {
+    tweets,
+    trendingRepos,
+    latentSpaceLinks,
+    aiNewsPosts,
+    redditPosts,
+  };
 }
