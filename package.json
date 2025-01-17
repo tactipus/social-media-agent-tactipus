@@ -59,8 +59,10 @@
     "passport": "^0.7.0",
     "passport-twitter": "^1.0.4",
     "playwright": "^1.49.1",
+    "snoowrap": "^1.23.0",
     "twitter-api-v2": "^1.18.2",
     "uuid": "^11.0.4",
+    "xml2js": "^0.6.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -74,6 +76,7 @@
     "@types/node": "^22.10.6",
     "@types/passport": "^1.0.17",
     "@types/passport-twitter": "^1.0.40",
+    "@types/xml2js": "^0.4.14",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "cross-env": "^7.0.3",

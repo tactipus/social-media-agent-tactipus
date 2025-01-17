@@ -35,6 +35,7 @@ export async function getTwitterListPosts(
         createdAt: t.created_at || new Date().toISOString(),
         fullText,
         mediaKeys: t.attachments?.media_keys || [],
+        references: t.referenced_tweets,
       };
     });
 

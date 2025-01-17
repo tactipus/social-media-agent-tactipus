@@ -3,6 +3,7 @@ import { CreateTweetRequest, TwitterClientArgs } from "./types.js";
 import {
   Tweetv2FieldsParams,
   TweetV2ListTweetsPaginator,
+  TweetV2PaginableListParams,
   TweetV2SingleResult,
   TwitterApi,
   TwitterApiReadWrite,
@@ -455,6 +456,7 @@ export class TwitterClient {
     fields?: {
       includeMedia?: boolean;
       maxResults?: number;
+      paginationToken?: string;
     },
   ): Promise<TweetV2ListTweetsPaginator> {
     const fieldsWithDefaults = {
@@ -462,14 +464,32 @@ export class TwitterClient {
       maxResults: 100,
       ...fields,
     };
-    const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
+    const fetchTweetOptions: Partial<TweetV2PaginableListParams> = {
       // This allows us to access the full text of the Tweet, and the created_at date.
       // Access via `response.data.note_tweet.text`
-      "tweet.fields": ["note_tweet", "created_at"],
+      "tweet.fields": [
+        "note_tweet",
+        "created_at",
+        "id",
+        "author_id",
+        "in_reply_to_user_id",
+        "referenced_tweets",
+      ],
+      "user.fields": ["username"],
+      expansions: ["referenced_tweets.id", "referenced_tweets.id.author_id"],
     };
 
+    if (fieldsWithDefaults.paginationToken) {
+      fetchTweetOptions.pagination_token = fieldsWithDefaults.paginationToken;
+    }
+
     if (fieldsWithDefaults.includeMedia) {
-      fetchTweetOptions.expansions = ["attachments.media_keys"];
+      fetchTweetOptions.expansions = [
+        ...(Array.isArray(fetchTweetOptions.expansions)
+          ? fetchTweetOptions.expansions
+          : []),
+        "attachments.media_keys",
+      ];
       fetchTweetOptions["media.fields"] = ["type", "url"];
     }
 
