@@ -1,7 +1,7 @@
 import { VerifyTweetAnnotation } from "../verify-tweet-state.js";
 import { extractTweetId, extractUrls } from "../../utils.js";
-import { resolveTwitterUrl } from "../utils.js";
 import { TwitterClient } from "../../../clients/twitter/client.js";
+import { resolveTwitterUrl } from "../../../clients/twitter/utils.js";
 
 export async function getTweetContent(
   state: typeof VerifyTweetAnnotation.State,
@@ -32,9 +32,7 @@ export async function getTweetContent(
     });
   }
 
-  const tweetContent = await twitterClient.getTweet(tweetId, {
-    includeMedia: true,
-  });
+  const tweetContent = await twitterClient.getTweet(tweetId);
   const mediaUrls: string[] =
     tweetContent.includes?.media
       ?.filter((m) => (m.url && m.type === "photo") || m.type.includes("gif"))

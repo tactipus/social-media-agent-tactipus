@@ -1,6 +1,5 @@
 import { Annotation } from "@langchain/langgraph";
-import { PageContentData, SavedRedditPost } from "./types.js";
-import { TweetV2 } from "twitter-api-v2";
+import { PageContentData, SavedRedditPost, TweetV2WithURLs } from "./types.js";
 
 export const CurateReportsAnnotation = Annotation.Root({
   /**
@@ -21,7 +20,7 @@ export const CurateReportsAnnotation = Annotation.Root({
    * Collection of saved tweets from a Twitter list.
    * Each tweet contains metadata like ID, creation time, text content, and media references.
    */
-  tweets: Annotation<TweetV2[]>,
+  tweets: Annotation<TweetV2WithURLs[]>,
   /**
    * List of trending GitHub repository names/paths.
    */

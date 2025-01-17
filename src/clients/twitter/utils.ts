@@ -1,4 +1,5 @@
 import { TweetV2 } from "twitter-api-v2";
+import { extractUrls } from "../../agents/utils.js";
 
 /**
  * Generates a link to a tweet based on its author ID and tweet ID.
@@ -65,4 +66,94 @@ export function getThreadTweets(
   }
 
   return validThreadTweets;
+}
+
+/**
+ * Resolves a shortened Twitter URL to the original URL.
+ * This is because Twitter shortens URLs in tweets and makes
+ * you follow a redirect to get the original URL.
+ * @param shortUrl The shortened Twitter URL
+ * @returns The resolved Twitter URL
+ */
+export async function resolveTwitterUrl(
+  shortUrl: string,
+): Promise<string | undefined> {
+  try {
+    const response = await fetch(shortUrl, {
+      method: "HEAD",
+      redirect: "follow",
+    });
+    return response.url;
+  } catch (error) {
+    console.warn(`Failed to resolve Twitter URL ${shortUrl}:`, error);
+    return undefined;
+  }
+}
+
+/**
+ * Resolves and replaces shortened Twitter URLs in a tweet's text content.
+ * @param content The text content of the tweet
+ * @returns The text content with shortened Twitter URLs replaced
+ */
+export async function resolveAndReplaceTweetTextLinks(
+  content: string,
+): Promise<{
+  content: string;
+  externalUrls: string[];
+}> {
+  const urlsInTweet = extractUrls(content);
+  if (!urlsInTweet) return { content, externalUrls: [] };
+
+  const cleanedUrls = (
+    await Promise.all(
+      urlsInTweet.map(async (url) => {
+        if (
+          !url.includes("https://t.co") &&
+          !url.includes("https://x.com") &&
+          !url.includes("https://twitter.com")
+        ) {
+          return {
+            original: url,
+            resolved: undefined,
+          };
+        }
+        const resolvedUrl = await resolveTwitterUrl(url);
+        if (
+          !resolvedUrl ||
+          resolvedUrl.includes("https://t.co") ||
+          resolvedUrl.includes("https://twitter.com") ||
+          resolvedUrl.includes("https://x.com")
+        ) {
+          // Do not return twitter URLs.
+          return {
+            original: url,
+            resolved: undefined,
+          };
+        }
+        return {
+          original: url,
+          resolved: resolvedUrl,
+        };
+      }),
+    )
+  ).flat();
+
+  let updatedContent = content;
+  for (const urlPair of cleanedUrls) {
+    if (urlPair.resolved) {
+      updatedContent = updatedContent.replaceAll(
+        urlPair.original,
+        urlPair.resolved,
+      );
+    }
+  }
+
+  return {
+    content: updatedContent,
+    externalUrls: cleanedUrls
+      .filter(
+        (url): url is { resolved: string; original: string } => !!url.resolved,
+      )
+      .map((url) => url.resolved),
+  };
 }

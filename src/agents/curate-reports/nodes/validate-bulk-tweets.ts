@@ -2,7 +2,7 @@ import { ChatAnthropic } from "@langchain/anthropic";
 import { CurateReportsState } from "../state.js";
 import { z } from "zod";
 import { chunkArray } from "../../utils.js";
-import { TweetV2 } from "twitter-api-v2";
+import { TweetV2WithURLs } from "../types.js";
 
 const EXAMPLES = `<example index="0">
     <example-tweet>
@@ -115,7 +115,7 @@ const answerSchema = z
   })
   .describe("Your final answer to what tweets are relevant.");
 
-function formatTweets(tweets: TweetV2[]): string {
+function formatTweets(tweets: TweetV2WithURLs[]): string {
   return tweets
     .map((t, index) => {
       const fullText = t.note_tweet?.text || t.text || "";
@@ -150,7 +150,7 @@ export async function validateBulkTweets(
 
   // Chunk the tweets into groups of 25
   const chunkedTweets = chunkArray(state.tweets, 25);
-  const allRelevantTweets: TweetV2[] = [];
+  const allRelevantTweets: TweetV2WithURLs[] = [];
 
   for (const chunk of chunkedTweets) {
     console.log(`Validating ${chunk.length} tweets...`);

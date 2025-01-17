@@ -399,7 +399,7 @@ export class TwitterClient {
    * const tweet = await client.getTweet("1234567890", { twitterUserId: "user123" });
    *
    * // Without media attachments
-   * const tweet = await client.getTweet("1234567890", { includeMedia: false });
+   * const tweet = await client.getTweet("1234567890");
    * ```
    */
   async getTweet(

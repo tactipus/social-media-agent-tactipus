@@ -1,3 +1,4 @@
+import { TweetV2 } from "twitter-api-v2";
 import {
   SimpleRedditComment,
   SimpleRedditPost,
@@ -42,4 +43,8 @@ export type Source =
 export type SavedRedditPost = {
   post: SimpleRedditPost;
   comments: SimpleRedditComment[];
+};
+
+export type TweetV2WithURLs = TweetV2 & {
+  external_urls: string[];
 };
