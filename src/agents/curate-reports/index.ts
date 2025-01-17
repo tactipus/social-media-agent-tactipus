@@ -1,26 +1,14 @@
-import { END, START, StateGraph, Send } from "@langchain/langgraph";
-import { CurateReportsAnnotation, type CurateReportsState } from "./state.js";
+import { END, START, StateGraph } from "@langchain/langgraph";
+import { CurateReportsAnnotation } from "./state.js";
 import { ingestData } from "./nodes/ingest-data.js";
-
-function generateReportsEdge(state: CurateReportsState) {
-  return state.pageContentData.map((data) => {
-    return new Send("generateReport", data);
-  });
-}
-
-/**
- * Execute each node which is used to ingest data.
- * - github trending
- * - ingest from twitter users
- * - ai news blog
- */
+import { classifyContent } from "./nodes/classify-content.js";
 
 const curateReportsWorkflow = new StateGraph(CurateReportsAnnotation)
   .addNode("ingestData", ingestData)
-  .addNode("generateReport", generateReport)
+  .addNode("classifyContent", classifyContent)
   .addEdge(START, "ingestData")
-  .addConditionalEdges("ingestData", generateReportsEdge, ["generateReport"])
-  .addEdge("generateReport", END);
+  .addEdge("ingestData", "classifyContent")
+  .addEdge("classifyContent", END);
 
 export const curateReportsGraph = curateReportsWorkflow.compile();
 curateReportsGraph.name = "Curate Reports Graph";
