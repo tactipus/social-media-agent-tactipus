@@ -1,5 +1,4 @@
 import { TweetV2 } from "twitter-api-v2";
-import { SavedTweet } from "../../agents/curate-reports/types.js";
 
 /**
  * Generates a link to a tweet based on its author ID and tweet ID.
@@ -9,22 +8,6 @@ import { SavedTweet } from "../../agents/curate-reports/types.js";
  */
 export function getTweetLink(authorId: string, tweetId: string): string {
   return `https://twitter.com/${authorId}/status/${tweetId}`;
-}
-
-/**
- * Convert a TweetV2 object to a SavedTweet object
- * @param t The TweetV2 object
- * @returns The SavedTweet object
- */
-export function tweetV2ToSavedTweet(t: TweetV2): SavedTweet {
-  return {
-    id: t.id,
-    link: getTweetLink(t.author_id || "", t.id),
-    createdAt: t.created_at || "",
-    fullText: t.note_tweet?.text || t.text || "",
-    mediaKeys: t.attachments?.media_keys || [],
-    references: t.referenced_tweets || undefined,
-  };
 }
 
 export function isTweetSelfReply(

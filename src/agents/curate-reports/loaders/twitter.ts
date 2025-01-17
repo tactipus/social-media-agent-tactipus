@@ -1,8 +1,6 @@
-import { TweetV2ListTweetsPaginator } from "twitter-api-v2";
+import { TweetV2, TweetV2ListTweetsPaginator } from "twitter-api-v2";
 import { TwitterClient } from "../../../clients/twitter/client.js";
-import { SavedTweet } from "../types.js";
 import { createdAtAfter } from "../utils/created-at-after.js";
-import { getTweetLink } from "../../../clients/twitter/utils.js";
 
 const LIST_ID = "1585430245762441216";
 
@@ -28,12 +26,12 @@ async function fetchListTweetsWrapper(
   }
 }
 
-export async function twitterLoader(): Promise<SavedTweet[]> {
+export async function twitterLoader(): Promise<TweetV2[]> {
   const client = TwitterClient.fromBasicTwitterAuth();
 
   // Initialize variables for pagination
   let paginationToken: string | undefined;
-  let allTweets: SavedTweet[] = [];
+  let allTweets: TweetV2[] = [];
   let requestCount = 0;
   const maxRequests = 5;
 
@@ -50,22 +48,10 @@ export async function twitterLoader(): Promise<SavedTweet[]> {
       break;
     }
 
-    const filteredTweets: SavedTweet[] = tweets?.data.data
-      .filter(
-        (tweet) =>
-          tweet.created_at && createdAtAfter(tweet.created_at, oneDayAgoUTC),
-      )
-      .map((t) => {
-        const fullText = t.note_tweet?.text || t.text;
-        return {
-          id: t.id,
-          link: t.author_id ? getTweetLink(t.author_id, t.id) : undefined,
-          createdAt: t.created_at || new Date().toISOString(),
-          fullText,
-          mediaKeys: t.attachments?.media_keys || [],
-          references: t.referenced_tweets,
-        };
-      });
+    const filteredTweets: TweetV2[] = tweets?.data.data.filter(
+      (tweet) =>
+        tweet.created_at && createdAtAfter(tweet.created_at, oneDayAgoUTC),
+    );
 
     allTweets = [...allTweets, ...filteredTweets];
 

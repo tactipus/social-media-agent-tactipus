@@ -10,8 +10,7 @@ import {
   TwitterApiReadWrite,
 } from "twitter-api-v2";
 import { AuthorizeUserResponse } from "../types.js";
-import { SavedTweet } from "../../agents/curate-reports/types.js";
-import { isTweetSelfReply, tweetV2ToSavedTweet } from "./utils.js";
+import { isTweetSelfReply } from "./utils.js";
 
 type MediaIdStringArray =
   | [string]
@@ -513,9 +512,14 @@ export class TwitterClient {
    * @returns {Promise<TweetV2[] | undefined>} An array of tweets in chronological order if a thread exists,
    *                                          undefined if the tweet is not part of a thread
    */
-  async getThreadFromId<TweetType extends TweetV2 | SavedTweet>(
-    initialTweet: TweetType,
-  ): Promise<TweetType[] | undefined> {
+  async getThreadFromId(initialTweet: TweetV2): Promise<TweetV2[] | undefined> {
+    const authorId = initialTweet.author_id;
+    if (!initialTweet.author_id) {
+      throw new Error(
+        "Failed to get tweet author from input:" + JSON.stringify(initialTweet),
+      );
+    }
+
     const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
       "tweet.fields": [
         "note_tweet",
@@ -527,27 +531,7 @@ export class TwitterClient {
       ],
     };
 
-    const thread: TweetType[] = [initialTweet];
-
-    let authorId = "author_id" in initialTweet ? initialTweet.author_id : "";
-    try {
-      if (!authorId && "link" in initialTweet && initialTweet.link) {
-        const url = new URL(initialTweet.link);
-        const path = url.pathname.split("/");
-        authorId = path[1]; // the second path segment is the author ID. /status/author_id/
-      }
-    } catch (e) {
-      throw new Error(
-        "Failed to get tweet author from input:" +
-          JSON.stringify(initialTweet) +
-          e,
-      );
-    }
-    if (!authorId) {
-      throw new Error(
-        "Failed to get tweet author from input:" + JSON.stringify(initialTweet),
-      );
-    }
+    const thread: TweetV2[] = [initialTweet];
 
     // Search for replies by the same author
     const replies = await this.twitterClient.v2.search(
@@ -561,24 +545,16 @@ export class TwitterClient {
     if (!replies.data) return thread;
     // Filter replies to only include those that form a thread (author replying to themselves)
     const threadReplies = replies.data.data.filter((tweet) =>
-      isTweetSelfReply(tweet, authorId),
+      isTweetSelfReply(tweet, authorId as string),
     );
 
     if (threadReplies.length === 0) return undefined;
 
-    const formattedThreads: TweetType[] = threadReplies
-      .sort((a, b) => {
-        return (
-          new Date(a.created_at!).getTime() - new Date(b.created_at!).getTime()
-        );
-      })
-      .map((t) => {
-        // createdAt is only in SavedTweet and not TweetV2
-        if ("createdAt" in initialTweet) {
-          return tweetV2ToSavedTweet(t) as TweetType;
-        }
-        return t as TweetType;
-      });
+    const formattedThreads: TweetV2[] = threadReplies.sort((a, b) => {
+      return (
+        new Date(a.created_at!).getTime() - new Date(b.created_at!).getTime()
+      );
+    });
 
     // Sort replies by creation date to maintain thread order
     thread.push(...formattedThreads);

@@ -2,7 +2,7 @@ import fs from "fs";
 import * as ls from "langsmith/jest";
 import { validateBulkTweets } from "../validate-bulk-tweets.js";
 import { SimpleEvaluator } from "langsmith/jest";
-import { SavedTweet } from "../../types.js";
+import { TweetV2 } from "twitter-api-v2";
 
 const tweetEvaluator: SimpleEvaluator = () => {
   return {
@@ -11,7 +11,7 @@ const tweetEvaluator: SimpleEvaluator = () => {
   };
 };
 
-function loadTweets(): SavedTweet[] {
+function loadTweets(): TweetV2[] {
   const tweets = JSON.parse(
     fs.readFileSync(
       "src/agents/curate-reports/nodes/tests/data/tweets.json",
@@ -34,7 +34,9 @@ ls.describe("SMA - Curate Reports - Validate Bulk Tweets", () => {
       // Import and run your app, or some part of it here
       // This dummy example just returns your expected output
       const result = await validateBulkTweets({ tweets } as any);
-      console.log(result.tweets?.map((p) => p.fullText).join("\n---\n"));
+      console.log(
+        result.tweets?.map((p) => p.note_tweet?.text || p.text).join("\n---\n"),
+      );
       await ls.expect(result).evaluatedBy(tweetEvaluator).toBe(1);
       return result;
     },

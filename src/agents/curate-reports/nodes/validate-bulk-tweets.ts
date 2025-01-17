@@ -1,8 +1,74 @@
 import { ChatAnthropic } from "@langchain/anthropic";
 import { CurateReportsState } from "../state.js";
 import { z } from "zod";
-import { SavedTweet } from "../types.js";
 import { chunkArray } from "../../utils.js";
+import { TweetV2 } from "twitter-api-v2";
+
+const EXAMPLES = `<example index="0">
+    <example-tweet>
+      RT @arjunkhemani: .@naval: Looking for truth is the opposite of looking for social approval.\n\n“I’m deeply suspicious of groups of people co…
+    </example-tweet>
+
+    <scratchpad>
+      This tweet is not relevant because it has no mentions of AI, or valuable content for learning.
+    </scratchpad>
+    is_relevant: false
+  </example>
+
+  <example index="0">
+    <example-tweet>
+      Blog post for Transformer²: Self-Adaptive LLMs\n\nhttps://t.co/AyeFdqEKsd\n\nEventually, neural network weights should be as adaptive as the Octopus 🐙\nhttps://t.co/me7urXJ6BS
+    </example-tweet>
+
+    <scratchpad>
+      This tweet is relevant because it is about AI, and contains links to blog posts which are most likely about AI.
+    </scratchpad>
+    is_relevant: true
+  </example>
+
+  <example index="0">
+    <example-tweet>
+      @karpathy @martin_casado Sir, how do I convince my talented ex-big tech SDE peers to use LLMs more for coding\n\nalmost all of them cite privacy/security concerns or hallucinations
+    </example-tweet>
+
+    <scratchpad>
+      This tweet is not relevant because it does not have enough AI content for learning, but rather it's presenting a question about AI.
+    </scratchpad>
+    is_relevant: false
+  </example>
+
+  <example index="0">
+    <example-tweet>
+      Aligning Instruction Tuning with Pre-training\n\nDetermines differences between pretraining corpus and SFT corpus and generates instruction data for the difference set. Evaluations on three fully\nopen LLMs across eight benchmarks demonstrate\nconsistent performance improvements. https://t.co/1jJxiv5q2T
+    </example-tweet>
+
+    <scratchpad>
+      This tweet is relevant because it appears to be referencing a research paper on AI.
+    </scratchpad>
+    is_relevant: true
+  </example>
+
+  <example index="0">
+    <example-tweet>
+      Btw, your docs are likely AI generated, GAIA is not about environmental and sustainability at all 🤣
+    </example-tweet>
+
+    <scratchpad>
+      This tweet is not relevant. Although it does mention AI, the tweet itself has no content for learning, or writing educational AI content. Instead it's dissing someone's (alleged) poor documentation.
+    </scratchpad>
+    is_relevant: false
+  </example>
+
+  <example index="0">
+    <example-tweet>
+      Prompt Engineers at Work 🍰👷🎨\n\nExclusive merch only available for the PromptLayer team... but good news is that we are hiring! https://t.co/X9aJO95RQp
+    </example-tweet>
+
+    <scratchpad>
+      This tweet is not relevant because it is promoting a non-software product.
+    </scratchpad>
+    is_relevant: false
+  </example>`;
 
 const VALIDATE_BULK_TWEETS_PROMPT = `You are an AI assistant tasked with curating a dataset of tweets about AI. Your job is to review a series of tweets and determine which ones are relevant to AI, LLMs, and related topics. The tweets are provided from a 'Twitter List' of users who primarily tweet about AI.
 
@@ -14,16 +80,23 @@ Here are the rules for determining whether a tweet is relevant:
 5. The tweet references a blog post, video, or other content related to AI, LLMs, or anything interesting related to AI.
 
 Additionally, ensure that the tweet has enough content to be interesting and engaging. Avoid short tweets that merely reference AI without providing substantial information that could be used to create longer content or posts about AI.
+The tweets you do approve will be used to create educational content about AI, so ensure the tweets approved are high quality, engaging, and informative.
 
 You will be provided with a list of tweets, each associated with an index number. Your task is to analyze these tweets and identify which ones are relevant according to the rules above.
 
-Here are the tweets to analyze:
+Use the following examples to guide your analysis:
+<analysis-examples>
+${EXAMPLES}
+</analysis-examples>
 
+
+Here are the tweets to analyze:
 <tweets>
 {TWEETS}
 </tweets>
 
 Use a scratchpad to analyze each tweet. In your scratchpad, briefly explain why each tweet is relevant or not relevant based on the rules provided. Then, create a list of the index numbers for the relevant tweets.
+Remember, we only want the highest quality AI tweets, so you should lean towards NOT including a tweet unless it is clearly highly relevant, and would be useful when writing educational content about AI.
 
 <scratchpad>
 [Analyze each tweet here, explaining your reasoning]
@@ -41,9 +114,12 @@ const answerSchema = z
   })
   .describe("Your final answer to what tweets are relevant.");
 
-function formatTweets(tweets: SavedTweet[]): string {
+function formatTweets(tweets: TweetV2[]): string {
   return tweets
-    .map((t, index) => `<tweet index="${index}">\n${t.fullText}\n</tweet>`)
+    .map((t, index) => {
+      const fullText = t.note_tweet?.text || t.text || "";
+      return `<tweet index="${index}">\n${fullText}\n</tweet>`;
+    })
     .join("\n");
 }
 
@@ -73,10 +149,9 @@ export async function validateBulkTweets(
 
   // Chunk the tweets into groups of 25
   const chunkedTweets = chunkArray(state.tweets, 25);
-  const allRelevantTweets: SavedTweet[] = [];
+  const allRelevantTweets: TweetV2[] = [];
 
   for (const chunk of chunkedTweets) {
-    console.log("Starting chunk");
     const formattedPrompt = VALIDATE_BULK_TWEETS_PROMPT.replace(
       "{TWEETS}",
       formatTweets(chunk),
@@ -85,7 +160,6 @@ export async function validateBulkTweets(
     const { answer } = await model.invoke([["user", formattedPrompt]]);
 
     const answerSet = new Set(answer);
-    console.log("answerSet", Array.from(answerSet));
     const relevantTweets = chunk.filter((_, index) => answerSet.has(index));
     allRelevantTweets.push(...relevantTweets);
   }

@@ -1,4 +1,3 @@
-import { ReferencedTweetV2 } from "twitter-api-v2";
 import {
   SimpleRedditComment,
   SimpleRedditPost,
@@ -39,15 +38,6 @@ export type Source =
       username?: never;
       link?: never;
     };
-
-export type SavedTweet = {
-  id: string;
-  link: string | undefined;
-  createdAt: string;
-  fullText: string;
-  mediaKeys: string[];
-  references: ReferencedTweetV2[] | undefined;
-};
 
 export type SavedRedditPost = {
   post: SimpleRedditPost;
