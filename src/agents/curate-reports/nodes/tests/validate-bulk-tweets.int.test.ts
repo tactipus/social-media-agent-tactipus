@@ -3,7 +3,7 @@ import * as ls from "langsmith/jest";
 import { validateBulkTweets } from "../validate-bulk-tweets.js";
 import { SimpleEvaluator } from "langsmith/jest";
 import { formatInTimeZone } from "date-fns-tz";
-import { TweetV2WithURLs } from "../../types.js";
+import { TweetV2 } from "twitter-api-v2";
 
 const tweetEvaluator: SimpleEvaluator = () => {
   return {
@@ -12,7 +12,7 @@ const tweetEvaluator: SimpleEvaluator = () => {
   };
 };
 
-function loadTweets(): TweetV2WithURLs[] {
+function loadTweets(): TweetV2[] {
   const tweets = JSON.parse(
     fs.readFileSync(
       "src/agents/curate-reports/nodes/tests/data/tweets.json",
@@ -22,7 +22,7 @@ function loadTweets(): TweetV2WithURLs[] {
   return tweets;
 }
 
-function saveRelevantTweets(tweets: TweetV2WithURLs[]): void {
+function saveRelevantTweets(tweets: TweetV2[]): void {
   try {
     const currentDateUTC = new Date().toISOString();
     const formattedPSTDate = formatInTimeZone(

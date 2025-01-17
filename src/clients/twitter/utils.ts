@@ -1,5 +1,6 @@
 import { TweetV2 } from "twitter-api-v2";
 import { extractUrls } from "../../agents/utils.js";
+import { TweetV2WithURLs } from "../../agents/curate-reports/types.js";
 
 /**
  * Generates a link to a tweet based on its author ID and tweet ID.
@@ -156,4 +157,55 @@ export async function resolveAndReplaceTweetTextLinks(
       )
       .map((url) => url.resolved),
   };
+}
+
+/**
+ * Processes an array of tweets and resolves any shortened URLs in their text content.
+ * For each tweet, it extracts URLs from both regular text and note_tweet text (if present),
+ * resolves them to their full form, and adds them to the tweet object.
+ *
+ * @param {TweetV2[]} tweets - An array of Twitter V2 API tweet objects to process
+ * @returns {Promise<TweetV2WithURLs[]>} A promise that resolves to an array of processed tweets.
+ *                                       Each tweet will have an additional `external_urls` field
+ *                                       containing an array of resolved URLs found in the tweet's text.
+ *
+ * @example
+ * const tweets = await client.getTweets();
+ * const processedTweets = await resolveTweetsWithUrls(tweets);
+ * // Each tweet in processedTweets will have resolved URLs in external_urls field
+ */
+export async function resolveTweetsWithUrls(
+  tweets: TweetV2[],
+): Promise<TweetV2WithURLs[]> {
+  const resolvedTweets: TweetV2WithURLs[] = [];
+
+  for (const tweet of tweets) {
+    const tweetText = tweet.note_tweet?.text || tweet.text || "";
+    if (!tweetText) {
+      continue;
+    }
+
+    const contentAndUrls = await resolveAndReplaceTweetTextLinks(tweetText);
+
+    if (tweet.note_tweet?.text) {
+      resolvedTweets.push({
+        ...tweet,
+        note_tweet: {
+          ...tweet.note_tweet,
+          text: contentAndUrls.content,
+        },
+        external_urls: contentAndUrls.externalUrls,
+      });
+    } else {
+      if (tweet.note_tweet?.text) {
+        resolvedTweets.push({
+          ...tweet,
+          text: contentAndUrls.content,
+          external_urls: contentAndUrls.externalUrls,
+        });
+      }
+    }
+  }
+
+  return resolvedTweets;
 }

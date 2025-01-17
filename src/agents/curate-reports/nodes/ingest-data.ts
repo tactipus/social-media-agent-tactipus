@@ -5,7 +5,8 @@ import { twitterLoader } from "../loaders/twitter.js";
 import { getLatentSpaceLinks } from "../utils/stores/latent-space-links.js";
 import { getRedditPosts } from "../loaders/reddit.js";
 import { githubTrendingLoader } from "../loaders/github-trending.js";
-import { SavedRedditPost, TweetV2WithURLs } from "../types.js";
+import { SavedRedditPost } from "../types.js";
+import { TweetV2 } from "twitter-api-v2";
 
 export async function ingestData(
   _state: CurateReportsState,
@@ -17,7 +18,7 @@ export async function ingestData(
     throw new Error("No sources provided");
   }
 
-  let tweets: TweetV2WithURLs[] = [];
+  let tweets: TweetV2[] = [];
   let trendingRepos: string[] = [];
   let latentSpaceLinks: string[] = [];
   let aiNewsPosts: string[] = [];
