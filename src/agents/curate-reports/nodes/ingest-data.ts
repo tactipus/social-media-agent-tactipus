@@ -2,11 +2,11 @@ import { CurateReportsConfigurable, CurateReportsState } from "../state.js";
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { aiNewsBlogLoader } from "../loaders/ai-news-blog.js";
 import { twitterLoader } from "../loaders/twitter.js";
-import { getLatentSpaceLinks } from "../utils/stores/latent-space-links.js";
 import { getRedditPosts } from "../loaders/reddit.js";
 import { githubTrendingLoader } from "../loaders/github-trending.js";
-import { SavedRedditPost } from "../types.js";
 import { TweetV2 } from "twitter-api-v2";
+import { latentSpaceLoader } from "../loaders/latent-space.js";
+import { SimpleRedditPostWithComments } from "../../../clients/reddit/types.js";
 
 export async function ingestData(
   _state: CurateReportsState,
@@ -20,9 +20,9 @@ export async function ingestData(
 
   let tweets: TweetV2[] = [];
   let trendingRepos: string[] = [];
-  let latentSpaceLinks: string[] = [];
+  let latentSpacePosts: string[] = [];
   let aiNewsPosts: string[] = [];
-  let redditPosts: SavedRedditPost[] = [];
+  let redditPosts: SimpleRedditPostWithComments[] = [];
 
   if (sources.includes("twitter")) {
     tweets = await twitterLoader();
@@ -31,7 +31,7 @@ export async function ingestData(
     trendingRepos = await githubTrendingLoader(config);
   }
   if (sources.includes("latent_space")) {
-    latentSpaceLinks = await getLatentSpaceLinks(config);
+    latentSpacePosts = await latentSpaceLoader(config);
   }
   if (sources.includes("ai_news")) {
     aiNewsPosts = await aiNewsBlogLoader();
@@ -41,10 +41,10 @@ export async function ingestData(
   }
 
   return {
-    tweets,
-    trendingRepos,
-    latentSpaceLinks,
+    rawTweets: tweets,
+    rawTrendingRepos: trendingRepos,
+    latentSpacePosts,
     aiNewsPosts,
-    redditPosts,
+    rawRedditPosts: redditPosts,
   };
 }

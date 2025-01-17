@@ -1,18 +1,18 @@
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { RedditClient } from "../../../clients/reddit/client.js";
-import { SavedRedditPost } from "../types.js";
 import {
   getRedditPostIds,
   putRedditPostIds,
 } from "../utils/stores/reddit-post-ids.js";
 import { getUniqueArrayItems } from "../utils/get-unique-array.js";
+import { SimpleRedditPostWithComments } from "../../../clients/reddit/types.js";
 
 export async function getRedditPosts(
   config: LangGraphRunnableConfig,
-): Promise<SavedRedditPost[]> {
+): Promise<SimpleRedditPostWithComments[]> {
   const client = await RedditClient.fromUserless();
   const topPosts = await client.getTopPosts("LocalLLaMA", { limit: 15 });
-  const data: SavedRedditPost[] = [];
+  const data: SimpleRedditPostWithComments[] = [];
   for (const post of topPosts) {
     const comments = await client.getPostComments(post.id, {
       limit: 10, // default

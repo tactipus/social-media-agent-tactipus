@@ -1,8 +1,4 @@
 import { TweetV2 } from "twitter-api-v2";
-import {
-  SimpleRedditComment,
-  SimpleRedditPost,
-} from "../../clients/reddit/types.js";
 
 export interface PageContentData {
   link: string;
@@ -40,11 +36,11 @@ export type Source =
       link?: never;
     };
 
-export type SavedRedditPost = {
-  post: SimpleRedditPost;
-  comments: SimpleRedditComment[];
-};
-
 export type TweetV2WithURLs = TweetV2 & {
   external_urls: string[];
+};
+
+export type GitHubTrendingData = {
+  repoURL: string;
+  pageContent: string;
 };

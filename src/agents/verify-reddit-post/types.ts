@@ -1,3 +1,6 @@
+import { SimpleRedditPostWithComments } from "../../clients/reddit/types.js";
+import { VerifyRedditPostAnnotation } from "./verify-reddit-post-state.js";
+
 export type RedditPostRoot = RedditPostRoot2[];
 
 export interface RedditPostRoot2 {
@@ -154,3 +157,12 @@ export interface FormattedRedditPost {
   post: string;
   replies: string[];
 }
+
+export type RedditPostsWithExternalData = SimpleRedditPostWithComments & {
+  externalData: {
+    url: string;
+    pageContent: string;
+  }[];
+};
+
+export type VerifyRedditGraphState = typeof VerifyRedditPostAnnotation.State;

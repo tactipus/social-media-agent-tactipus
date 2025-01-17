@@ -1,6 +1,8 @@
 import { Annotation } from "@langchain/langgraph";
-import { PageContentData, SavedRedditPost } from "./types.js";
+import { GitHubTrendingData, PageContentData } from "./types.js";
 import { TweetV2 } from "twitter-api-v2";
+import { SimpleRedditPostWithComments } from "../../clients/reddit/types.js";
+import { RedditPostsWithExternalData } from "../verify-reddit-post/types.js";
 
 export const CurateReportsAnnotation = Annotation.Root({
   /**
@@ -21,15 +23,22 @@ export const CurateReportsAnnotation = Annotation.Root({
    * Collection of saved tweets from a Twitter list.
    * Each tweet contains metadata like ID, creation time, text content, and media references.
    */
-  tweets: Annotation<TweetV2[]>,
+  rawTweets: Annotation<TweetV2[]>,
+
   /**
    * List of trending GitHub repository names/paths.
    */
-  trendingRepos: Annotation<string[]>,
+  rawTrendingRepos: Annotation<string[]>,
+  /**
+   * A list of trending GitHub repositories & README contents which have been
+   * validated.
+   */
+  githubTrendingData: Annotation<GitHubTrendingData[]>,
+
   /**
    * A list of new Latent Space posts.
    */
-  latentSpaceLinks: Annotation<string[]>,
+  latentSpacePosts: Annotation<string[]>,
   /**
    * A list of new AI Newsletter posts.
    */
@@ -38,7 +47,11 @@ export const CurateReportsAnnotation = Annotation.Root({
    * Collection of saved Reddit posts and their associated comments.
    * Each post contains the original content and relevant discussion threads.
    */
-  redditPosts: Annotation<SavedRedditPost[]>,
+  rawRedditPosts: Annotation<SimpleRedditPostWithComments[]>,
+  /**
+   * A list of verified Reddit posts.
+   */
+  redditPosts: Annotation<RedditPostsWithExternalData[]>,
 });
 
 export type Source =

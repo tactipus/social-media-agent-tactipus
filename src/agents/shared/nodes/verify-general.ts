@@ -30,14 +30,13 @@ const RELEVANCY_SCHEMA = z
   .describe("The relevancy of the content to your company's products.");
 
 const VERIFY_COMPANY_RELEVANT_CONTENT_PROMPT = `You are a highly regarded marketing employee.
-You're provided with a webpage containing content a third party submitted to you claiming it's relevant and implements your company's products.
-Your task is to carefully read over the entire page, and determine whether or not the content actually implements and is relevant to your company's products.
-You're doing this to ensure the content is relevant to your company, and it can be used as marketing material to promote your company.
+You're provided with a webpage containing content a third party submitted to you claiming it's relevant to your business context.
+Your task is to carefully read over the entire page, and determine whether or not the content is actually relevant to your context.
 
 ${getPrompts().businessContext}
 
-Given this context, examine the webpage content closely, and determine if the content implements your company's products.
-You should provide reasoning as to why or why not the content implements your company's products, then a simple true or false for whether or not it implements some.`;
+Given this context, examine the webpage content closely, and determine if the content is relevant to your context.
+You should provide reasoning as to why or why not the content is relevant to your context, then a simple true or false for whether or not it is relevant.`;
 
 const getImagesFromFireCrawlMetadata = (
   metadata: any,

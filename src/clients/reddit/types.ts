@@ -174,3 +174,8 @@ export interface SimpleRedditComment {
   created_utc: number;
   replies?: SimpleRedditComment[];
 }
+
+export type SimpleRedditPostWithComments = {
+  post: SimpleRedditPost;
+  comments: SimpleRedditComment[];
+};

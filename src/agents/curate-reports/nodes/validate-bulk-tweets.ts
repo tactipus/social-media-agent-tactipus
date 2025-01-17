@@ -149,7 +149,7 @@ export async function validateBulkTweets(
   }).withStructuredOutput(answerSchema, { name: "answer" });
 
   // Chunk the tweets into groups of 25
-  const chunkedTweets = chunkArray(state.tweets, 25);
+  const chunkedTweets = chunkArray(state.rawTweets, 25);
   const allRelevantTweets: TweetV2[] = [];
 
   for (const chunk of chunkedTweets) {
