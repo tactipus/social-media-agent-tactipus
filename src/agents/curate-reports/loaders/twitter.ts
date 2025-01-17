@@ -2,7 +2,7 @@ import { TweetV2ListTweetsPaginator } from "twitter-api-v2";
 import { TwitterClient } from "../../../clients/twitter/client.js";
 import { SavedTweet } from "../types.js";
 import { createdAtAfter } from "../utils/created-at-after.js";
-import { getTweetLink } from "../utils/get-tweet-link.js";
+import { getTweetLink } from "../../../clients/twitter/utils.js";
 
 const LIST_ID = "1585430245762441216";
 
@@ -19,8 +19,7 @@ async function fetchListTweetsWrapper(
 ): Promise<TweetV2ListTweetsPaginator | undefined> {
   try {
     return await client.getListTweets(LIST_ID, {
-      // maxResults: 100,
-      maxResults: 10,
+      maxResults: 100,
       paginationToken,
     });
   } catch (error) {
@@ -36,8 +35,7 @@ export async function twitterLoader(): Promise<SavedTweet[]> {
   let paginationToken: string | undefined;
   let allTweets: SavedTweet[] = [];
   let requestCount = 0;
-  // const maxRequests = 5;
-  const maxRequests = 1;
+  const maxRequests = 5;
 
   // Calculate 24 hours ago once, using the provided current time
   const oneDayAgo = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
@@ -45,16 +43,11 @@ export async function twitterLoader(): Promise<SavedTweet[]> {
 
   while (requestCount < maxRequests) {
     requestCount += 1;
-    console.log("requestCount", requestCount);
 
     const tweets = await fetchListTweetsWrapper(client, paginationToken);
     if (tweets === undefined || !tweets?.data?.data?.length) {
       // No more tweets to fetch
       break;
-    }
-    if (!allTweets.length) {
-      console.log("got tweets");
-      console.dir(tweets, { depth: null });
     }
 
     const filteredTweets: SavedTweet[] = tweets?.data.data

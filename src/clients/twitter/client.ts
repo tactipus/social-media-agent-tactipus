@@ -1,6 +1,7 @@
 import Arcade from "@arcadeai/arcadejs";
 import { CreateTweetRequest, TwitterClientArgs } from "./types.js";
 import {
+  TweetV2,
   Tweetv2FieldsParams,
   TweetV2ListTweetsPaginator,
   TweetV2PaginableListParams,
@@ -9,6 +10,8 @@ import {
   TwitterApiReadWrite,
 } from "twitter-api-v2";
 import { AuthorizeUserResponse } from "../types.js";
+import { SavedTweet } from "../../agents/curate-reports/types.js";
+import { isTweetSelfReply, tweetV2ToSavedTweet } from "./utils.js";
 
 type MediaIdStringArray =
   | [string]
@@ -499,5 +502,87 @@ export class TwitterClient {
     });
 
     return listTweets;
+  }
+
+  /**
+   * Retrieves all tweets in a thread starting from a given tweet ID.
+   * A thread is defined as a series of tweets where the author replies to their own tweets.
+   *
+   * @param {string} tweetId - The ID of the initial tweet in the thread
+   * @param {string} authorId - The ID of the author who created the thread
+   * @returns {Promise<TweetV2[] | undefined>} An array of tweets in chronological order if a thread exists,
+   *                                          undefined if the tweet is not part of a thread
+   */
+  async getThreadFromId<TweetType extends TweetV2 | SavedTweet>(
+    initialTweet: TweetType,
+  ): Promise<TweetType[] | undefined> {
+    const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
+      "tweet.fields": [
+        "note_tweet",
+        "created_at",
+        "id",
+        "author_id",
+        "in_reply_to_user_id",
+        "referenced_tweets",
+      ],
+    };
+
+    const thread: TweetType[] = [initialTweet];
+
+    let authorId = "author_id" in initialTweet ? initialTweet.author_id : "";
+    try {
+      if (!authorId && "link" in initialTweet && initialTweet.link) {
+        const url = new URL(initialTweet.link);
+        const path = url.pathname.split("/");
+        authorId = path[1]; // the second path segment is the author ID. /status/author_id/
+      }
+    } catch (e) {
+      throw new Error(
+        "Failed to get tweet author from input:" +
+          JSON.stringify(initialTweet) +
+          e,
+      );
+    }
+    if (!authorId) {
+      throw new Error(
+        "Failed to get tweet author from input:" + JSON.stringify(initialTweet),
+      );
+    }
+
+    // Search for replies by the same author
+    const replies = await this.twitterClient.v2.search(
+      `conversation_id:${initialTweet.id} from:${authorId}`,
+      {
+        ...fetchTweetOptions,
+        max_results: 15, // Limit to 15 replies as most threads will not be longer than this.
+      },
+    );
+
+    if (!replies.data) return thread;
+    // Filter replies to only include those that form a thread (author replying to themselves)
+    const threadReplies = replies.data.data.filter((tweet) =>
+      isTweetSelfReply(tweet, authorId),
+    );
+
+    if (threadReplies.length === 0) return undefined;
+
+    const formattedThreads: TweetType[] = threadReplies
+      .sort((a, b) => {
+        return (
+          new Date(a.created_at!).getTime() - new Date(b.created_at!).getTime()
+        );
+      })
+      .map((t) => {
+        // createdAt is only in SavedTweet and not TweetV2
+        if ("createdAt" in initialTweet) {
+          return tweetV2ToSavedTweet(t) as TweetType;
+        }
+        return t as TweetType;
+      });
+
+    // Sort replies by creation date to maintain thread order
+    thread.push(...formattedThreads);
+
+    return thread;
   }
 }

@@ -5,7 +5,8 @@
     "generate_post": "./src/agents/generate-post/generate-post-graph.ts:generatePostGraph",
     "upload_post": "./src/agents/upload-post/index.ts:uploadPostGraph",
     "reflection": "./src/agents/reflection/index.ts:reflectionGraph",
-    "generate_thread": "./src/agents/generate-thread/index.ts"
+    "generate_thread": "./src/agents/generate-thread/index.ts:generateThreadGraph",
+    "curate_reports": "src/agents/curate-reports/index.ts:curateReportsGraph"
   },
   "env": ".env",
   "dependencies": ["."],

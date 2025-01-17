@@ -1,7 +1,7 @@
 import { END, START, StateGraph } from "@langchain/langgraph";
 import { CurateReportsAnnotation } from "./state.js";
 import { ingestData } from "./nodes/ingest-data.js";
-import { classifyContent } from "./nodes/classify-content.js";
+import { classifyContent } from "./nodes/classify-social-posts.js";
 
 const curateReportsWorkflow = new StateGraph(CurateReportsAnnotation)
   .addNode("ingestData", ingestData)
