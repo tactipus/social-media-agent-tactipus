@@ -2,6 +2,8 @@ import * as fs from "fs/promises";
 import { describe, it, expect } from "@jest/globals";
 import { TwitterClient } from "../client.js";
 import { imageUrlToBuffer } from "../../../agents/utils.js";
+import { TweetV2 } from "twitter-api-v2";
+import { getThreadTweets } from "../utils.js";
 
 const tweetId = "1864386797788385455";
 // const tweetWithMediaId = "1846215982765035677";
@@ -16,18 +18,14 @@ describe("Basic Twitter Auth", () => {
   });
 
   it("Can read a tweet from ID", async () => {
-    const tweet = await client.getTweet(tweetId, {
-      includeMedia: false,
-    });
+    const tweet = await client.getTweet(tweetId);
     expect(tweet).toBeDefined();
     console.log("Tweet\n");
-    console.dir(tweet, { depth: null });
+    console.dir(tweet.data, { depth: null });
   });
 
   it("Can read a tweet from ID and get media", async () => {
-    const tweet = await client.getTweet(tweetWithMediaId, {
-      includeMedia: true,
-    });
+    const tweet = await client.getTweet(tweetWithMediaId);
     console.dir(tweet, { depth: null });
     expect(tweet).toBeDefined();
     // Check the full length Tweet is returned
@@ -70,19 +68,22 @@ describe("Basic Twitter Auth", () => {
   });
 
   it.only("Can fetch a thread using the original tweet", async () => {
-    // const baseThreadTweet: TweetV2 = {
-    //   id: "1880269659070689496",
-    //   link: "https://twitter.com/3448284313/status/1880269659070689496",
-    //   createdAt: "2025-01-17T15:03:15.000Z",
-    //   fullText:
-    //     "Lots of devs sharing how to code with AI and agents.\n\nUse cases range from basic code optimization to test-driven development. \n\nHere are a few interesting resources:\n\n(bookmark for later)",
-    //   mediaKeys: [],
-    //   references: undefined,
-    // };
-    // const thread = await client.getThreadFromId(baseThreadTweet);
-    // // console.log("thread", thread?.length);
-    // // console.dir(thread, { depth: null });
-    // expect(thread).toBeDefined();
-    // expect(thread?.length).toBe(9);
+    const baseThreadTweet: TweetV2 = {
+      created_at: "2025-01-17T15:03:15.000Z",
+      edit_history_tweet_ids: ["1880269659070689496"],
+      text: "Lots of devs sharing how to code with AI and agents.\n\nUse cases range from basic code optimization to test-driven development. \n\nHere are a few interesting resources:\n\n(bookmark for later)",
+      author_id: "3448284313",
+      id: "1880269659070689496",
+    };
+    const thread = await client.getThreadFromId(baseThreadTweet);
+    console.log("thread", thread?.length);
+    console.dir(thread, { depth: null });
+    expect(thread).toBeDefined();
+    expect(thread?.length).toBe(9);
+    const validatedThread = getThreadTweets(baseThreadTweet, thread);
+    console.log("validatedThread", validatedThread?.length);
+    console.dir(validatedThread, { depth: null });
+    expect(validatedThread).toBeDefined();
+    expect(validatedThread?.length).toBe(9);
   });
 });

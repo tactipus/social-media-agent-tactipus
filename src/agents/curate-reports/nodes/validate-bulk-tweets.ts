@@ -89,13 +89,12 @@ Use the following examples to guide your analysis:
 ${EXAMPLES}
 </analysis-examples>
 
-
 Here are the tweets to analyze:
 <tweets>
 {TWEETS}
 </tweets>
 
-Use a scratchpad to analyze each tweet. In your scratchpad, briefly explain why each tweet is relevant or not relevant based on the rules provided. Then, create a list of the index numbers for the relevant tweets.
+Use a scratchpad to analyze each tweet independently. In your scratchpad, briefly explain why each tweet is relevant or not relevant based on the rules provided. Then, create a list of the index numbers for the relevant tweets.
 Remember, we only want the highest quality AI tweets, so you should lean towards NOT including a tweet unless it is clearly highly relevant, and would be useful when writing educational content about AI.
 
 <scratchpad>
@@ -103,6 +102,8 @@ Remember, we only want the highest quality AI tweets, so you should lean towards
 </scratchpad>
 
 After your analysis, provide your final answer to the 'answer' tool.
+Remember, there will be times when all of the tweets are NOT relevant. In this case, do not be worried and simply answer with an empty array.
+I won't be upset with you if you don't find any relevant tweets, however I WILL be upset if you mark tweets as relevant which are NOT actually relevant.
 
 Begin!`;
 
@@ -152,6 +153,7 @@ export async function validateBulkTweets(
   const allRelevantTweets: TweetV2[] = [];
 
   for (const chunk of chunkedTweets) {
+    console.log(`Validating ${chunk.length} tweets...`);
     const formattedPrompt = VALIDATE_BULK_TWEETS_PROMPT.replace(
       "{TWEETS}",
       formatTweets(chunk),
@@ -161,6 +163,14 @@ export async function validateBulkTweets(
 
     const answerSet = new Set(answer);
     const relevantTweets = chunk.filter((_, index) => answerSet.has(index));
+    if (relevantTweets.length !== answer.length) {
+      console.warn(
+        `Expected ${answer.length} relevant tweets, but found ${relevantTweets.length}`,
+      );
+    }
+    console.log(
+      `Finished validating tweets. ${relevantTweets.length}/${chunk.length} are relevant.`,
+    );
     allRelevantTweets.push(...relevantTweets);
   }
 

@@ -456,6 +456,7 @@ export function removeQueryParams(url: string): string {
  * @template T - The type of elements in the array
  */
 export function chunkArray<T>(arr: T[], size: number): T[][] {
+  if (!arr.length) return [];
   return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
     arr.slice(i * size, i * size + size),
   );
