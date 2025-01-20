@@ -1,5 +1,5 @@
 import { END, Send, START, StateGraph } from "@langchain/langgraph";
-import { CurateReportsAnnotation, CurateReportsState } from "./state.js";
+import { CurateDataAnnotation, CurateDataState } from "./state.js";
 import { ingestData } from "./nodes/ingest-data.js";
 import { verifyGitHubWrapper } from "./nodes/verify-github-wrapper.js";
 import { verifyRedditWrapper } from "./nodes/verify-reddit-wrapper.js";
@@ -7,8 +7,9 @@ import { verifyGeneralContent } from "../shared/nodes/verify-general.js";
 import { VerifyContentAnnotation } from "../shared/shared-state.js";
 import { validateBulkTweets } from "./nodes/validate-bulk-tweets.js";
 import { generateReports } from "./nodes/generate-reports.js";
+import { groupTweetsByContent } from "./nodes/group-tweets-by-content.js";
 
-function verifyContentWrapper(state: CurateReportsState): Send[] {
+function verifyContentWrapper(state: CurateDataState): Send[] {
   const latentSpaceSends = state.latentSpacePosts.map((post) => {
     return new Send("verifyGeneralContent", {
       link: post,
@@ -42,7 +43,7 @@ function verifyContentWrapper(state: CurateReportsState): Send[] {
   return [...latentSpaceSends, ...githubSends, ...redditSends, ...twitterSends];
 }
 
-const curateReportsWorkflow = new StateGraph(CurateReportsAnnotation)
+const curateDataWorkflow = new StateGraph(CurateDataAnnotation)
   .addNode("ingestData", ingestData)
   .addNode("verifyGitHubContent", verifyGitHubWrapper)
   .addNode("verifyRedditPost", verifyRedditWrapper)
@@ -50,6 +51,7 @@ const curateReportsWorkflow = new StateGraph(CurateReportsAnnotation)
     input: VerifyContentAnnotation,
   })
   .addNode("verifyBulkTweets", validateBulkTweets)
+  .addNode("groupTweetsByContent", groupTweetsByContent)
 
   .addNode("generateReports", generateReports)
   .addEdge(START, "ingestData")
@@ -62,10 +64,11 @@ const curateReportsWorkflow = new StateGraph(CurateReportsAnnotation)
   .addEdge("verifyGeneralContent", "generateReports")
   .addEdge("verifyGitHubContent", "generateReports")
   .addEdge("verifyRedditPost", "generateReports")
-  .addEdge("verifyBulkTweets", "generateReports")
+  .addEdge("verifyBulkTweets", "groupTweetsByContent")
+  .addEdge("groupTweetsByContent", "generateReports")
 
   // TODO: Will need to add a node & edge for routing to generate tweet/thread graphs
   .addEdge("generateReports", END);
 
-export const curateReportsGraph = curateReportsWorkflow.compile();
-curateReportsGraph.name = "Curate Reports Graph";
+export const curateDataGraph = curateDataWorkflow.compile();
+curateDataGraph.name = "Curate Data Graph";

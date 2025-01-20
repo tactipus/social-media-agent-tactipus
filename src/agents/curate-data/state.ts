@@ -1,10 +1,14 @@
 import { Annotation } from "@langchain/langgraph";
-import { GitHubTrendingData, PageContentData } from "./types.js";
+import {
+  GitHubTrendingData,
+  PageContentData,
+  TweetsGroupedByContent,
+} from "./types.js";
 import { TweetV2 } from "twitter-api-v2";
 import { SimpleRedditPostWithComments } from "../../clients/reddit/types.js";
 import { RedditPostsWithExternalData } from "../verify-reddit-post/types.js";
 
-export const CurateReportsAnnotation = Annotation.Root({
+export const CurateDataAnnotation = Annotation.Root({
   /**
    * Array of page content data scraped from various sources.
    * This data serves as the raw input for generating reports.
@@ -19,12 +23,21 @@ export const CurateReportsAnnotation = Annotation.Root({
    * Each report contains processed and summarized information from various sources.
    */
   reports: Annotation<Report[]>,
+
   /**
    * Collection of saved tweets from a Twitter list.
    * Each tweet contains metadata like ID, creation time, text content, and media references.
    */
   rawTweets: Annotation<TweetV2[]>,
-
+  /**
+   * A list of validated tweets.
+   */
+  validatedTweets: Annotation<TweetV2[]>,
+  /**
+   * Tweets which have been grouped by their external URLs.
+   * Each group contains a list of tweets which reference the same external URL.
+   */
+  tweetsGroupedByContent: Annotation<TweetsGroupedByContent[]>,
   /**
    * List of trending GitHub repository names/paths.
    */
@@ -61,13 +74,13 @@ export type Source =
   | "ai_news"
   | "reddit";
 
-export const CurateReportsConfigurableAnnotation = Annotation.Root({
+export const CurateDataConfigurableAnnotation = Annotation.Root({
   /**
    * The sources to ingest from.
    */
   sources: Annotation<Source[]>,
 });
 
-export type CurateReportsState = typeof CurateReportsAnnotation.State;
-export type CurateReportsConfigurable =
-  typeof CurateReportsConfigurableAnnotation.State;
+export type CurateDataState = typeof CurateDataAnnotation.State;
+export type CurateDataConfigurable =
+  typeof CurateDataConfigurableAnnotation.State;

@@ -1,5 +1,5 @@
 import { ChatAnthropic } from "@langchain/anthropic";
-import { CurateReportsState } from "../state.js";
+import { CurateDataState } from "../state.js";
 import { z } from "zod";
 import { chunkArray } from "../../utils.js";
 import { TweetV2 } from "twitter-api-v2";
@@ -136,13 +136,13 @@ function formatTweets(tweets: TweetV2[]): string {
  * - Information about AI products, tools, or services
  * - References to AI-related blog posts, videos, or other content
  *
- * @param {CurateReportsState} state - The current state containing tweets to be validated
- * @returns {Promise<Partial<CurateReportsState>>} A promise that resolves to an updated state
+ * @param {CurateDataState} state - The current state containing tweets to be validated
+ * @returns {Promise<Partial<CurateDataState>>} A promise that resolves to an updated state
  *                                                 containing only the relevant tweets
  */
 export async function validateBulkTweets(
-  state: CurateReportsState,
-): Promise<Partial<CurateReportsState>> {
+  state: CurateDataState,
+): Promise<Partial<CurateDataState>> {
   const model = new ChatAnthropic({
     model: "claude-3-5-sonnet-latest",
     temperature: 0,
@@ -175,6 +175,6 @@ export async function validateBulkTweets(
   }
 
   return {
-    tweets: allRelevantTweets,
+    validatedTweets: allRelevantTweets,
   };
 }

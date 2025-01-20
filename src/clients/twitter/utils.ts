@@ -1,6 +1,6 @@
 import { TweetV2 } from "twitter-api-v2";
 import { extractUrls } from "../../agents/utils.js";
-import { TweetV2WithURLs } from "../../agents/curate-reports/types.js";
+import { TweetV2WithURLs } from "../../agents/curate-data/types.js";
 
 /**
  * Generates a link to a tweet based on its author ID and tweet ID.

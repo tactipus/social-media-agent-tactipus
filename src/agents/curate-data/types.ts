@@ -44,3 +44,8 @@ export type GitHubTrendingData = {
   repoURL: string;
   pageContent: string;
 };
+
+export type TweetsGroupedByContent = {
+  explanation: string;
+  tweets: TweetV2WithURLs[];
+};

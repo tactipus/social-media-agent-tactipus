@@ -1,12 +1,12 @@
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
-import { CurateReportsState } from "../state.js";
+import { CurateDataState } from "../state.js";
 import { GitHubTrendingData } from "../types.js";
 import { verifyGitHubContent } from "../../shared/nodes/verify-github.js";
 
 export async function verifyGitHubWrapper(
-  state: CurateReportsState,
+  state: CurateDataState,
   config: LangGraphRunnableConfig,
-): Promise<Partial<CurateReportsState>> {
+): Promise<Partial<CurateDataState>> {
   const verifiedRepoData: GitHubTrendingData[] = [];
 
   // Iterate over each raw GitHub repo & verify + extract page contents

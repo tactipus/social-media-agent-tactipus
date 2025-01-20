@@ -481,3 +481,7 @@ export function shouldPostToLinkedInOrg(
       : process.env.POST_TO_LINKEDIN_ORGANIZATION === "true";
   return postToOrg;
 }
+
+export async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

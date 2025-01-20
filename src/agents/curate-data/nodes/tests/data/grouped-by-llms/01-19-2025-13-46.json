@@ -1,0 +1,1819 @@
+[
+  {
+    "explanation": "Discussions about AI singularity, large-scale transformations, and the idea of AI outgrowing human development or surpassing humans",
+    "tweets": [
+      {
+        "text": "Operational definition of singularity: we are not truly done until transformers start to research the next transformer. A less fancy term is AutoML, a decades-old CS topic. Singularity is AutoML at the extreme. AutoML is trading capital for higher intelligence without human… https://t.co/cRWFme5n7A",
+        "author_id": "1007413134",
+        "edit_history_tweet_ids": ["1881081662106411138"],
+        "created_at": "2025-01-19T20:49:51.000Z",
+        "id": "1881081662106411138",
+        "note_tweet": {
+          "text": "Operational definition of singularity: we are not truly done until transformers start to research the next transformer. A less fancy term is AutoML, a decades-old CS topic. Singularity is AutoML at the extreme. AutoML is trading capital for higher intelligence without human babysitting.\n\nConcretely, the model needs to read research papers, collect and curate data, manage a GPU cluster, monitor the training jobs, and select its own offsprings from silicon. Perhaps they can even peer review each other in an AI-led virtual conference.\n\nI don’t think we are very far away from this."
+        },
+        "external_urls": []
+      },
+      {
+        "text": "a coming fragment of the singularity im predicting is AI rewriting all software libraries, languages and hardware subunits; blasting away the engineering and technical debt of civilization. I call it ~ the great refactoring ~ goodbye javascript, welcome back ternary processors! https://t.co/0NHBncyLpn",
+        "author_id": "535358285",
+        "edit_history_tweet_ids": ["1881068653753598075"],
+        "created_at": "2025-01-19T19:58:10.000Z",
+        "id": "1881068653753598075",
+        "note_tweet": {
+          "text": "a coming fragment of the singularity im predicting is AI rewriting all software libraries, languages and hardware subunits; blasting away the engineering and technical debt of civilization. I call it ~ the great refactoring ~ goodbye javascript, welcome back ternary processors!"
+        },
+        "external_urls": []
+      },
+      {
+        "text": "It can be hard to “feel the AGI” until you see an AI surpass top humans in a domain you care deeply about. Competitive coders will feel it within a couple years. Paul is early but I think writers will feel it too. Everyone will have their Lee Sedol moment at a different time. https://t.co/Sfi1IZOGSd",
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880922831418183753"
+          }
+        ],
+        "author_id": "825088493764407298",
+        "edit_history_tweet_ids": [
+          "1881036362817880312",
+          "1881039073558806617"
+        ],
+        "created_at": "2025-01-19T18:00:37.000Z",
+        "id": "1881039073558806617",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "References to MLX-based libraries, tools, or training workflows, including TTS or local LLM training",
+    "tweets": [
+      {
+        "text": "RT @lazarustda: I've started working on a library that wraps MLX to let you use Neural Networks with a scikit-learn compatible API!!   \n\nGi…",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1881069304298479709"
+          }
+        ],
+        "author_id": "245262377",
+        "edit_history_tweet_ids": ["1881081833024262516"],
+        "created_at": "2025-01-19T20:50:32.000Z",
+        "id": "1881081833024262516",
+        "external_urls": []
+      },
+      {
+        "text": "A short guide to narrating text in any custom voice running locally with f5-tts-mlx: https://t.co/LwH7uJIF9O",
+        "author_id": "245262377",
+        "edit_history_tweet_ids": ["1881066021907570886"],
+        "created_at": "2025-01-19T19:47:42.000Z",
+        "attachments": {
+          "media_keys": ["3_1881066016362635264"]
+        },
+        "id": "1881066021907570886",
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880878605846081972"
+          }
+        ],
+        "created_at": "2025-01-19T14:10:40.000Z",
+        "id": "1880981204511625306",
+        "text": "RT @ivanfioravanti: A simple MLX implementation for pretraining LLMs on Apple Silicon. This shows the power and hackability of this amazing…",
+        "author_id": "245262377",
+        "edit_history_tweet_ids": ["1880981204511625306"],
+        "external_urls": []
+      },
+      {
+        "text": "RT @rudrankriyam: A small reasoning model running locally on the iPhone using MLX Swift https://t.co/P7zscTeBVD",
+        "id": "1880824925399003287",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880811989938974895"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880824925399003287"],
+        "created_at": "2025-01-19T03:49:40.000Z",
+        "attachments": {
+          "media_keys": ["7_1880811617723772928"]
+        },
+        "author_id": "245262377",
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880751637490172002"
+          }
+        ],
+        "created_at": "2025-01-18T23:08:42.000Z",
+        "text": "RT @Prince_Canuma: mlx-vlm v0.1.11 is here 🎉\n\nChanges: \n- Chat in CLI h/t to Chigkim \n- Fix trainer, Qwen2-VL and DS-VL2\n- Pin latest MLX…",
+        "id": "1880754215423017227",
+        "author_id": "245262377",
+        "edit_history_tweet_ids": ["1880754215423017227"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "LangChain tutorials and RAG-focused chatbot or search solutions",
+    "tweets": [
+      {
+        "text": "RT @MervinPraison: OceanBase + Dify + Ollama: \nCreate Private Chatbot with YOUR Custom Data (RAG)\n\n🔄 Handles SQL and Vector Data @OceanBase…",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880242548779753933"
+          }
+        ],
+        "author_id": "1688410127378829312",
+        "edit_history_tweet_ids": ["1881076778938282423"],
+        "created_at": "2025-01-19T20:30:27.000Z",
+        "id": "1881076778938282423",
+        "external_urls": []
+      },
+      {
+        "text": "🤖 Desktop AI Assistant Tutorial\n\nBuild a desktop AI assistant that combines Mistral AI's powerful LLM with LangChain to create an intelligent chatbot interface. Perfect for journalists and easily adaptable for various use cases.\n\nLearn more: https://t.co/tATd4VNJfD https://t.co/rRd8ergsvU",
+        "author_id": "1589007443853340672",
+        "edit_history_tweet_ids": ["1881069119526633762"],
+        "created_at": "2025-01-19T20:00:01.000Z",
+        "attachments": {
+          "media_keys": ["3_1881069116565442560"]
+        },
+        "id": "1881069119526633762",
+        "external_urls": []
+      },
+      {
+        "text": "🔍🤖 Hybrid Search with LangChain-Milvus\n\nMilvus integration now combines AI-powered semantic and keyword search capabilities in one solution, delivering more accurate and flexible search results across your data.\n\nLearn more about hybrid search: https://t.co/dzK3U01Aiy https://t.co/Px090NDWiE",
+        "author_id": "1589007443853340672",
+        "edit_history_tweet_ids": ["1881054019583361405"],
+        "created_at": "2025-01-19T19:00:01.000Z",
+        "attachments": {
+          "media_keys": ["3_1881054016722849792"]
+        },
+        "id": "1881054019583361405",
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["3_1881008724078133248"]
+        },
+        "created_at": "2025-01-19T16:00:02.000Z",
+        "id": "1881008727018397946",
+        "text": "🏦🤖 Demo Bank: AI Customer Support\n\nAn open-source banking support chatbot using RAG and LangChain to deliver reliable customer service. Built for production with FastAPI/React, comprehensive testing, and advanced tracing capabilities.\n\nLearn more: https://t.co/yk927cnBmg https://t.co/oNtHZTmSTo",
+        "author_id": "1589007443853340672",
+        "edit_history_tweet_ids": ["1881008727018397946"],
+        "external_urls": []
+      },
+      {
+        "note_tweet": {
+          "text": "📚🤖 Complete LangChain Course\n\nA practical guide for building AI applications with LangChain. This repository teaches you essential concepts featuring ChatModels, RAG, and intelligent agents - everything you need to create sophisticated LLM-powered solutions.\n\nLearn more: https://t.co/Kmovo8b7xz",
+          "entities": {
+            "urls": [
+              {
+                "start": 272,
+                "end": 295,
+                "url": "https://t.co/Kmovo8b7xz",
+                "expanded_url": "https://github.com/MuhammadAhsaanAbbasi/generative-ai/tree/main",
+                "display_url": "github.com/MuhammadAhsaan…"
+              }
+            ]
+          }
+        },
+        "created_at": "2025-01-18T22:00:02.000Z",
+        "text": "📚🤖 Complete LangChain Course\n\nA practical guide for building AI applications with LangChain. This repository teaches you essential concepts featuring ChatModels, RAG, and intelligent agents - everything you need to create sophisticated LLM-powered solutions.\n\nLearn more:… https://t.co/ZXSYRARuCs https://t.co/8hdlUZLWU3",
+        "id": "1880736933762027540",
+        "author_id": "1589007443853340672",
+        "attachments": {
+          "media_keys": ["3_1880736931257999360"]
+        },
+        "edit_history_tweet_ids": ["1880736933762027540"],
+        "external_urls": []
+      },
+      {
+        "created_at": "2025-01-18T21:00:01.000Z",
+        "text": "🤖 Trustworthy LLM Integration\n\nCleanlab's TLM integrates with LangChain to detect hallucinations and score trustworthiness in real-time. Enhance your AI applications with detailed insights on potentially incorrect LLM responses.\n\nLearn more: https://t.co/DkV0dDAzzW https://t.co/2P9zQ76KHQ",
+        "id": "1880721830836686869",
+        "author_id": "1589007443853340672",
+        "attachments": {
+          "media_keys": ["3_1880721827758026752"]
+        },
+        "edit_history_tweet_ids": ["1880721830836686869"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Using LangGraph or multi-agent orchestration in AI applications",
+    "tweets": [
+      {
+        "text": "RT @threepointone: langgraph ⨉ durable objects \n\ntl;dr - I got langgraph's multi-agent example working inside a durable object. \n\n- used no…",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880767921711993021"
+          }
+        ],
+        "author_id": "2728439146",
+        "edit_history_tweet_ids": ["1881054290455982494"],
+        "created_at": "2025-01-19T19:01:05.000Z",
+        "id": "1881054290455982494",
+        "external_urls": []
+      },
+      {
+        "text": "🤖 💻 AI Coding Assistant\n\nMeet an open-source development tool that uses LangGraph agents to supercharge your coding workflow. This intelligent assistant helps developers write better code through natural language AI interactions.\n\nLearn more: https://t.co/vDb3yKX44r https://t.co/GaJ8GL3Qti",
+        "author_id": "1589007443853340672",
+        "edit_history_tweet_ids": ["1881038918717477169"],
+        "created_at": "2025-01-19T18:00:00.000Z",
+        "attachments": {
+          "media_keys": ["3_1881038916662222848"]
+        },
+        "id": "1881038918717477169",
+        "external_urls": []
+      },
+      {
+        "created_at": "2025-01-18T21:00:05.000Z",
+        "text": "🤖 Multi-Agent Orchestration Tutorial\n\nA guide showing how to build AI multi-agent systems with LangGraph. Create specialized agents for research, RAG &amp; NL2SQL tasks, coordinated by a supervisor agent to work together seamlessly.\n\nLearn more: https://t.co/FE0mu60gu8 https://t.co/uLVohH9trq",
+        "id": "1880721850503676149",
+        "author_id": "1589007443853340672",
+        "attachments": {
+          "media_keys": ["3_1880721848716898305"]
+        },
+        "edit_history_tweet_ids": ["1880721850503676149"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Code generation AI tools and model updates (SOTA code embeddings, coding AIs, GPT-based assistants)",
+    "tweets": [
+      {
+        "text": "RT @NielsRogge: Awesome release by @salesforce, SOTA code embedding models (something @Cursor uses too behind the scenes!), even outperform…",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1881052868989632868"
+          }
+        ],
+        "author_id": "2465283662",
+        "edit_history_tweet_ids": ["1881056488573313093"],
+        "created_at": "2025-01-19T19:09:49.000Z",
+        "id": "1881056488573313093",
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["7_1878949387034124288"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024786190463073"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:56.000Z",
+        "id": "1881024808609100106",
+        "text": "Mistral released Codestral 25.01, a 2x faster, lightweight coding AI that achieves high performance across 80+ programming languages\n\nIt supports tasks like code correction and test generation and is currently ranked #1 on the Copilot Arena leaderboard\nhttps://t.co/wpSAW3uazD",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024808609100106"],
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["3_1881023823408955392"]
+        },
+        "created_at": "2025-01-19T17:00:02.000Z",
+        "id": "1881023825933942886",
+        "text": "🤖 GPT Computer Assistant\n\nAn open-source AI framework that automates computer interactions across multiple platforms. GCA integrates with LLMs to transform repetitive tasks into verified, cross-platform workflows.\n\nLearn more: https://t.co/Y6uqjia1tJ https://t.co/UL4W9hd7o4",
+        "author_id": "1589007443853340672",
+        "edit_history_tweet_ids": ["1881023825933942886"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880383207310266470"
+          }
+        ],
+        "created_at": "2025-01-19T13:56:54.000Z",
+        "id": "1880977739437777381",
+        "text": "RT @SFResearch: 🚨🚨🚨Just released!🚨🚨🚨 \n\n🚀Introducing the Salesforce Code Embedding Model Family (SFR-Embedding-Code), ranked #1 on CoIR Benc…",
+        "author_id": "186420551",
+        "edit_history_tweet_ids": ["1880977739437777381"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Debates and perspectives on using LLMs for coding, addressing the critique that developers won't understand the generated code",
+    "tweets": [
+      {
+        "text": "this is like saying you should not program in python cause you don't see low-level assembly code and hence can't understand what is going on wrong\n\nbut python runtime takes care of this plus exposes good APIs to help you understand what might be going wrong\n\nsimilar thing with… https://t.co/UMRrLHaWzS",
+        "id": "1880842272151093470",
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880841572293734817"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880842272151093470"],
+        "note_tweet": {
+          "text": "this is like saying you should not program in python cause you don't see low-level assembly code and hence can't understand what is going on wrong\n\nbut python runtime takes care of this plus exposes good APIs to help you understand what might be going wrong\n\nsimilar thing with happen with LLMs"
+        },
+        "created_at": "2025-01-19T04:58:36.000Z",
+        "in_reply_to_user_id": "1513853205125681162",
+        "author_id": "1513853205125681162",
+        "external_urls": []
+      },
+      {
+        "text": "One criticism against programming with LLMs is that you don't understand the code you're generating\n\nso you'll take much much longer to fix that code plus as it grows large the speed of iteration will slow down\n\nthis is bs, cause \n\nA. the tools are evolving to help you… https://t.co/XISD96DFxU",
+        "id": "1880841572293734817",
+        "edit_history_tweet_ids": ["1880841572293734817"],
+        "note_tweet": {
+          "text": "One criticism against programming with LLMs is that you don't understand the code you're generating\n\nso you'll take much much longer to fix that code plus as it grows large the speed of iteration will slow down\n\nthis is bs, cause \n\nA. the tools are evolving to help you fix/understand code that you didn't write in first place.\n\nB. have you never tried to fix bugs in another repo or your peers code during oncalls??"
+        },
+        "created_at": "2025-01-19T04:55:49.000Z",
+        "author_id": "1513853205125681162",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Updates and observations on Claude's capability improvements and usefulness for scientific or writing tasks",
+    "tweets": [
+      {
+        "text": "Generally, this correlates to Claude improving at scientific understanding, combined with some quality of life features we've shipped for dealing with uploaded docs (e.g, pdfs). Claude increasingly feels like a knowledgable and patient colleague I can check my thinking with.",
+        "in_reply_to_user_id": "86351835",
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881044841335038083"
+          }
+        ],
+        "author_id": "86351835",
+        "edit_history_tweet_ids": ["1881045195397153052"],
+        "created_at": "2025-01-19T18:24:57.000Z",
+        "id": "1881045195397153052",
+        "external_urls": []
+      },
+      {
+        "text": "Subjective experience of AI progress: Claude has started to become useful for writing Import AI. Specifically, I now use Claude to double check my thinking on research papers (e.g., uploading the paper to Claude and bits of my analysis and asking if it seems correct).",
+        "author_id": "86351835",
+        "edit_history_tweet_ids": ["1881044841335038083"],
+        "created_at": "2025-01-19T18:23:32.000Z",
+        "id": "1881044841335038083",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Argil's AI model and Sora for generating video content, emphasizing cost-effectiveness and unlimited generation",
+    "tweets": [
+      {
+        "text": "What is remarkable about Argil is its cost-effectiveness. Compared to Sora, we are splitting the cost of batching dozens of videos by 10.\n\nA large model and a small model on video is the perfect combo! https://t.co/rNTUUFIBBN",
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1881039231432454310"
+          }
+        ],
+        "author_id": "1583730714",
+        "edit_history_tweet_ids": ["1881043808617656348"],
+        "created_at": "2025-01-19T18:19:26.000Z",
+        "id": "1881043808617656348",
+        "external_urls": []
+      },
+      {
+        "text": "This video is entirely generated 🤯\n\nI just spent the last hours to merge Argil's AI model and Sora from open AI, and the result is 💥\n\nThere is no limitation on the generation or control of the physical aspect. You can imagine running a 24-hour channel on any topic.\n\nThis is… https://t.co/GRtdkFK69x https://t.co/IvaD2mKPt9",
+        "author_id": "1583730714",
+        "edit_history_tweet_ids": ["1881039231432454310"],
+        "created_at": "2025-01-19T18:01:15.000Z",
+        "attachments": {
+          "media_keys": ["7_1881038261834895360"]
+        },
+        "id": "1881039231432454310",
+        "note_tweet": {
+          "text": "This video is entirely generated 🤯\n\nI just spent the last hours to merge Argil's AI model and Sora from open AI, and the result is 💥\n\nThere is no limitation on the generation or control of the physical aspect. You can imagine running a 24-hour channel on any topic.\n\nThis is limitless."
+        },
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Critique of people being upset about AI usage in movies, emphasizing that AI is just another filmmaking tool",
+    "tweets": [
+      {
+        "created_at": "2025-01-19T15:33:36.000Z",
+        "id": "1881002075758141580",
+        "text": "This bizarre thing happens to a small group of people when they hear AI was used in a movie: they forget how movies actually work. The Brutalist used some form of technology to help them tell a story you like. So what? Being mad because a movie used AI is like being mad because a… https://t.co/iUPbaKsakh",
+        "note_tweet": {
+          "text": "This bizarre thing happens to a small group of people when they hear AI was used in a movie: they forget how movies actually work. The Brutalist used some form of technology to help them tell a story you like. So what? Being mad because a movie used AI is like being mad because a movie used practical or digital effects. It's as if it somehow invalidates the entire creative process, as if the filmmakers just pressed a button and went home.\n\nThe reality of filmmaking is messier, harder, and more interesting than that. Movies are elaborate magic tricks, using whatever tools can help create the illusion. Digital effects, practical effects, now neural networks. They're all just different ways to make the audience believe in something that isn't there. The only difference now is that we're calling it AI instead of \"digital tools.\"\n\nIf you are mad because \"AI was used in a movie,\" you will get really mad when you learn about crowd simulation, background generation, automatic color grading, noise reduction, facial and body motion capture, and many other things that use scary AI to make all the things you love. Being angry about AI in films is like being angry about cameras having autofocus. It's missing the point of what makes movies work in the first place. Tools don't make movies. People do."
+        },
+        "author_id": "788107483306942464",
+        "edit_history_tweet_ids": ["1881002075758141580"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Importance of token accuracy over validation loss, and the mismatch between perplexity and accurate predictions",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881000620305621100"
+          }
+        ],
+        "created_at": "2025-01-19T15:28:57.000Z",
+        "id": "1881000904230617365",
+        "text": "Validation per token accuracy will continue to improve for many epochs after validation loss appears to be getting worse. That’s because the probability calibration gets worse, not because the predictions are worse.",
+        "author_id": "175282603",
+        "in_reply_to_user_id": "175282603",
+        "edit_history_tweet_ids": ["1881000904230617365"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881000354923544757"
+          }
+        ],
+        "created_at": "2025-01-19T15:27:49.000Z",
+        "id": "1881000620305621100",
+        "text": "Remember, loss is a differentiable *proxy* for what you actually care about. \n\nToken accuracy is much closer to what you should *actually* care about.",
+        "author_id": "175282603",
+        "in_reply_to_user_id": "175282603",
+        "edit_history_tweet_ids": ["1881000620305621100"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880320930855153969"
+          }
+        ],
+        "created_at": "2025-01-19T15:26:46.000Z",
+        "id": "1881000354923544757",
+        "text": "Folks seem to rediscover this every couple of years. \n\nAs I’ve been saying for many years, you have to track token accuracy, not loss/perplexity, otherwise you’ll wrongly think the validation loss going up is a bad thing. https://t.co/8QfSCVHFxx",
+        "author_id": "175282603",
+        "edit_history_tweet_ids": ["1881000354923544757"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Discussion of tokenizers, including BPE and tiktoken, and sharing a BPE tokenizer for LLM training",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880996263774286131"
+          }
+        ],
+        "created_at": "2025-01-19T15:14:29.000Z",
+        "id": "1880997261531906229",
+        "text": "Context: While my LLMs from Scratch book explains and uses BPE tokenizers, I opted to use the highly performant tiktoken library (which is used for GPT-4 and now also used for Llama 3 as well) for practical purposes: the book focuses on LLMs rather than tokenizer development.… https://t.co/jaXkDwmmNM",
+        "note_tweet": {
+          "text": "Context: While my LLMs from Scratch book explains and uses BPE tokenizers, I opted to use the highly performant tiktoken library (which is used for GPT-4 and now also used for Llama 3 as well) for practical purposes: the book focuses on LLMs rather than tokenizer development. However, one limitation of tiktoken (please correct me if I'm wrong) is that it doesn't support training a tokenizer on custom datasets, so if you want to support new languages or other special structures, you are kind of out of luck.\n\nThe blog post is a bit more unpolished than my usual ones, since I just dug it up from the archives of my computer. And it's for educational purposes only. But hopefully, it will make for a fun weekend project if you're interested in learning about and experimenting with tokenization."
+        },
+        "author_id": "865622395",
+        "in_reply_to_user_id": "865622395",
+        "edit_history_tweet_ids": ["1880997261531906229"],
+        "external_urls": []
+      },
+      {
+        "created_at": "2025-01-19T15:10:31.000Z",
+        "id": "1880996263774286131",
+        "text": "A reader recently shared a resource on training tokenizers for new languages which reminded me I originally wrote a BPE Tokenizer for my “LLMs from Scratch” book but never shared it!\n\nIf you are looking a weekend project, here you go: https://t.co/sDAjxSkUuf",
+        "author_id": "865622395",
+        "edit_history_tweet_ids": ["1880996263774286131"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Surveys, frameworks, and recent papers (spanning RAG, AutoCBT, Transformer², Minimax models, math reasoning, and more)",
+    "tweets": [
+      {
+        "text": "a great survey of modern recurrent models after Mamba https://t.co/H91qJp3iL8",
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880536012432265349"
+          }
+        ],
+        "author_id": "1076265378118959104",
+        "edit_history_tweet_ids": ["1881065378270630362"],
+        "created_at": "2025-01-19T19:45:09.000Z",
+        "id": "1881065378270630362",
+        "external_urls": []
+      },
+      {
+        "text": "RT @Hesamation: Hugging Face 🤗 has two very cool notebooks to get you started on SFT and DPO, \n&gt; they explain everything step-by-step\n&gt; sta…",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1881042758905029046"
+          }
+        ],
+        "author_id": "1029493180704714753",
+        "edit_history_tweet_ids": ["1881054155944665157"],
+        "created_at": "2025-01-19T19:00:33.000Z",
+        "id": "1881054155944665157",
+        "external_urls": []
+      },
+      {
+        "text": "🤖 From this week's issue: An in-depth blog post discussing paradigm shifts in evaluating LLM applications, including the need to benchmark differences and embrace human triage. https://t.co/Qk9l3dpZTn",
+        "author_id": "763368160527544320",
+        "edit_history_tweet_ids": ["1881054140773634258"],
+        "created_at": "2025-01-19T19:00:30.000Z",
+        "id": "1881054140773634258",
+        "external_urls": []
+      },
+      {
+        "text": "Humanity's Last Exam is being released this upcoming week, so we can test models' research-level STEM capabilities with that. https://t.co/32QQ4MtbeK",
+        "author_id": "68538286",
+        "edit_history_tweet_ids": ["1881045781354000604"],
+        "created_at": "2025-01-19T18:27:17.000Z",
+        "attachments": {
+          "media_keys": ["3_1881045668728545281"]
+        },
+        "id": "1881045781354000604",
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880829933259559002"
+          }
+        ],
+        "created_at": "2025-01-19T16:18:11.000Z",
+        "id": "1881013293067944311",
+        "text": "Our Co-founder @amiruci and Model Performance Engineer @zhyncs42 sat down with @latentspacepod to dive deep into DeepSeek-V3 and SGLang, model performance, scaling AI products, and more.\n\nListen to the full episode here 👇 https://t.co/QmFBJIXGyS",
+        "author_id": "1375579341178818561",
+        "edit_history_tweet_ids": ["1881013293067944311"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1879188983705747754"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986931095584949"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:26.000Z",
+        "id": "1880986933129818383",
+        "text": "10). ChemAgent - presents a new framework designed to improve the performance of LLMs on chemical reasoning through a dynamic, self-updating library...\n\nhttps://t.co/e8cIQdINI3",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986933129818383"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1879181711982129420"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986929170465163"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:26.000Z",
+        "id": "1880986931095584949",
+        "text": "9). Imagine while Reasoning in Space - introduces MVoT (Multimodal Visualization-of-Thought), a new reasoning framework that enables AI models to \"think\" in both text and image.\n\nhttps://t.co/EodmwWe2O9",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986931095584949"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880283025595867631"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986927085883794"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:25.000Z",
+        "id": "1880986929170465163",
+        "text": "8). AutoCBT - proposes a multi-agent framework, AutoCBT, for Cognitive Behavioral Therapy; the work proposes a general multi-agent framework that generates high-quality responses for single-turn psychological consultation scenarios...\n\nhttps://t.co/NYH0qumVOJ",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986929170465163"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1879178916021318029"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986924988637333"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:25.000Z",
+        "id": "1880986927085883794",
+        "text": "7). Enhancing RAG - systematically explores the factors and methods that improve RAG systems such as retrieval strategies, query expansion, contrastive in-context learning, prompt design, and chunking.\n\nhttps://t.co/5WHJn1AKMg",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986927085883794"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880275861401923619"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986923013124133"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:24.000Z",
+        "id": "1880986924988637333",
+        "text": "6). OmniThink - a new framework that emulates a human-like process of iterative expansion and reflection...\n\nhttps://t.co/MjbsLOWLpx",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986924988637333"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880284477445767586"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986920844664978"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:24.000Z",
+        "id": "1880986923013124133",
+        "text": "5). Foundations of LLMs - new survey on the foundations of LLMs covering areas such as pre-training, prompting, and alignment methods.\n\nhttps://t.co/eLs6BT3R9w",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986923013124133"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1879896681010921742"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986918810529944"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:23.000Z",
+        "id": "1880986920844664978",
+        "text": "4). Learning to Memorize at Test Time - introduces a neural long-term memory module to memorize historical context and help attention to attend to the current context while utilizing long past information.\n\nhttps://t.co/RmLITT5Nk2",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986920844664978"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1878827350315659421"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986916755210264"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:23.000Z",
+        "id": "1880986918810529944",
+        "text": "3). VideoRAG - a framework that enhances RAG by leveraging video content as an external knowledge source...\n\nhttps://t.co/bdUdabdXqf",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986918810529944"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1879572512075587872"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986914310042010"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:22.000Z",
+        "id": "1880986916755210264",
+        "text": "2). MiniMax-01 - introduces a new series of models that integrate Mixture-of-Experts; introduces a model with 32 experts and 456B parameters, and 45.9B are activated for each token...\n\nhttps://t.co/nDpIsuFvvt",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986916755210264"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1879331049383334187"
+          },
+          {
+            "type": "replied_to",
+            "id": "1880986912460300568"
+          }
+        ],
+        "created_at": "2025-01-19T14:33:22.000Z",
+        "id": "1880986914310042010",
+        "text": "1). Self-Adaptive LLMs - introduces Transformer^2, a novel self-adaptation framework that adapts LLMs for unseen tasks in real-time by selectively adjusting singular components of their weight matrices...\n\nhttps://t.co/yEh79xsVhH",
+        "author_id": "889050642903293953",
+        "in_reply_to_user_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986914310042010"],
+        "external_urls": []
+      },
+      {
+        "created_at": "2025-01-19T14:33:21.000Z",
+        "id": "1880986912460300568",
+        "text": "Here are the top AI Papers of the Week (Jan 13-19):  \n\n- VideoRAG\n- MiniMax-01\n- Enhancing RAG\n- Self-Adaptive LLMs\n- Foundations of LLMs\n- Learning to Memorize at Test Time\n\nRead on for more:",
+        "author_id": "889050642903293953",
+        "edit_history_tweet_ids": ["1880986912460300568"],
+        "external_urls": []
+      },
+      {
+        "text": "10 recent advancements in math reasoning: \n\n▪️ AceMath @nvidia\n▪️ Qwen2.5-Math-PRM and PROCESSBENCH evaluation from @Alibaba_Qwen\n▪️ rStar-Math @MSFTResearch\n▪️ BoostStep\n▪️ URSA\n▪️ U-MATH benchmark\n▪️ SVE-Math\n▪️ \"System-2 Mathematical Reasoning via Enriched Instruction Tuning… https://t.co/ugmAkaIBXj https://t.co/VpnE9vJawi",
+        "id": "1880942445485027486",
+        "note_tweet": {
+          "entities": {
+            "urls": [
+              {
+                "start": 497,
+                "end": 520,
+                "url": "https://t.co/5zb7NFyPgu",
+                "expanded_url": "https://huggingface.co/posts/Kseniase/758689622817591",
+                "display_url": "huggingface.co/posts/Kseniase…"
+              }
+            ],
+            "mentions": [
+              {
+                "start": 55,
+                "end": 62,
+                "username": "nvidia",
+                "id": "61559439"
+              },
+              {
+                "start": 116,
+                "end": 129,
+                "username": "Alibaba_Qwen",
+                "id": "1753339277386342400"
+              },
+              {
+                "start": 144,
+                "end": 157,
+                "username": "MSFTResearch",
+                "id": "21457289"
+              }
+            ]
+          },
+          "text": "10 recent advancements in math reasoning: \n\n▪️ AceMath @nvidia\n▪️ Qwen2.5-Math-PRM and PROCESSBENCH evaluation from @Alibaba_Qwen\n▪️ rStar-Math @MSFTResearch\n▪️ BoostStep\n▪️ URSA\n▪️ U-MATH benchmark\n▪️ SVE-Math\n▪️ \"System-2 Mathematical Reasoning via Enriched Instruction Tuning (EIT)\"\n▪️ \"End-to-End Bangla AI for Solving Math Olympiad Problem Benchmark\n▪️ \"Exploring LLM Low-Bit Quantization Degradation for Mathematical Reasoning\"\n\nSave the list and check this out for the links and more info: https://t.co/5zb7NFyPgu"
+        },
+        "edit_history_tweet_ids": ["1880942445485027486"],
+        "created_at": "2025-01-19T11:36:39.000Z",
+        "attachments": {
+          "media_keys": ["3_1880942436656009217", "3_1880942437561950208"]
+        },
+        "author_id": "1271482878958940160",
+        "external_urls": []
+      },
+      {
+        "text": "RT @TheTuringPost: A new MiniMax-01 series of models from @MiniMax__AI combines high performance and handles extremely long contexts.\n\n- It…",
+        "id": "1880934179833307540",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1879696157452144836"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880934179833307540"],
+        "created_at": "2025-01-19T11:03:49.000Z",
+        "author_id": "1271482878958940160",
+        "external_urls": []
+      },
+      {
+        "text": "RT @latentspacepod: 🆕: Everything you need to run Mission Critical Inference (ft. DeepSeek v3 + SGLang)\n\nhttps://t.co/N67XXjHsHB\n\nWe chat w…",
+        "id": "1880830185584635911",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880829933259559002"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880830185584635911"],
+        "created_at": "2025-01-19T04:10:35.000Z",
+        "author_id": "33521530",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "A cluster of announcements about new AI or robotics models/tools from various institutions (Minimax, Neura, Sakana, etc.)",
+    "tweets": [
+      {
+        "attachments": {
+          "media_keys": [
+            "3_1879216291736899584",
+            "3_1879216316495822848",
+            "3_1879216344459300864"
+          ]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024763763544349"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:51.000Z",
+        "id": "1881024786190463073",
+        "text": "Chinese lab Minimax launched two AI models with context windows of 4M tokens\n\nUsing a new ‘Lightning Attention’ approach, the models perform comparably with top models on academic benchmarks\n\nThey mark a push toward agents with extensive memory\nhttps://t.co/EvkjqSCsxS",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024786190463073"],
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["7_1834015868227125250"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024741252722831"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:46.000Z",
+        "id": "1881024763763544349",
+        "text": "German cognitive robotics company Neura raised $123M from Lingotto Investment, Volvo Cars Tech Fund and others\n\nPowered Nvidia Cosmos, Neura's first humanoid, 4NE-1, can see, hear and has a sense of touch\nhttps://t.co/ZhNuLnJTI1",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024763763544349"],
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["7_1879325443440230400"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024718712480163"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:40.000Z",
+        "id": "1881024741252722831",
+        "text": "Sakana AI unveiled Transformer2, an AI that dynamically adjusts its weights for different tasks\n\nThe work gives a glimpse into a future where AI is no longer static but an embodiment of living intelligence capable of continuous learning and change\nhttps://t.co/3RHucaHk6f",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024741252722831"],
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["13_1879592758010134528"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024696306557134"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:35.000Z",
+        "id": "1881024718712480163",
+        "text": "Luma Labs released Ray2, its next-gen AI for generating 10s videos with advanced motion quality and physics realism \n\nRay2 understands complex object interactions, including water physics \n\nNow, the question is which lab will crack longer-length outputs\nhttps://t.co/TlHtJgVLay",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024718712480163"],
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": [
+            "7_1879960508096208897",
+            "7_1879960560281792512",
+            "3_1879960604078731264"
+          ]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024673762230399"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:30.000Z",
+        "id": "1881024696306557134",
+        "text": "Physical Intelligence released Fast, a tokenizer that compresses actions to train Transformers on robotic control\n\nFast's compression enables 5x faster VLA training, even on dexterous tasks like folding laundry, bussing tables, and packing bags\nhttps://t.co/IphgbI9kWm",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024696306557134"],
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["13_1879833054660673537"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024651377230013"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:24.000Z",
+        "id": "1881024673762230399",
+        "text": "Microsoft debuted MatterGen, an AI that creates materials with specific properties\n\nIn tests, it produced materials with structures 10x closer to optimal energy states\n\nThe work can address the need for advanced materials across sectors like clean energy\nhttps://t.co/emR5gnBCnp",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024673762230399"],
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["13_1879705305140920321"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024629155737612"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:19.000Z",
+        "id": "1881024651377230013",
+        "text": "Chinese company Mirror Me unveiled a robotic dog that can sprint 100m in 10s\n\nBlack Panther 2.0 uses carbon fiber legs and spring joints to mimic animals and run faster than most humans\n\nCreated in just 3 months\nhttps://t.co/vaRxI0d8bO",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024651377230013"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024606707863709"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:13.000Z",
+        "id": "1881024629155737612",
+        "text": "OpenAI debuted Tasks, a new ChatGPT beta feature that schedules one-time or recurring actions\n\nIt's coming to Plus, Team, and Pro users, with max 10 active tasks at a time\n\nTasks will probably lay the groundwork for incorporating future agentic abilities into ChatGPT… https://t.co/ZfwkM1QE3O",
+        "note_tweet": {
+          "text": "OpenAI debuted Tasks, a new ChatGPT beta feature that schedules one-time or recurring actions\n\nIt's coming to Plus, Team, and Pro users, with max 10 active tasks at a time\n\nTasks will probably lay the groundwork for incorporating future agentic abilities into ChatGPT\nhttps://t.co/BvueHAY5Rg",
+          "entities": {
+            "urls": [
+              {
+                "start": 268,
+                "end": 291,
+                "url": "https://t.co/BvueHAY5Rg",
+                "expanded_url": "https://x.com/OpenAI/status/1879267274185756896/video/1",
+                "display_url": "x.com/OpenAI/status/…"
+              }
+            ]
+          }
+        },
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024629155737612"],
+        "external_urls": []
+      },
+      {
+        "attachments": {
+          "media_keys": ["7_1879859075045117953"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1881024584515830239"
+          }
+        ],
+        "created_at": "2025-01-19T17:03:08.000Z",
+        "id": "1881024606707863709",
+        "text": "Unitree upgraded its G1 Bionic humanoid with agility and stability\n\nIt can now move smoothly and run on various surfaces, including uphill/downhill tracks, stony paths and stairs\nhttps://t.co/NCmkHlSQk7",
+        "author_id": "3222018178",
+        "in_reply_to_user_id": "3222018178",
+        "edit_history_tweet_ids": ["1881024606707863709"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Challenges with LLM agents failing to take certain actions in environments, e.g., weave-agent not noticing alternate key presses",
+    "tweets": [
+      {
+        "text": "\"I don't understand why LLM agents aren't working yet.\"\n\nI didn't either, that's part of why I decided to do weave-agent, to find out. Right now it's \"it doesn't notice it can try pressing a key other than down or that it's blocked by a wall in Nethack\", yet Mistral-large knows. https://t.co/z1GtzhLifB",
+        "id": "1880954116752712083",
+        "edit_history_tweet_ids": ["1880954116752712083"],
+        "created_at": "2025-01-19T12:23:02.000Z",
+        "attachments": {
+          "media_keys": [
+            "3_1880953290734850048",
+            "3_1880954052491829248",
+            "3_1880954069491331072",
+            "3_1880954083491860480"
+          ]
+        },
+        "author_id": "829108178059096064",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Controversy around OpenAI potentially having early access to challenging math benchmarks, accusations of “cheating,” and related discussion",
+    "tweets": [
+      {
+        "text": "OpenAI also has access to the test set of HumanEval, MATH and SWE-bench and they've never cheated on those. \nNot sure what all the drama is about right now. Mature LM devs know that it's really silly to cheat and have entire teams working on decontaminating train sets.",
+        "id": "1880953492057313579",
+        "edit_history_tweet_ids": ["1880953492057313579"],
+        "created_at": "2025-01-19T12:20:33.000Z",
+        "author_id": "746788615951355904",
+        "external_urls": []
+      },
+      {
+        "text": "fwiw i dont think this is that big of a deal tbh. I would be really surprised if OpenAI trained on FrontierMath in secret just to make o3 look good. I think if you believe that OpenAI has any idea what they are doing (they do), then they do not need to resort these sort of… https://t.co/acAEm0yI3C https://t.co/nZCYEfgmiT",
+        "id": "1880853582427160714",
+        "note_tweet": {
+          "entities": {
+            "urls": [
+              {
+                "start": 544,
+                "end": 567,
+                "url": "https://t.co/odPkUsRlIC",
+                "expanded_url": "https://www.lesswrong.com/posts/cu2E8wgmbdZbqeWqb/?commentId=FR5bGBmCkcoGniY9m",
+                "display_url": "lesswrong.com/posts/cu2E8wgm…"
+              }
+            ]
+          },
+          "text": "fwiw i dont think this is that big of a deal tbh. I would be really surprised if OpenAI trained on FrontierMath in secret just to make o3 look good. I think if you believe that OpenAI has any idea what they are doing (they do), then they do not need to resort these sort of methods. \n\nThe part that I don't get is why must the arrangement be kept a secret till after o3 was released? Doesn't make much sense to me since everyone could guess that OpenAI was doing a successor to o1, providing funding for a new challenging benchmark is good PR\n\nhttps://t.co/odPkUsRlIC"
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880853579671699709"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880853582427160714"],
+        "created_at": "2025-01-19T05:43:33.000Z",
+        "in_reply_to_user_id": "1718879852827484160",
+        "attachments": {
+          "media_keys": ["3_1880852874290200576"]
+        },
+        "author_id": "1718879852827484160",
+        "external_urls": []
+      },
+      {
+        "text": "It looks like OpenAI had access to FrontierMath (the super challenging math benchmark that o3 sets SOTA by a mile) problems and solutions. \n\nThey also did not allow the team behind FrontierMath to disclose this arrangement or that OpenAI was involved in the funding? https://t.co/6VvXf0XZt3",
+        "id": "1880853579671699709",
+        "edit_history_tweet_ids": ["1880853579671699709"],
+        "created_at": "2025-01-19T05:43:32.000Z",
+        "attachments": {
+          "media_keys": ["3_1880852083189907456"]
+        },
+        "author_id": "1718879852827484160",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Creative or playful AI usage, such as ASCII-fying outputs with glifblocks",
+    "tweets": [
+      {
+        "text": "love this so much I had o1 build me an ASCII-fy glifblock that you can just plug into any glif\n\nhere I just put it after a Flux Schnell block, so now i have a flexible ASCII art generator that does both\n\nlink below https://t.co/NndMdoviyb https://t.co/lwyh2TTlwD",
+        "id": "1880952793407905862",
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880701719530848761"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880952793407905862"],
+        "created_at": "2025-01-19T12:17:47.000Z",
+        "attachments": {
+          "media_keys": ["3_1880951769087295488"]
+        },
+        "author_id": "5483052",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "A single paper highlight discussing process reward modeling",
+    "tweets": [
+      {
+        "text": "RT @zst96687522: The most insightful paper regarding process reward modeling I've seen recently.\n\n[2501.07301] The Lessons of Developing Pr…",
+        "id": "1880950770205643236",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880472948135559424"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880950770205643236"],
+        "created_at": "2025-01-19T12:09:44.000Z",
+        "author_id": "29843511",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "New job or project announcements at Meta, focusing on LLM evaluations and open-source data/models",
+    "tweets": [
+      {
+        "created_at": "2025-01-19T13:59:37.000Z",
+        "id": "1880978423440654550",
+        "text": "A new year, a new challenge.\n\nI recently joined @AIatMeta to improve evaluation and benchmarking of LLMs. I'm excited to push on making LLMs more useful and accessible, via open-sourcing data/models and real-world applications. I'll continue to be based in Berlin.",
+        "author_id": "2785337469",
+        "edit_history_tweet_ids": ["1880978423440654550"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Business and industry insights, including a Q&A about AI security at Cisco",
+    "tweets": [
+      {
+        "text": "We sat down for an exclusive Q&amp;A with Jeetu Patel, EVP &amp; CPO of Cisco, to discuss:\n\n-Cisco’s AI Defense\n-Sensitive info in the AI era\n-Network-level security integration\nThe future of multi-model AI security\n-Why AI-forward is the only way forward\n\nRead: https://t.co/xUxKKb1Trc https://t.co/KgaQVUMBqk",
+        "id": "1880940823203762335",
+        "edit_history_tweet_ids": ["1880940823203762335"],
+        "created_at": "2025-01-19T11:30:13.000Z",
+        "attachments": {
+          "media_keys": ["3_1880940816266391552"]
+        },
+        "author_id": "731917653506318336",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Agentic RAG pipelines specialized for medical data workflows",
+    "tweets": [
+      {
+        "text": "🔧 Agentic RAG Pipelines for Medical Data with @crewAIInc\n\nAgentic RAG is a new way to retrieve and manage medical data at scale. In this new tutorial by @pavan_mantha1, you'll learn how to:\n\n➡️ Stream patient data from MongoDB to @apachekafka \n➡️ Ingest into Qdrant via the Kafka… https://t.co/F56a5RcZCx https://t.co/2t2sJdbjXZ",
+        "id": "1880900001532162462",
+        "note_tweet": {
+          "entities": {
+            "urls": [
+              {
+                "start": 400,
+                "end": 423,
+                "url": "https://t.co/kFv1HLTDbu",
+                "expanded_url": "https://ai.gopubby.com/building-agentic-rag-pipelines-for-medical-data-with-crewai-and-qdrant-3a00a48fb0d1",
+                "display_url": "ai.gopubby.com/building-agent…"
+              }
+            ],
+            "mentions": [
+              {
+                "start": 46,
+                "end": 56,
+                "username": "crewAIInc",
+                "id": "1770815821310230528"
+              },
+              {
+                "start": 153,
+                "end": 167,
+                "username": "pavan_mantha1",
+                "id": "772043423398322178"
+              },
+              {
+                "start": 230,
+                "end": 242,
+                "username": "apachekafka",
+                "id": "1287555762"
+              }
+            ]
+          },
+          "text": "🔧 Agentic RAG Pipelines for Medical Data with @crewAIInc\n\nAgentic RAG is a new way to retrieve and manage medical data at scale. In this new tutorial by @pavan_mantha1, you'll learn how to:\n\n➡️ Stream patient data from MongoDB to @apachekafka \n➡️ Ingest into Qdrant via the Kafka Sink Connector\n➡️ Orchestrate with CrewAI to manage agents and generate structured responses.\n\nRead the full blog here: https://t.co/kFv1HLTDbu"
+        },
+        "edit_history_tweet_ids": ["1880900001532162462"],
+        "created_at": "2025-01-19T08:48:00.000Z",
+        "attachments": {
+          "media_keys": ["3_1880855356919676928"]
+        },
+        "author_id": "1338631899422617600",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Observations about phi 1.5 usage and how it can change one's perspective or clarity",
+    "tweets": [
+      {
+        "text": "when you start using phi 1.5 for everything it weirdly feels like the world is coming into sharper focus",
+        "id": "1880882567710425218",
+        "edit_history_tweet_ids": ["1880882567710425218"],
+        "created_at": "2025-01-19T07:38:43.000Z",
+        "author_id": "17406365",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Accusations that “Communist China” stole Reflection-Llama, rebranded weights, and hints of IP conflict",
+    "tweets": [
+      {
+        "text": "unbelievable how Communist 🐉China🇨🇳 had stolen @mattshumer and @csahil28's  Reflection-Llama, swapped their weights to some forgery, spent months obfuscating the deed by cutting a dense model into \"fine-grained experts\", and now is going to release it as \"their\" \"R1\". despicable https://t.co/tJ7vih2KQv https://t.co/h8QpZ3z41m",
+        "id": "1880863138893255115",
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1831767023514480970"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880863138893255115"],
+        "created_at": "2025-01-19T06:21:31.000Z",
+        "attachments": {
+          "media_keys": ["3_1880862703670996992"]
+        },
+        "author_id": "192201556",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Noting a new epistemic gap between those who understand programming/deep learning and those who do not",
+    "tweets": [
+      {
+        "text": "There used to be a reliable epistemic gap between people who have done programming and people who haven't. But now there's a second gap between people who have had to think through problems with deep learning and people who haven't. Seemingly just as insurmountable. https://t.co/WaqTZI4wuK",
+        "id": "1880858171302178972",
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1873592951554933127"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880858171302178972"],
+        "created_at": "2025-01-19T06:01:47.000Z",
+        "author_id": "829108178059096064",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Announcement of the new OpenFlux-based Flex.1-alpha model",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880820764762653107"],
+        "author_id": "1693123346840551424",
+        "created_at": "2025-01-19T03:33:08.000Z",
+        "text": "I am happy to release the next iteration of OpenFlux, Flex.1-alpha. Flex.1 is an 8B param model with an Apache 2.0 license. It has been trained a significant amount since OpenFlux, and has a fancy new guidance embedder. Still a WIP. More to come. https://t.co/2BUq31bJuZ",
+        "id": "1880820764762653107",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Questioning how model “o1” actually works, noting an unusual lack of transparency",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880810705894654051"],
+        "note_tweet": {
+          "text": "Isn't it kinda weird we don't really know how o1 works?\n\nIs this the first time this is happening with such an advance?\n\nLike we roughly knew how ChatGPT (RLHF), DALL-E (diffusion), Sora (diffusion), etc. work. We just didn't know many of the practical details.\n\nBut we don't seem to have a confident idea how o1 works, right?"
+        },
+        "author_id": "441465751",
+        "created_at": "2025-01-19T02:53:10.000Z",
+        "text": "Isn't it kinda weird we don't really know how o1 works?\n\nIs this the first time this is happening with such an advance?\n\nLike we roughly knew how ChatGPT (RLHF), DALL-E (diffusion), Sora (diffusion), etc. work. We just didn't know many of the practical details.\n\nBut we don't seem… https://t.co/I884MrctyY",
+        "id": "1880810705894654051",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Showcasing Google Veo-2 advanced physical simulation capabilities",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880809855482843422"],
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880599227778134283"
+          }
+        ],
+        "author_id": "821092604821536768",
+        "created_at": "2025-01-19T02:49:47.000Z",
+        "text": "RT @ai_for_success: Google Veo-2 physical simulation is on next level 🔥🔥\nThis is one of the toughest prompts I’ve tested on many, no AI vid…",
+        "id": "1880809855482843422",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "LangSmith’s agent evaluation framework, focusing on metrics like latency, LLM cost, and correctness",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880808771808608394"],
+        "note_tweet": {
+          "text": "LangSmith is the best agent eval framework.\n\nI love seeing metrics for my financial agents:\n\n• latency\n• llm costs\n• correctness\n\nEvaluations are everything to me.\n\nI have to measure my agents, otherwise, I’m wasting my time.\n\nExcited to see continued improvements in the agent eval space."
+        },
+        "attachments": {
+          "media_keys": ["7_1880808634478649344"]
+        },
+        "author_id": "137086701",
+        "created_at": "2025-01-19T02:45:29.000Z",
+        "text": "LangSmith is the best agent eval framework.\n\nI love seeing metrics for my financial agents:\n\n• latency\n• llm costs\n• correctness\n\nEvaluations are everything to me.\n\nI have to measure my agents, otherwise, I’m wasting my time.\n\nExcited to see continued improvements in the agent… https://t.co/vX8yK6iMa6 https://t.co/Na8sU7n0fg",
+        "id": "1880808771808608394",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Kokoro TTS: a small but high-performing text-to-speech model, with local/Gradio demos",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880807682971460010"],
+        "note_tweet": {
+          "text": "Kokoro is insane. 🤯 \n\nThis AI is a groundbreaking TTS model with just 82M parameters. It outperforms larger models and generates minutes of speech in seconds.\n\nAPACHE 2.0 licensed, trained on < 100 hours of audio is now available in ai-gradio\n\npip install --upgrade \"ai-gradio[kokoro]\"\n\nimport gradio as gr\nimport ai_gradio  \n\ngr.load(name='kokoro:kokoro-v0_19',    src=ai_gradio.registry,).launch()"
+        },
+        "attachments": {
+          "media_keys": ["7_1880807419233656832"]
+        },
+        "author_id": "2465283662",
+        "created_at": "2025-01-19T02:41:09.000Z",
+        "text": "Kokoro is insane. 🤯 \n\nThis AI is a groundbreaking TTS model with just 82M parameters. It outperforms larger models and generates minutes of speech in seconds.\n\nAPACHE 2.0 licensed, trained on &lt; 100 hours of audio is now available in ai-gradio\n\npip install --upgrade… https://t.co/Qd9oQmcU2b https://t.co/LGgHyvthLE",
+        "id": "1880807682971460010",
+        "external_urls": []
+      },
+      {
+        "edit_history_tweet_ids": ["1880761491445662161"],
+        "attachments": {
+          "media_keys": ["3_1880761457496739840"]
+        },
+        "author_id": "2465283662",
+        "created_at": "2025-01-18T23:37:37.000Z",
+        "text": "Kokoro Text-to-Speech running locally in a gradio app https://t.co/IKcFRznSF3",
+        "id": "1880761491445662161",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Visual experiment using runwayML's Keyframe for four-dimensional rotational photos",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880787528892154012"],
+        "attachments": {
+          "media_keys": ["7_1880786683853189120"]
+        },
+        "author_id": "2818767727",
+        "created_at": "2025-01-19T01:21:04.000Z",
+        "text": "Four Dimensional Rotation around Sydney\n\nHere's my latest experiment interpolating IRL distorted photos with @runwayml's #Keyframe feature https://t.co/TSvLi49PVS",
+        "id": "1880787528892154012",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Comments on the nature of AI alignment, emphasizing it is neither automatic nor effortless",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880777242252542447"],
+        "author_id": "756181721997987848",
+        "created_at": "2025-01-19T00:40:12.000Z",
+        "text": "If we live in a world where AI alignment is relatively easy, that doesn't mean we live in a world where it's automatic or effortless. It'll be pretty tragic if we don't invest enough in the \"easy alignment\" world and end up fumbling a lucky pass.",
+        "id": "1880777242252542447",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Discussion on R1, o1, pass@10 vs pass@1, and cost/performance trade-offs",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880771604701167670"],
+        "in_reply_to_user_id": "192201556",
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880769999796932978"
+          }
+        ],
+        "author_id": "192201556",
+        "created_at": "2025-01-19T00:17:48.000Z",
+        "text": "If R1 is ≈V2, this means they can easily inference it at that lol $.28/1M output cost. Keep back-translating Github and stackoverflow into tasks. Pass@10, even Pass@100 if need be, just throw more Ascend nodes at the problem. R2 can follow as soon as o1=&gt;o3 if they will it.",
+        "id": "1880771604701167670",
+        "external_urls": []
+      },
+      {
+        "edit_history_tweet_ids": ["1880769999796932978"],
+        "in_reply_to_user_id": "192201556",
+        "attachments": {
+          "media_keys": ["3_1880769989839409152"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880768996225769738"
+          }
+        ],
+        "author_id": "192201556",
+        "created_at": "2025-01-19T00:11:25.000Z",
+        "text": "Note that o1 gains only 15.5% going from Low to High.\n\nI am not subscribed to OpenAI, can anyone enlighten me as to the price difference?\n\n(first colored column here is R1, second is R1-lite. Note how often it has &gt;0% pass.) https://t.co/KzTIdT14o5",
+        "id": "1880769999796932978",
+        "external_urls": []
+      },
+      {
+        "edit_history_tweet_ids": [
+          "1880764468076110008",
+          "1880768996225769738"
+        ],
+        "attachments": {
+          "media_keys": ["3_1880764301494882304"]
+        },
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880755740627148967"
+          }
+        ],
+        "author_id": "192201556",
+        "created_at": "2025-01-19T00:07:26.000Z",
+        "text": "R1 pass@10 is *way better* than o1-High compute; gains 20% on Hard set over pass@1. Whales tend to be mode-collapsed so pass@n only makes sense with how cheap they are. This supports my guess that reasoners are inherently more diverse.\nNow, if R1@10 *is* cheaper than o1-High@1… https://t.co/K9AL42j4u6 https://t.co/kh3IuKjHFq",
+        "id": "1880768996225769738",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "A humorous how-to for 3D-printing an “AI girlfriend,” bridging photorealistic AI design and physical manufacturing",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": ["1880769807068578275"],
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880739046734873031"
+          }
+        ],
+        "author_id": "260411518",
+        "created_at": "2025-01-19T00:10:39.000Z",
+        "text": "RT @levelsio: ✨ How I 3d printed my AI girlfriend:\n\n1) design an AI girlfriend by writing a prompt on Photo AI\n2) inside Photo AI press [ M…",
+        "id": "1880769807068578275",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Concept of a strategy game that randomizes all units and rules each playthrough, more akin to real-life unpredictability",
+    "tweets": [
+      {
+        "edit_history_tweet_ids": [
+          "1880767532577010044",
+          "1880767598016507909",
+          "1880767652685070685"
+        ],
+        "note_tweet": {
+          "text": "It would be helpful to have a strategy game like Starcraft which uses AI to give a new set of units, buildings and abilities every time you play. This is more like real life, where you only get one play through.\n\nAll of the \"repeated games\" we play are extremely different from life. They do not prepare us for navigating constant one-off hyper-dimensional decisions. They rely on mechanical mastery and micro-optimization to win.\n\nReal life requires us to develop deep intuition on extremely little information, and is often more about effectiveness than efficiency."
+        },
+        "author_id": "89538466",
+        "created_at": "2025-01-19T00:02:06.000Z",
+        "text": "It would be helpful to have a strategy game like Starcraft which uses AI to give a new set of units, buildings and abilities every time you play. This is more like real life, where you only get one play through.\n\nAll of the \"repeated games\" we play are extremely different from… https://t.co/5jX600vMcN",
+        "id": "1880767652685070685",
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Announcement of a talk at USC AI Seminar on “Socially Aware and Safe AI Agents”",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880071628627014098"
+          }
+        ],
+        "created_at": "2025-01-18T23:09:32.000Z",
+        "text": "RT @nlpxuhui: Hi friends, excited to present \"Towards Socially Aware and Safe AI Agents\" at USC AI Seminar tomorrow! 🎯\n\nJoin us @nlp_usc @C…",
+        "id": "1880754424118944158",
+        "author_id": "3025082120",
+        "edit_history_tweet_ids": ["1880754424118944158"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Positive results from a pilot program using AI for education, showing significant improvements for students in multiple dimensions",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880753666954756335"
+          }
+        ],
+        "in_reply_to_user_id": "2314443930",
+        "created_at": "2025-01-18T23:06:42.000Z",
+        "text": "Yes, this is just a single pilot program, but the team's findings get me so excited about what's possible. This is exactly why I'm so passionate about AI—opening up access and opportunity for people.",
+        "id": "1880753713473855568",
+        "author_id": "2314443930",
+        "edit_history_tweet_ids": ["1880753713473855568"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880753593537720776"
+          }
+        ],
+        "in_reply_to_user_id": "2314443930",
+        "created_at": "2025-01-18T23:06:31.000Z",
+        "text": "• The team also found that the more sessions students attended, the more they benefitted. What could results look like if they had access more than twice a week? For longer than six weeks?",
+        "id": "1880753666954756335",
+        "author_id": "2314443930",
+        "edit_history_tweet_ids": ["1880753666954756335"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880753552529993937"
+          }
+        ],
+        "in_reply_to_user_id": "2314443930",
+        "created_at": "2025-01-18T23:06:14.000Z",
+        "text": "• The impact of those six weeks didn't fade; in fact, it had a ripple effect. Students from the pilot performed better on final exams months later, across subjects that weren't even covered in the pilot program.",
+        "id": "1880753593537720776",
+        "author_id": "2314443930",
+        "edit_history_tweet_ids": ["1880753593537720776"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880753294492242419"
+          }
+        ],
+        "in_reply_to_user_id": "2314443930",
+        "created_at": "2025-01-18T23:06:04.000Z",
+        "text": "• Access to AI was a rising tide that lifted all boats, and narrowed the gender gap between male students and the female students who had been trailing behind before the pilot program began.",
+        "id": "1880753552529993937",
+        "author_id": "2314443930",
+        "edit_history_tweet_ids": ["1880753552529993937"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880753202976719238"
+          }
+        ],
+        "in_reply_to_user_id": "2314443930",
+        "created_at": "2025-01-18T23:05:02.000Z",
+        "text": "• When the researchers compared their results to other educational interventions, this pilot outperformed 80% of them. 80%!",
+        "id": "1880753294492242419",
+        "author_id": "2314443930",
+        "edit_history_tweet_ids": ["1880753294492242419"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880753077487313096"
+          }
+        ],
+        "in_reply_to_user_id": "2314443930",
+        "created_at": "2025-01-18T23:04:40.000Z",
+        "text": "• Many of these students had never even used a computer before. They spent the beginning of the program figuring out how to navigate a PC, setting up user accounts, being taught how to prompt. Makes the learning curve even more remarkable.",
+        "id": "1880753202976719238",
+        "author_id": "2314443930",
+        "edit_history_tweet_ids": ["1880753202976719238"],
+        "external_urls": []
+      },
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880751949131485561"
+          }
+        ],
+        "in_reply_to_user_id": "2314443930",
+        "created_at": "2025-01-18T23:04:11.000Z",
+        "text": "The setup: For 6 weeks, students used Copilot in their computer lab 2x/week, guided by teachers on selected topics and grammar/writing tasks. \nThe results: A pen and paper test showed their scores improving .3 standard deviations, the equivalent of almost 2 years of learning.",
+        "id": "1880753077487313096",
+        "author_id": "2314443930",
+        "edit_history_tweet_ids": ["1880753077487313096"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "A real-time API-based Gradio Agents app demonstration",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880750478889550028"
+          }
+        ],
+        "created_at": "2025-01-18T23:03:04.000Z",
+        "text": "Realtime API Gradio Agents App https://t.co/jngkM817lp https://t.co/hGYbTJzIup",
+        "id": "1880752797408473469",
+        "author_id": "2465283662",
+        "attachments": {
+          "media_keys": ["3_1880752650888609792"]
+        },
+        "edit_history_tweet_ids": ["1880752797408473469"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Gathering of AI builders at AGI House, brainstorming new ideas with Gemini’s multimodal capabilities",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880694212901159226"
+          }
+        ],
+        "created_at": "2025-01-18T22:45:45.000Z",
+        "text": "Awesome vibe at @agihouse_org today! Had a great time chatting with builders about Gemini’s cool multimodal capabilities and brainstorming tons of fun ideas for apps to build with it.\n\nhttps://t.co/DAdRJUsSUx",
+        "id": "1880748440050868374",
+        "author_id": "2550133394",
+        "edit_history_tweet_ids": ["1880748440050868374"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Observing a subreddit devoted to “Apple intelligence fails,” underscoring the importance of thorough AI evaluations",
+    "tweets": [
+      {
+        "created_at": "2025-01-18T22:34:30.000Z",
+        "text": "It's funny to see there is now an entire subreddit for Apple intelligence fails. This is why you need to set up evaluations. Do your evals, folks!\n\nhttps://t.co/dnd2yOjXoe",
+        "id": "1880745610640515135",
+        "author_id": "826039247392088064",
+        "edit_history_tweet_ids": ["1880745610640515135"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Note on reasoner-specific failure modes (like overthinking) being difficult to eliminate",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "replied_to",
+            "id": "1880743460623507937"
+          }
+        ],
+        "in_reply_to_user_id": "1365020011123773442",
+        "created_at": "2025-01-18T22:28:21.000Z",
+        "text": "@Teknium1 there have been a few papers from third parties about reasoner failure modes like overthinking. I suspect they're actually hard to weed out while remaining bitter-pilled enough - it may be that these are very natural attractors for reasoning RL with current gen transformers. https://t.co/12ddfGxIf3",
+        "id": "1880744059805048941",
+        "author_id": "192201556",
+        "attachments": {
+          "media_keys": ["3_1880743666337161216"]
+        },
+        "edit_history_tweet_ids": ["1880744059805048941"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Apple’s next-gen AI evaluation systems job posting, seeking an ML Scientist/Engineer",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880662403580621093"
+          }
+        ],
+        "created_at": "2025-01-18T22:26:30.000Z",
+        "text": "RT @JoeEHoover: We're building next-gen AI evaluation systems at Apple. Want to help?\n\nLooking for a contract ML Scientist/Engineer in NYC…",
+        "id": "1880743595063607523",
+        "author_id": "825766640",
+        "edit_history_tweet_ids": ["1880743595063607523"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Urging people to recognize the potential of reasoners, as they can “eat specialized domains” with enough context",
+    "tweets": [
+      {
+        "created_at": "2025-01-18T21:38:34.000Z",
+        "text": "People are still not updating enough on reasoners. It's not even about RSI in verifiable domains or perhaps in general. It changes so many things. It completely transforms data work. A reasoner with good ICL and long-ish context is a machine for eating specialized domains.",
+        "id": "1880731532438167807",
+        "author_id": "192201556",
+        "edit_history_tweet_ids": ["1880731532438167807"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Recommendation of a book by “chipro” for product designers/engineers to learn about model training",
+    "tweets": [
+      {
+        "created_at": "2025-01-18T21:21:31.000Z",
+        "text": "Highly recommend this book by @chipro esp. for product designers / software engineers who want to learn about model training and inference! https://t.co/6vNV2QKCO1",
+        "id": "1880727241824547318",
+        "author_id": "1094268079540920321",
+        "attachments": {
+          "media_keys": ["3_1880727235038162944"]
+        },
+        "edit_history_tweet_ids": ["1880727241824547318"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "High-level discussion on the challenge of deciding what to ask an LLM vs. how you ask it",
+    "tweets": [
+      {
+        "referenced_tweets": [
+          {
+            "type": "quoted",
+            "id": "1880677247662923798"
+          }
+        ],
+        "created_at": "2025-01-18T20:57:02.000Z",
+        "text": "tl;dr It’s obvious that LLMs will increasingly become good at doing *exactly* what you ask them to do, as long as you feed them the right context and tools.\n\nThe problem then becomes: especially within a larger software environment, *what* is it that you should ask them? https://t.co/9gIX8GN8BR",
+        "id": "1880721082791109072",
+        "author_id": "1605274291569799168",
+        "edit_history_tweet_ids": ["1880721082791109072"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Addressing numerical instability with expressions like a * exp(b), proposing a workaround approach",
+    "tweets": [
+      {
+        "created_at": "2025-01-18T20:55:22.000Z",
+        "text": "TIL at @xai:\n\nWe know `a * exp(b)` causes numerical instability when b is a large number.\n\nBUT: `a * exp(-b)` causes the same issue when b is negative but |b| is large!\n\nThe fix: `b &gt; 0.f ? a * exp(-b) : a / exp(b)`. It's slow af.\n\nThis should be baked into a fused instruction!",
+        "id": "1880720660743508160",
+        "author_id": "2353563199",
+        "edit_history_tweet_ids": ["1880720660743508160"],
+        "external_urls": []
+      }
+    ]
+  },
+  {
+    "explanation": "Examples of young creators (kids) using AI and music production tools, underscoring future possibilities",
+    "tweets": [
+      {
+        "text": "RT @somewheresy: this is excellent and I highly suggest you try it with a guitar or other instrument! augmenting your workflow with AI isn'…",
+        "id": "1880829589532094799",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880798328251961591"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880829589532094799"],
+        "created_at": "2025-01-19T04:08:12.000Z",
+        "author_id": "1519705236713189377",
+        "external_urls": []
+      },
+      {
+        "text": "RT @Jdaflame: Kid is killing it right now utilizing AI and using a DAW and plugins like serum. \n\nThis is what I mean when I said the future…",
+        "id": "1880829512763810034",
+        "referenced_tweets": [
+          {
+            "type": "retweeted",
+            "id": "1880742569602089410"
+          }
+        ],
+        "edit_history_tweet_ids": ["1880829512763810034"],
+        "created_at": "2025-01-19T04:07:54.000Z",
+        "author_id": "1519705236713189377",
+        "external_urls": []
+      }
+    ]
+  }
+]

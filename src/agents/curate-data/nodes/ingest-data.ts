@@ -1,4 +1,4 @@
-import { CurateReportsConfigurable, CurateReportsState } from "../state.js";
+import { CurateDataConfigurable, CurateDataState } from "../state.js";
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { aiNewsBlogLoader } from "../loaders/ai-news-blog.js";
 import { twitterLoader } from "../loaders/twitter.js";
@@ -9,10 +9,10 @@ import { latentSpaceLoader } from "../loaders/latent-space.js";
 import { SimpleRedditPostWithComments } from "../../../clients/reddit/types.js";
 
 export async function ingestData(
-  _state: CurateReportsState,
+  _state: CurateDataState,
   config: LangGraphRunnableConfig,
-): Promise<Partial<CurateReportsState>> {
-  const sources = (config.configurable as CurateReportsConfigurable | undefined)
+): Promise<Partial<CurateDataState>> {
+  const sources = (config.configurable as CurateDataConfigurable | undefined)
     ?.sources;
   if (!sources) {
     throw new Error("No sources provided");
