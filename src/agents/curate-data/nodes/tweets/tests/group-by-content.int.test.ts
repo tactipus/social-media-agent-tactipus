@@ -3,7 +3,7 @@ import * as ls from "langsmith/jest";
 import { SimpleEvaluator } from "langsmith/jest";
 import { TweetV2 } from "twitter-api-v2";
 import { groupTweetsByContent } from "../group-tweets-by-content.js";
-import { TweetsGroupedByContent } from "../../types.js";
+import { TweetsGroupedByContent } from "../../../types.js";
 import { formatInTimeZone } from "date-fns-tz";
 
 const tweetEvaluator: SimpleEvaluator = () => {
@@ -16,8 +16,9 @@ const tweetEvaluator: SimpleEvaluator = () => {
 function loadTweets(): TweetV2[] {
   const tweets = JSON.parse(
     fs.readFileSync(
-      // "src/agents/curate-reports/nodes/tests/data/relevant-tweets/relevant-01-17-2025-12-10.json",
-      "src/agents/curate-reports/nodes/tests/data/relevant-tweets/relevant-01-19-2025-12-59.json",
+      // "src/agents/curate-data/nodes/tweets/tests/data/relevant-tweets/relevant-01-17-2025-12-10.json",
+      // "src/agents/curate-data/nodes/tweets/tests/data/relevant-tweets/relevant-01-19-2025-12-59.json",
+      "src/agents/curate-data/nodes/tweets/tests/data/relevant-tweets/relevant-01-20-2025-11-28.json",
       "utf-8",
     ),
   );
@@ -32,14 +33,14 @@ async function saveTweets(tweets: TweetsGroupedByContent[]) {
     "MM-dd-yyyy-HH-mm",
   );
   await fs.promises.writeFile(
-    `src/agents/curate-reports/nodes/tests/data/grouped-by-llms/${formattedPSTDate}.json`,
+    `src/agents/curate-data/nodes/tweets/tests/data/grouped-by-llms/${formattedPSTDate}.json`,
     JSON.stringify(tweets),
   );
 }
 
 const validatedTweets = loadTweets();
 
-ls.describe("SMA - Curate Reports - Group By Content", () => {
+ls.describe("SMA - Curate Data - Group By Content", () => {
   ls.test(
     "Can group tweets",
     {

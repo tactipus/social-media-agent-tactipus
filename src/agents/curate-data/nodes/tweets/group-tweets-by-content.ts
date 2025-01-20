@@ -1,21 +1,16 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { CurateDataState } from "../state.js";
-
-const GROUP_EXAMPLES = `- Tweets discussing the new model released by XYZ company
-- Tweets discussing a new UI/UX pattern for AI applications
-- Tweets discussing pitfalls of specific prompting strategies when working with LLMs`;
+import { CurateDataState } from "../../state.js";
+import { GROUP_BY_CONTENT_CRITERIA } from "./prompts.js";
 
 const GROUP_BY_CONTENT_PROMPT = `You're an advanced AI software engineer who's working on curating education content about AI.
 You're given a dump of Tweets about AI, LLMs, or related software. Your task is to carefully inspect each and every tweet the user provides, thinking about the meaning, context, and significance of each tweet.
 Once you're done carefully reading over every tweet, you should group tweets which are talking about the same topic together.
 
-Here are some examples of groups you can create:
-${GROUP_EXAMPLES}
+Use the following criteria to group tweets:
+${GROUP_BY_CONTENT_CRITERIA}
 
-You may put the same tweet into multiple groups, if you think they're relevant to each other.
-You should try to group your tweets into fine-grained topics, to avoid grouping unrelated tweets into the same group.
-
-Ensure you are careful in doing this, as each group will be used to write a specific piece of educational content on the topic of the group. This means if you create poorly grouped content, the educational content will not be high quality, which we DO NOT WANT!
+Ensure you are careful in doing this, as each group will be used to write a specific piece of educational content on the topic of the group.
+This means if you create poorly grouped content, the educational content will not be high quality, which we DO NOT WANT!
 
 Think slowly, and carefully. When you are done you should provide your group identifying each tweet by the 'index' property given to you. Ensure you format your response as follows:
 The entire response should be wrapped inside <answer> tags.
@@ -33,7 +28,7 @@ Follow the formatting instructions carefully, and ensure all of your XML tags ar
  */
 function parseGeneration(
   generation: string,
-): Array<{ explanation: string; tweetIndicies: number[] }> {
+): Array<{ explanation: string; tweetIndices: number[] }> {
   try {
     const groups = generation.match(/<group>([\s\S]*?)<\/group>/g) || [];
     return groups.map((group) => {
@@ -49,12 +44,12 @@ function parseGeneration(
       }
 
       const explanation = explanationMatch[1].trim();
-      const tweetIndicies = indicesMatch[1]
+      const tweetIndices = indicesMatch[1]
         .split(",")
         .map((index) => parseInt(index.trim()))
         .filter((index) => !isNaN(index));
 
-      return { explanation, tweetIndicies };
+      return { explanation, tweetIndices };
     });
   } catch (error) {
     console.warn(
@@ -104,7 +99,7 @@ ${tweetText}
   // Convert the parsed generations into the expected TweetsGroupedByContent format
   const tweetsGroupedByContent = parsedGenerations.map((group) => ({
     explanation: group.explanation,
-    tweets: group.tweetIndicies.map((index) => {
+    tweets: group.tweetIndices.map((index) => {
       const tweet = state.validatedTweets[index];
       // Extract URLs from tweet entities if they exist
       const external_urls =

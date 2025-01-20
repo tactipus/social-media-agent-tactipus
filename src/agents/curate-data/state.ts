@@ -39,6 +39,11 @@ export const CurateDataAnnotation = Annotation.Root({
    */
   tweetsGroupedByContent: Annotation<TweetsGroupedByContent[]>,
   /**
+   * Array of indices of similar groups of tweets to re-evaluate the grouping of.
+   */
+  similarGroupIndices: Annotation<number[]>,
+
+  /**
    * List of trending GitHub repository names/paths.
    */
   rawTrendingRepos: Annotation<string[]>,

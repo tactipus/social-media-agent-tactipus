@@ -7,7 +7,9 @@ import { verifyGeneralContent } from "../shared/nodes/verify-general.js";
 import { VerifyContentAnnotation } from "../shared/shared-state.js";
 import { validateBulkTweets } from "./nodes/validate-bulk-tweets.js";
 import { generateReports } from "./nodes/generate-reports.js";
-import { groupTweetsByContent } from "./nodes/group-tweets-by-content.js";
+import { groupTweetsByContent } from "./nodes/tweets/group-tweets-by-content.js";
+import { reflectOnTweetGroups } from "./nodes/tweets/reflect-tweet-groups.js";
+import { reGroupTweets } from "./nodes/tweets/re-group-tweets.js";
 
 function verifyContentWrapper(state: CurateDataState): Send[] {
   const latentSpaceSends = state.latentSpacePosts.map((post) => {
@@ -43,6 +45,13 @@ function verifyContentWrapper(state: CurateDataState): Send[] {
   return [...latentSpaceSends, ...githubSends, ...redditSends, ...twitterSends];
 }
 
+function reGroupOrContinue(state: CurateDataState) {
+  if (state.similarGroupIndices.length > 0) {
+    return "reGroupTweets";
+  }
+  return "generateReports";
+}
+
 const curateDataWorkflow = new StateGraph(CurateDataAnnotation)
   .addNode("ingestData", ingestData)
   .addNode("verifyGitHubContent", verifyGitHubWrapper)
@@ -52,6 +61,8 @@ const curateDataWorkflow = new StateGraph(CurateDataAnnotation)
   })
   .addNode("verifyBulkTweets", validateBulkTweets)
   .addNode("groupTweetsByContent", groupTweetsByContent)
+  .addNode("reflectOnTweetGroups", reflectOnTweetGroups)
+  .addNode("reGroupTweets", reGroupTweets)
 
   .addNode("generateReports", generateReports)
   .addEdge(START, "ingestData")
@@ -65,7 +76,12 @@ const curateDataWorkflow = new StateGraph(CurateDataAnnotation)
   .addEdge("verifyGitHubContent", "generateReports")
   .addEdge("verifyRedditPost", "generateReports")
   .addEdge("verifyBulkTweets", "groupTweetsByContent")
-  .addEdge("groupTweetsByContent", "generateReports")
+  .addEdge("groupTweetsByContent", "reflectOnTweetGroups")
+  .addConditionalEdges("reflectOnTweetGroups", reGroupOrContinue, [
+    "reGroupTweets",
+    "generateReports",
+  ])
+  .addEdge("reGroupTweets", "generateReports")
 
   // TODO: Will need to add a node & edge for routing to generate tweet/thread graphs
   .addEdge("generateReports", END);

@@ -1,6 +1,6 @@
 import fs from "fs";
 import * as ls from "langsmith/jest";
-import { validateBulkTweets } from "../validate-bulk-tweets.js";
+import { validateBulkTweets } from "../../validate-bulk-tweets.js";
 import { SimpleEvaluator } from "langsmith/jest";
 import { formatInTimeZone } from "date-fns-tz";
 import { TweetV2 } from "twitter-api-v2";
@@ -15,7 +15,9 @@ const tweetEvaluator: SimpleEvaluator = () => {
 function loadTweets(): TweetV2[] {
   const tweets = JSON.parse(
     fs.readFileSync(
-      "src/agents/curate-reports/nodes/tests/data/tweets-3.json",
+      // "src/agents/curate-data/nodes/tweets/tests/data/tweets.json",
+      // "src/agents/curate-data/nodes/tweets/tests/data/tweets-2.json",
+      "src/agents/curate-data/nodes/tweets/tests/data/tweets-3.json",
       "utf-8",
     ),
   );
@@ -31,7 +33,7 @@ function saveRelevantTweets(tweets: TweetV2[]): void {
       "MM-dd-yyyy-HH-mm",
     );
     fs.writeFileSync(
-      `src/agents/curate-reports/nodes/tests/data/relevant-tweets/relevant-${formattedPSTDate}.json`,
+      `src/agents/curate-data/nodes/tweets/tests/data/relevant-tweets/relevant-${formattedPSTDate}.json`,
       JSON.stringify(tweets),
     );
   } catch (e) {
@@ -42,7 +44,7 @@ function saveRelevantTweets(tweets: TweetV2[]): void {
 
 const rawTweets = loadTweets();
 
-ls.describe("SMA - Curate Reports - Validate Bulk Tweets", () => {
+ls.describe("SMA - Curate Data - Validate Bulk Tweets", () => {
   ls.test(
     "Can validate tweets",
     // You can pass an "iterations" parameter or other LS config here if desired
