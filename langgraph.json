@@ -7,7 +7,8 @@
     "reflection": "./src/agents/reflection/index.ts:reflectionGraph",
     "generate_thread": "./src/agents/generate-thread/index.ts:generateThreadGraph",
     "curate_data": "./src/agents/curate-data/index.ts:curateDataGraph",
-    "verify_reddit_post": "./src/agents/verify-reddit-post/verify-reddit-post-graph.ts:verifyRedditPostGraph"
+    "verify_reddit_post": "./src/agents/verify-reddit-post/verify-reddit-post-graph.ts:verifyRedditPostGraph",
+    "generate_report": "./src/agents/generate-report/index.ts:generateReportGraph"
   },
   "env": ".env",
   "dependencies": ["."],
