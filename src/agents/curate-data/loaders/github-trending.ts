@@ -5,11 +5,14 @@ import {
 } from "../utils/stores/github-repos.js";
 import { getUniqueArrayItems } from "../utils/get-unique-array.js";
 import * as cheerio from "cheerio";
+import { Octokit } from "@octokit/rest";
 
 const TYPESCRIPT_TRENDING_URL =
   "https://github.com/trending/typescript?since=daily";
 const PYTHON_TRENDING_URL = "https://github.com/trending/python?since=daily";
 
+// Check github dependabot for depending on langchain
+// Check for github langchain tags
 export async function githubTrendingLoader(config: LangGraphRunnableConfig) {
   const fetchRepos = async (url: string) => {
     const response = await fetch(url);
@@ -40,4 +43,52 @@ export async function githubTrendingLoader(config: LangGraphRunnableConfig) {
   await putGitHubRepoURLs(allRepos, config);
 
   return uniqueRepos;
+}
+
+export async function getLangChainGitHubRepos(config: LangGraphRunnableConfig) {
+  const octokit = new Octokit();
+  const processedRepos = await getGitHubRepoURLs(config);
+  let newRepoUrls: string[] = [];
+  let page = 1;
+  const maxAttempts = 5;
+
+  while (newRepoUrls.length < 5 && page <= maxAttempts) {
+    const [langchainData, langgraphData] = await Promise.all([
+      octokit.search.repos({
+        q: "topic:langchain",
+        sort: "stars",
+        order: "desc",
+        per_page: 100,
+        page,
+      }),
+      octokit.search.repos({
+        q: "topic:langgraph",
+        sort: "stars",
+        order: "desc",
+        per_page: 100,
+        page,
+      }),
+    ]);
+
+    const repoUrls = [
+      ...langchainData.data.items.map((repo) => repo.html_url),
+      ...langgraphData.data.items.map((repo) => repo.html_url),
+    ];
+
+    // Filter out already processed repos
+    const unprocessedUrls = repoUrls.filter(
+      (url) => !processedRepos.includes(url),
+    );
+    newRepoUrls = [...new Set([...newRepoUrls, ...unprocessedUrls])];
+    page += 1;
+
+    if (
+      langchainData.data.items.length === 0 &&
+      langgraphData.data.items.length === 0
+    ) {
+      break; // No more results available from either search
+    }
+  }
+
+  return newRepoUrls;
 }

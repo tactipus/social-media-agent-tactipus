@@ -465,6 +465,29 @@ export class TwitterClient {
   }
 
   /**
+   * Searches for tweets using the Twitter API v2 endpoint
+   * @param query - The search query string to find relevant tweets
+   * @param options - Optional configuration for the search
+   * @param options.maxResults - Maximum number of tweets to return (default: 15)
+   * @returns {Promise<import('twitter-api-v2').TwitterApiV2.TweetSearchResults>} A promise that resolves to the search results
+   */
+  async searchTweets(
+    query: string,
+    options?: {
+      maxResults?: number;
+    },
+  ) {
+    const fetchTweetOptions: Partial<Tweetv2FieldsParams> =
+      BASE_FETCH_TWEET_OPTIONS;
+
+    const tweets = await this.twitterClient.v2.search(query, {
+      ...fetchTweetOptions,
+      max_results: options?.maxResults || 15,
+    });
+    return tweets;
+  }
+
+  /**
    * Retrieves all tweets in a thread starting from a given tweet ID.
    * A thread is defined as a series of tweets where the author replies to their own tweets.
    *

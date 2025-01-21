@@ -353,9 +353,13 @@ export type UrlType =
   | "general"
   | "twitter"
   | "reddit"
+  | "arxiv"
   | undefined;
 
-export function getUrlType(url: string): UrlType {
+export function getUrlType(
+  url: string,
+  options?: { includeArxiv?: boolean },
+): UrlType {
   let parsedUrl: URL | undefined = undefined;
   try {
     parsedUrl = new URL(url);
@@ -382,8 +386,16 @@ export function getUrlType(url: string): UrlType {
     return "twitter";
   }
 
-  if (parsedUrl.hostname.includes("reddit")) {
+  if (
+    (options?.includeArxiv && parsedUrl.hostname.includes("reddit")) ||
+    parsedUrl.hostname.includes("np.reddit") ||
+    parsedUrl.hostname.includes("redd.it")
+  ) {
     return "reddit";
+  }
+
+  if (parsedUrl.hostname.includes("arxiv.org")) {
+    return "arxiv";
   }
 
   return "general";

@@ -9,10 +9,10 @@ Additionally, if the Reddit post contains links to other webpages, you'll be pro
 
 Now, given all of this context, your task is to determine whether or not the post & optionally linked content is relevant to your business context.
 
-
 ${getPrompts().businessContext}
 
 You should carefully read over all of the content submitted to you, and determine whether or not the content is actually relevant to you.
+You only want to approve content which can be used as marketing material, or other content to promote your business context.
 You should provide reasoning as to why or why not the post & additional content is relevant to you, then a simple true or false for whether or not it is relevant.`;
 
 const RELEVANCY_SCHEMA = z

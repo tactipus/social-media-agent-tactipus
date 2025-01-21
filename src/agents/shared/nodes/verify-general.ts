@@ -7,6 +7,7 @@ import { getPrompts } from "../../generate-post/prompts/index.js";
 import { VerifyContentAnnotation } from "../shared-state.js";
 import { RunnableLambda } from "@langchain/core/runnables";
 import { getPageText } from "../../utils.js";
+import { getImagesFromFireCrawlMetadata } from "../../../utils/firecrawl.js";
 
 type VerifyGeneralContentReturn = {
   relevantLinks: (typeof GeneratePostAnnotation.State)["relevantLinks"];
@@ -37,17 +38,6 @@ ${getPrompts().businessContext}
 
 Given this context, examine the webpage content closely, and determine if the content is relevant to your context.
 You should provide reasoning as to why or why not the content is relevant to your context, then a simple true or false for whether or not it is relevant.`;
-
-const getImagesFromFireCrawlMetadata = (
-  metadata: any,
-): string[] | undefined => {
-  const image = metadata.image || [];
-  const ogImage = metadata.ogImage ? [metadata.ogImage] : [];
-  if (image?.length || ogImage?.length) {
-    return [...ogImage, ...image];
-  }
-  return undefined;
-};
 
 type UrlContents = {
   content: string;

@@ -71,3 +71,37 @@ export async function twitterLoader(): Promise<TweetV2[]> {
 
   return allTweets;
 }
+
+export async function twitterLoaderWithLangChain() {
+  const client = TwitterClient.fromBasicTwitterAuth();
+
+  let totalReqCount = 40;
+  const langchainTweets = await client.searchTweets(
+    "(@LangChainAI) -filter:replies",
+    {
+      maxResults: 40,
+    },
+  );
+  const tweets = langchainTweets.data.data;
+
+  for await (const tweet of tweets) {
+    // Twitter API has a limit of 60 requests per 15 minutes
+    if (totalReqCount >= 60) {
+      break;
+    }
+    try {
+      const thread = await client.getThreadFromId(tweet);
+      const threadWithoutOriginal = thread.filter((t) => t.id !== tweet.id);
+      tweets.push(...threadWithoutOriginal);
+      totalReqCount += threadWithoutOriginal.length;
+      for await (const t of thread) {
+        console.log(t);
+      }
+    } catch (e) {
+      console.error("Failed to call Twitter API:", e);
+      break;
+    }
+  }
+
+  return tweets;
+}

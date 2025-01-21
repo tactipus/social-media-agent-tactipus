@@ -13,6 +13,7 @@ import { VerifyRedditPostAnnotation } from "./verify-reddit-post-state.js";
 import { validateRedditPost } from "./nodes/validate-reddit-post.js";
 import { getExternalUrls } from "./nodes/get-external-urls.js";
 import { getUrlType } from "../utils.js";
+import { getPost } from "./nodes/get-post.js";
 
 /**
  * This conditional edge will iterate over all the links in a Reddit post.
@@ -42,6 +43,7 @@ function routePostUrls(state: typeof VerifyRedditPostAnnotation.State) {
 }
 
 const verifyRedditPostBuilder = new StateGraph(VerifyRedditPostAnnotation)
+  .addNode("getPost", getPost)
   .addNode("getExternalUrls", getExternalUrls)
 
   // Validates any GitHub, YouTube, or other URLs found in the Reddit post content.
@@ -60,7 +62,8 @@ const verifyRedditPostBuilder = new StateGraph(VerifyRedditPostAnnotation)
   .addNode("validateRedditPost", validateRedditPost)
 
   // Start node
-  .addEdge(START, "getExternalUrls")
+  .addEdge(START, "getPost")
+  .addEdge("getPost", "getExternalUrls")
   // After getting the content & nested URLs, route to either the nodes, or go
   // straight to validation if no URLs found.
   .addConditionalEdges("getExternalUrls", routePostUrls, [

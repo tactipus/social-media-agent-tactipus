@@ -1,4 +1,4 @@
-import Snoowrap from "snoowrap";
+import Snoowrap, { Submission } from "snoowrap";
 import fs from "fs/promises";
 import path from "path";
 import { getRedditUserlessToken } from "./get-user-less-token.js";
@@ -122,9 +122,9 @@ export class RedditClient {
     const limitWithDefaults = options?.limit ?? 10;
     const depthWithDefaults = options?.depth ?? 3;
 
-    // @ts-expect-error - Weird snoowrap types. Can ignore.
     const submission = await this.snoowrapClient.getSubmission(postId);
     const comments = (await (submission.comments.fetchAll({
+      // @ts-expect-error - Weird snoowrap types. Can ignore.
       limit: limitWithDefaults,
       depth: depthWithDefaults,
     }) as any)) as Snoowrap.Comment[];
@@ -150,4 +150,28 @@ export class RedditClient {
         : undefined,
     };
   };
+
+  async getPostById(postId: string): Promise<any> {
+    return await this.snoowrapClient.getSubmission(postId).fetch();
+  }
+
+  /**
+   * Retrieves post data from a Reddit URL
+   * @param url - Full Reddit post URL (e.g., https://www.reddit.com/r/subreddit/comments/postid/title/)
+   * @returns Promise containing the post data
+   * @throws Error if the URL is not a valid Reddit post URL
+   */
+  async getPostByURL(url: string): Promise<Submission> {
+    // Extract post ID from URL - matches both old and new Reddit URL formats
+    const urlPattern = /reddit\.com\/r\/[^/]+\/comments\/([a-zA-Z0-9]+)/;
+    const match = url.match(urlPattern);
+
+    if (!match) {
+      throw new Error("Invalid Reddit post URL");
+    }
+
+    const postId = match[1];
+    const submission = (await this.getPostById(postId)) as any;
+    return submission as Submission;
+  }
 }

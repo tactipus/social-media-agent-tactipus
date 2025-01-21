@@ -22,3 +22,13 @@ test("Reddit client can fetch comments from post", async () => {
   console.dir(comments.map(client.simplifyComment), { depth: null });
   expect(comments.length).toBeGreaterThan(0);
 });
+
+test("Reddit client can fetch post by URL", async () => {
+  const client = await RedditClient.fromUserless();
+  const url =
+    "https://www.reddit.com/r/LocalLLaMA/comments/1i31ji5/what_is_elevenlabs_doing_how_is_it_so_good/";
+  const post = await client.getPostByURL(url);
+  console.log("Post:\n");
+  console.dir(post, { depth: null });
+  expect(post).toBeDefined();
+});

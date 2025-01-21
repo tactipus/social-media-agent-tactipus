@@ -35,3 +35,30 @@ export async function getRedditPosts(
 
   return data.filter((post) => uniquePostIds.includes(post.post.id));
 }
+
+export async function getLangChainRedditPosts(config: LangGraphRunnableConfig) {
+  const client = await RedditClient.fromUserless();
+  const topPosts = await client.getTopPosts("LangChain", { limit: 25 });
+  const data: SimpleRedditPostWithComments[] = [];
+  for (const post of topPosts) {
+    const comments = await client.getPostComments(post.id, {
+      limit: 10, // default
+      depth: 3, // default
+    });
+    data.push({
+      post: client.simplifyPost(post),
+      comments: comments.map(client.simplifyComment),
+    });
+  }
+
+  const processedPostIds = await getRedditPostIds(config);
+  const postIds = data.map((post) => post.post.id);
+  const uniquePostIds = getUniqueArrayItems(processedPostIds, postIds);
+  const allPostIds = Array.from(
+    new Set([...processedPostIds, ...uniquePostIds]),
+  );
+
+  await putRedditPostIds(allPostIds, config);
+
+  return data.filter((post) => uniquePostIds.includes(post.post.id));
+}

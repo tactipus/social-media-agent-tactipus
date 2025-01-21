@@ -10,8 +10,19 @@ import { generateReports } from "./nodes/generate-reports.js";
 import { groupTweetsByContent } from "./nodes/tweets/group-tweets-by-content.js";
 import { reflectOnTweetGroups } from "./nodes/tweets/reflect-tweet-groups.js";
 import { reGroupTweets } from "./nodes/tweets/re-group-tweets.js";
+import { generatePostsSubgraph } from "./nodes/generate-posts-subgraph.js";
 
 function verifyContentWrapper(state: CurateDataState): Send[] {
+  const useLangChain = process.env.USE_LANGCHAIN_PROMPTS === "true";
+
+  if (useLangChain) {
+    return [
+      new Send("generatePostsSubgraph", {
+        ...state,
+      }),
+    ];
+  }
+
   const latentSpaceSends = state.latentSpacePosts.map((post) => {
     return new Send("verifyGeneralContent", {
       link: post,
@@ -63,6 +74,8 @@ const curateDataWorkflow = new StateGraph(CurateDataAnnotation)
   .addNode("groupTweetsByContent", groupTweetsByContent)
   .addNode("reflectOnTweetGroups", reflectOnTweetGroups)
   .addNode("reGroupTweets", reGroupTweets)
+
+  .addNode("generatePostsSubgraph", generatePostsSubgraph)
 
   .addNode("generateReports", generateReports)
   .addEdge(START, "ingestData")

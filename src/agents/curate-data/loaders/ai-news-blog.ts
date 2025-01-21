@@ -25,7 +25,7 @@ interface RSSFeed {
  * @returns {Promise<string[]>} Array of links
  */
 export async function aiNewsBlogLoader(): Promise<string[]> {
-  const lastCheckTime = new Date(new Date().getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
+  const lastCheckTime = new Date(new Date().getTime() - 96 * 60 * 60 * 1000); // 24 hours ago
 
   try {
     // Fetch the RSS feed
@@ -36,7 +36,7 @@ export async function aiNewsBlogLoader(): Promise<string[]> {
 
     // Get the text content
     const xmlContent = await response.text();
-
+    console.log("Fetched RSS feed:", xmlContent.slice(0, 2000));
     // Parse the XML content
     const parsedFeed = (await parseStringPromise(xmlContent)) as RSSFeed;
 
