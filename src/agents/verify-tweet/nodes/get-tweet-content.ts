@@ -6,11 +6,6 @@ import { resolveTwitterUrl } from "../../../clients/twitter/utils.js";
 export async function getTweetContent(
   state: typeof VerifyTweetAnnotation.State,
 ) {
-  const twitterUserId = process.env.TWITTER_USER_ID;
-  if (!twitterUserId) {
-    throw new Error("Twitter user ID not found in configurable fields.");
-  }
-
   const tweetId = extractTweetId(state.link);
   if (!tweetId) {
     return {};
@@ -23,6 +18,11 @@ export async function getTweetContent(
   if (useTwitterApiOnly === "true" || useArcadeAuth !== "true") {
     twitterClient = TwitterClient.fromBasicTwitterAuth();
   } else {
+    const twitterUserId = process.env.TWITTER_USER_ID;
+    if (!twitterUserId) {
+      throw new Error("Twitter user ID not found in configurable fields.");
+    }
+
     const twitterToken = process.env.TWITTER_USER_TOKEN;
     const twitterTokenSecret = process.env.TWITTER_USER_TOKEN_SECRET;
 

@@ -72,13 +72,6 @@ export async function schedulePost(
   const isTextOnlyMode = isTextOnly(config);
   const postToLinkedInOrg = shouldPostToLinkedInOrg(config);
 
-  const twitterUserId = process.env.TWITTER_USER_ID;
-  const linkedInUserId = process.env.LINKEDIN_USER_ID;
-
-  if (!twitterUserId && !linkedInUserId) {
-    throw new Error("One of twitterUserId or linkedInUserId must be provided");
-  }
-
   const client = new Client({
     apiUrl: `http://localhost:${process.env.PORT}`,
   });

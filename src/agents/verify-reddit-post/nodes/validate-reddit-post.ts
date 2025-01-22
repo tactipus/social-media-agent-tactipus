@@ -39,21 +39,25 @@ function formatUserPrompt(state: VerifyRedditGraphState) {
 ${state.redditPost.post.title}
 ${state.redditPost.post.selftext}
 </reddit_post>`;
-  const formattedComments = `<reddit_post_comments>
+  const formattedComments = state.redditPost.comments?.length
+    ? `<reddit_post_comments>
 ${state.redditPost.comments.map((c) => `${c.author}\n${c.body}`).join("\n")}
-</reddit_post_comments>`;
+</reddit_post_comments>`
+    : "";
   const fullFormattedPost = `${formattedPost}\n${formattedComments}`;
 
-  const formattedExternalContent = state.pageContents
-    .map(
-      (
-        c,
-        idx,
-      ) => `<external_content${state.relevantLinks?.[idx] ? ` url="${state.relevantLinks[idx]}"` : ""}>
+  const formattedExternalContent = state.pageContents?.length
+    ? state.pageContents
+        .map(
+          (
+            c,
+            idx,
+          ) => `<external_content${state.relevantLinks?.[idx] ? ` url="${state.relevantLinks[idx]}"` : ""}>
 ${c}
 </external_content>`,
-    )
-    .join("\n");
+        )
+        .join("\n")
+    : "";
 
   const fullPrompt = `${fullFormattedPost}\n\n${formattedExternalContent}`;
   return fullPrompt;
