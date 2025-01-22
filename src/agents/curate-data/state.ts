@@ -2,11 +2,13 @@ import { Annotation } from "@langchain/langgraph";
 import {
   GitHubTrendingData,
   PageContentData,
+  ThreadRunId,
   TweetsGroupedByContent,
 } from "./types.js";
 import { TweetV2 } from "twitter-api-v2";
 import { SimpleRedditPostWithComments } from "../../clients/reddit/types.js";
 import { RedditPostsWithExternalData } from "../verify-reddit-post/types.js";
+import { NUM_POSTS_PER_SUBREDDIT } from "./constants.js";
 
 export const CurateDataAnnotation = Annotation.Root({
   /**
@@ -70,6 +72,10 @@ export const CurateDataAnnotation = Annotation.Root({
    * A list of verified Reddit posts.
    */
   redditPosts: Annotation<RedditPostsWithExternalData[]>,
+  /**
+   * The thread & run IDs for runs kicked off after curating data.
+   */
+  threadRunIds: Annotation<ThreadRunId[]>,
 });
 
 export type Source =
@@ -84,6 +90,10 @@ export const CurateDataConfigurableAnnotation = Annotation.Root({
    * The sources to ingest from.
    */
   sources: Annotation<Source[]>,
+  /**
+   * The number of posts to fetch per subreddit when ingesting Reddit posts.
+   */
+  [NUM_POSTS_PER_SUBREDDIT]: Annotation<number | undefined>(),
 });
 
 export type CurateDataState = typeof CurateDataAnnotation.State;

@@ -6,6 +6,7 @@ import {
 } from "../utils/stores/reddit-post-ids.js";
 import { getUniqueArrayItems } from "../utils/get-unique-array.js";
 import { SimpleRedditPostWithComments } from "../../../clients/reddit/types.js";
+import { NUM_POSTS_PER_SUBREDDIT } from "../constants.js";
 
 export async function getRedditPosts(
   config: LangGraphRunnableConfig,
@@ -37,12 +38,14 @@ export async function getRedditPosts(
 }
 
 export async function getLangChainRedditPosts(config: LangGraphRunnableConfig) {
+  const numPostsPerSubreddit =
+    config.configurable?.[NUM_POSTS_PER_SUBREDDIT] || 25;
   const client = await RedditClient.fromUserless();
   const newPostsLangChain = await client.getNewPosts("LangChain", {
-    limit: 25,
+    limit: numPostsPerSubreddit,
   });
   const newPostsLangGraph = await client.getNewPosts("LangGraph", {
-    limit: 25,
+    limit: numPostsPerSubreddit,
   });
 
   const allNewPosts = [...newPostsLangChain, ...newPostsLangGraph];

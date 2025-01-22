@@ -36,6 +36,8 @@ Your task is to carefully read over the entire page, and determine whether or no
 
 ${getPrompts().businessContext}
 
+${getPrompts().contentValidationPrompt}
+
 Given this context, examine the webpage content closely, and determine if the content is relevant to your context.
 You should provide reasoning as to why or why not the content is relevant to your context, then a simple true or false for whether or not it is relevant.`;
 

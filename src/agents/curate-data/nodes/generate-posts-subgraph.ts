@@ -17,6 +17,7 @@ import {
 } from "../utils/stores/reddit-post-ids.js";
 import { getTweetIds, putTweetIds } from "../utils/stores/twitter.js";
 import { SlackClient } from "../../../clients/slack.js";
+import { ThreadRunId } from "../types.js";
 
 async function saveIngestedData(
   state: CurateDataState,
@@ -70,9 +71,11 @@ export async function generatePostsSubgraph(
     },
   );
 
+  const threadRunIds: ThreadRunId[] = [];
+
   for (const { link, afterSeconds } of afterSecondsList) {
     const { thread_id } = await client.threads.create();
-    await client.runs.create(thread_id, "generate_post", {
+    const { run_id } = await client.runs.create(thread_id, "generate_post", {
       input: {
         links: [link],
       },
@@ -83,6 +86,7 @@ export async function generatePostsSubgraph(
       },
       afterSeconds,
     });
+    threadRunIds.push({ thread_id, run_id });
   }
 
   let slackClient: SlackClient | undefined = undefined;
@@ -117,5 +121,7 @@ Thread ID: *${config.configurable?.thread_id || "not found"}*
     }
   }
 
-  return {};
+  return {
+    threadRunIds,
+  };
 }

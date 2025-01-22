@@ -25,6 +25,8 @@ You're doing this to ensure the content is relevant to your company, and it can 
 
 ${getPrompts().businessContext}
 
+${getPrompts().contentValidationPrompt}
+
 Given this context, examine the entire Tweet plus webpage content closely, and determine if the content implements your company's products.
 You should provide reasoning as to why or why not the content implements your company's products, then a simple true or false for whether or not it implements some.`;
 

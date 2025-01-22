@@ -76,7 +76,9 @@ export async function getRepoContents(repoUrl: string): Promise<RepoContent[]> {
     }));
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to fetch repository contents: ${error.message}`);
+      throw new Error(
+        `Failed to fetch repository contents: ${error.message}\n\nRepo URL: ${repoUrl}`,
+      );
     }
     throw error;
   }

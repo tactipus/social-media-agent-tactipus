@@ -49,3 +49,5 @@ export type TweetsGroupedByContent = {
   explanation: string;
   tweets: TweetV2WithURLs[];
 };
+
+export type ThreadRunId = { thread_id: string; run_id: string };

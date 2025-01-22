@@ -3,6 +3,7 @@
     "agentinbox",
     "checkpointer",
     "reranked",
+    "subreddits",
     "Supabase",
     "Userless"
   ]

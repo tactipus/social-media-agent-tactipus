@@ -41,6 +41,8 @@ You're doing this to ensure the content is relevant to LangChain, and it can be 
 
 ${getPrompts().businessContext}
 
+${getPrompts().contentValidationPrompt}
+
 {repoDependenciesPrompt}
 
 Given this context, examine the  {file_type} closely, and determine if the repository implements your company's products.
