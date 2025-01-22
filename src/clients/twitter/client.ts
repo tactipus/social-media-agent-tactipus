@@ -422,6 +422,8 @@ export class TwitterClient {
       if (tweetContent) {
         return tweetContent;
       }
+
+      throw new Error("Tweet not found");
     }
 
     if (!fields?.twitterUserId) {

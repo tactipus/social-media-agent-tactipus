@@ -76,6 +76,7 @@ export async function generateThreadPlan(
 ): Promise<Partial<typeof GenerateThreadAnnotation.State>> {
   const model = new ChatOpenAI({
     model: "o1",
+    streaming: false,
   });
 
   const userMessage = `Here are the report(s) you should use to plan the thread:

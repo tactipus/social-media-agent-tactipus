@@ -2,7 +2,11 @@ import { Client } from "@langchain/langgraph-sdk";
 import { CurateDataState } from "../state.js";
 import { getTweetLink } from "../../../clients/twitter/utils.js";
 import { POST_TO_LINKEDIN_ORGANIZATION } from "../../generate-post/constants.js";
-import { getUrlType, shouldPostToLinkedInOrg } from "../../utils.js";
+import {
+  getAfterSecondsFromLinks,
+  getUrlType,
+  shouldPostToLinkedInOrg,
+} from "../../utils.js";
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import {
   getGitHubRepoURLs,
@@ -46,22 +50,6 @@ async function saveIngestedData(
   ]);
 }
 
-function getAfterSecondsFromLinks(links: string[]): {
-  link: string;
-  afterSeconds: number;
-}[] {
-  const baseDelaySeconds = 30;
-  return links.map((link, index) => {
-    const isTwitterUrl = getUrlType(link) === "twitter";
-    const additionalDelay = isTwitterUrl ? baseDelaySeconds : 0;
-    const afterSeconds = index * baseDelaySeconds + additionalDelay;
-    return {
-      link,
-      afterSeconds,
-    };
-  });
-}
-
 export async function generatePostsSubgraph(
   state: CurateDataState,
   config: LangGraphRunnableConfig,
@@ -76,12 +64,12 @@ export async function generatePostsSubgraph(
     t.author_id ? [getTweetLink(t.author_id, t.id)] : [],
   );
   const redditURLs = state.rawRedditPosts.map((p) => p.post.url);
-
-  const afterSecondsList = getAfterSecondsFromLinks([
-    ...twitterURLs,
-    ...redditURLs,
-    ...state.rawTrendingRepos,
-  ]);
+  const afterSecondsList = getAfterSecondsFromLinks(
+    [...twitterURLs, ...redditURLs, ...state.rawTrendingRepos],
+    {
+      baseDelaySeconds: 60,
+    },
+  );
 
   for (const { link, afterSeconds } of afterSecondsList) {
     const { thread_id } = await client.threads.create();

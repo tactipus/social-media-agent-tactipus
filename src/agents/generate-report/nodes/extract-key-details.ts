@@ -39,6 +39,7 @@ export async function extractKeyDetails(
 
   const model = new ChatOpenAI({
     model: "o1",
+    streaming: false,
   });
 
   const keyDetailsRes = await model.invoke([

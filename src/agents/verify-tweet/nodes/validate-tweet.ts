@@ -97,7 +97,7 @@ export async function validateTweetContent(
   }
 
   return {
-    relevantLinks: [state.link],
+    relevantLinks: [state.link, ...state.tweetContentUrls],
     pageContents: [context],
   };
 }

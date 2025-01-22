@@ -153,7 +153,6 @@ export async function validateBulkTweets(
   const allRelevantTweets: TweetV2[] = [];
 
   for (const chunk of chunkedTweets) {
-    console.log(`Validating ${chunk.length} tweets...`);
     const formattedPrompt = VALIDATE_BULK_TWEETS_PROMPT.replace(
       "{TWEETS}",
       formatTweets(chunk),
@@ -168,9 +167,6 @@ export async function validateBulkTweets(
         `Expected ${answer.length} relevant tweets, but found ${relevantTweets.length}`,
       );
     }
-    console.log(
-      `Finished validating tweets. ${relevantTweets.length}/${chunk.length} are relevant.`,
-    );
     allRelevantTweets.push(...relevantTweets);
   }
 

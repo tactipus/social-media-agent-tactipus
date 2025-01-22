@@ -135,7 +135,7 @@ export async function reGroupTweets(
     return {};
   }
 
-  const model = new ChatOpenAI({ model: "o1" });
+  const model = new ChatOpenAI({ model: "o1", streaming: false });
 
   const { include, review } = splitGroups(
     state.tweetsGroupedByContent,

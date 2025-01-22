@@ -66,7 +66,7 @@ function parseGeneration(
 export async function groupTweetsByContent(
   state: CurateDataState,
 ): Promise<Partial<CurateDataState>> {
-  const model = new ChatOpenAI({ model: "o1" });
+  const model = new ChatOpenAI({ model: "o1", streaming: false });
 
   const formattedUserPrompt = `Here are the tweets you should inspect, and group:
 <all-tweets>
@@ -85,9 +85,6 @@ ${tweetText}
     ["system", GROUP_BY_CONTENT_PROMPT],
     ["user", formattedUserPrompt],
   ]);
-
-  console.log("Result");
-  console.log(result.content);
 
   const parsedGenerations = parseGeneration(result.content as string);
 

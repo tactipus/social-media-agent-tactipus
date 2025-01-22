@@ -36,7 +36,6 @@ export async function aiNewsBlogLoader(): Promise<string[]> {
 
     // Get the text content
     const xmlContent = await response.text();
-    console.log("Fetched RSS feed:", xmlContent.slice(0, 2000));
     // Parse the XML content
     const parsedFeed = (await parseStringPromise(xmlContent)) as RSSFeed;
 

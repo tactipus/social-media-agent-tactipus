@@ -95,7 +95,7 @@ ${formatTweetsInGroup(group.tweets)}
 export async function reflectOnTweetGroups(
   state: CurateDataState,
 ): Promise<Partial<CurateDataState>> {
-  const model = new ChatOpenAI({ model: "o1" });
+  const model = new ChatOpenAI({ model: "o1", streaming: false });
 
   const formattedUserPrompt = `Hi! Here are all of the groups I put together:
 ${formatUserPrompt(state.tweetsGroupedByContent)}

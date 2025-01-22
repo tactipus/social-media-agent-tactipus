@@ -22,9 +22,11 @@ export async function ingestData(
     throw new Error("No sources provided");
   }
 
+  if (!process.env.PORT) {
+    throw new Error("PORT environment variable not set");
+  }
+
   const useLangChain = process.env.USE_LANGCHAIN_PROMPTS === "true";
-  console.log("\n\n\nRUNNING INGEST DATA\n\n\n");
-  console.log("useLangChain", useLangChain, "\n\n\n");
 
   let tweets: TweetV2[] = [];
   let trendingRepos: string[] = [];

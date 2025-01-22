@@ -32,6 +32,7 @@ export async function generateReport(
 
   const reportO1Model = new ChatOpenAI({
     model: "o1",
+    streaming: false,
   });
 
   const formattedReportPrompt = GENERATE_REPORT_PROMPT_O1.replace(

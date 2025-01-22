@@ -4,8 +4,8 @@ export const NAMESPACE = ["saved_data", "twitter"];
 export const IDS_KEY = "ids";
 export const IDS_OBJECT_KEY = "data";
 
-export const ID_KEY = "id";
-export const ID_OBJECT_KEY = "data";
+export const LAST_INGESTED_ID_KEY = "last_ingested_id";
+export const LAST_INGESTED_ID_OBJECT_KEY = "data";
 
 export async function putTweetIds(
   tweetIds: string[],
@@ -42,8 +42,8 @@ export async function putLastIngestedTweetId(
   if (!store) {
     throw new Error("No store provided");
   }
-  await store.put(NAMESPACE, ID_KEY, {
-    [ID_OBJECT_KEY]: id,
+  await store.put(NAMESPACE, LAST_INGESTED_ID_KEY, {
+    [LAST_INGESTED_ID_OBJECT_KEY]: id,
   });
 }
 
@@ -54,9 +54,9 @@ export async function getLastIngestedTweetId(
   if (!store) {
     throw new Error("No store provided");
   }
-  const idData = await store.get(NAMESPACE, ID_KEY);
+  const idData = await store.get(NAMESPACE, LAST_INGESTED_ID_KEY);
   if (!idData) {
     return "";
   }
-  return idData.value?.[ID_OBJECT_KEY] || "";
+  return idData.value?.[LAST_INGESTED_ID_OBJECT_KEY] || "";
 }

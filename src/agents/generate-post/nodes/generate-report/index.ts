@@ -44,6 +44,7 @@ async function generateReportWithO1(
 
   const reportO1Model = new ChatOpenAI({
     model: "o1",
+    streaming: false,
   });
 
   const keyDetails = (
