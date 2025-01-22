@@ -90,6 +90,28 @@ export class RedditClient {
   }
 
   /**
+   * Retrieves new posts from a specified subreddit
+   * @param subreddit - Name of the subreddit to fetch posts from
+   * @param options - Optional configuration object
+   * @param options.limit - Maximum number of posts to retrieve (default: 10)
+   * @returns Promise containing an array of Snoowrap Submissions
+   */
+  async getNewPosts(
+    subreddit: string,
+    options?: {
+      limit?: number;
+    },
+  ): Promise<Snoowrap.Submission[]> {
+    const limitWithDefaults = options?.limit != null ? options.limit : 10;
+
+    const posts = (await (this.snoowrapClient.getSubreddit(subreddit).getNew({
+      limit: limitWithDefaults,
+    }) as any)) as Snoowrap.Submission[];
+
+    return posts;
+  }
+
+  /**
    * Converts a Snoowrap Submission into a simplified post format
    * @param post - Snoowrap Submission object to simplify
    * @returns Simplified Reddit post object

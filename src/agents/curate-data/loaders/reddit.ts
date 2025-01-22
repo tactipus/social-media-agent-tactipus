@@ -38,9 +38,17 @@ export async function getRedditPosts(
 
 export async function getLangChainRedditPosts(config: LangGraphRunnableConfig) {
   const client = await RedditClient.fromUserless();
-  const topPosts = await client.getTopPosts("LangChain", { limit: 25 });
+  const newPostsLangChain = await client.getNewPosts("LangChain", {
+    limit: 25,
+  });
+  const newPostsLangGraph = await client.getNewPosts("LangGraph", {
+    limit: 25,
+  });
+
+  const allNewPosts = [...newPostsLangChain, ...newPostsLangGraph];
+
   const data: SimpleRedditPostWithComments[] = [];
-  for (const post of topPosts) {
+  for (const post of allNewPosts) {
     const comments = await client.getPostComments(post.id, {
       limit: 10, // default
       depth: 3, // default

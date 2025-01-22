@@ -387,14 +387,14 @@ export function getUrlType(
   }
 
   if (
-    (options?.includeArxiv && parsedUrl.hostname.includes("reddit")) ||
+    parsedUrl.hostname.includes("reddit") ||
     parsedUrl.hostname.includes("np.reddit") ||
     parsedUrl.hostname.includes("redd.it")
   ) {
     return "reddit";
   }
 
-  if (parsedUrl.hostname.includes("arxiv.org")) {
+  if (options?.includeArxiv && parsedUrl.hostname.includes("arxiv.org")) {
     return "arxiv";
   }
 
