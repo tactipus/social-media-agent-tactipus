@@ -4,7 +4,6 @@ import { getTweetLink } from "../../../clients/twitter/utils.js";
 import { POST_TO_LINKEDIN_ORGANIZATION } from "../../generate-post/constants.js";
 import {
   getAfterSecondsFromLinks,
-  getUrlType,
   shouldPostToLinkedInOrg,
 } from "../../utils.js";
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
