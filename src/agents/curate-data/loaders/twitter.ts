@@ -3,10 +3,9 @@ import { TwitterClient } from "../../../clients/twitter/client.js";
 import { createdAtAfter } from "../utils/created-at-after.js";
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import {
-  getLastIngestedTweetDate,
-  putLastIngestedTweetDate,
+  getLastIngestedTweetId,
+  putLastIngestedTweetId,
 } from "../utils/stores/twitter.js";
-import { format } from "date-fns";
 
 const LIST_ID = "1585430245762441216";
 
@@ -81,29 +80,28 @@ export async function twitterLoader(): Promise<TweetV2[]> {
 export async function twitterLoaderWithLangChain(
   config: LangGraphRunnableConfig,
 ) {
-  const lastIngestedTweetDate = await getLastIngestedTweetDate(config);
-  const filterSince = lastIngestedTweetDate
-    ? `since:${lastIngestedTweetDate}`
-    : "";
+  const lastIngestedTweetId = await getLastIngestedTweetId(config);
   const client = TwitterClient.fromBasicTwitterAuth();
-
-  const langchainTweets = await client.searchTweets(
-    `(@LangChainAI) -filter:replies ${filterSince}`,
-    {
-      maxResults: 60, // Twitter API v2 limits to 60 req/15 min
-    },
-  );
+  const query = `@LangChainAI -is:reply -is:retweet -is:quote has:links`;
+  const langchainTweets = await client.searchTweets(query, {
+    maxResults: 60, // Twitter API v2 limits to 60 req/15 min,
+    sinceId: lastIngestedTweetId || undefined,
+  });
   const tweets = langchainTweets.data.data;
 
-  const mostRecentTweetDate = tweets
-    .map((tweet) => tweet.created_at)
-    .sort()
-    .pop();
+  const mostRecentTweetId = tweets
+    .sort((a, b) => {
+      if (!a.created_at || !b.created_at) {
+        return 0;
+      }
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    })
+    .map((tweet) => tweet.id)[0];
 
-  if (mostRecentTweetDate) {
-    // Format into YYYY-MM-DD using `format` from date-fns
-    const formattedDate = format(new Date(mostRecentTweetDate), "yyyy-MM-dd");
-    await putLastIngestedTweetDate(formattedDate, config);
+  if (mostRecentTweetId) {
+    await putLastIngestedTweetId(mostRecentTweetId, config);
   }
 
   return tweets;

@@ -469,12 +469,14 @@ export class TwitterClient {
    * @param query - The search query string to find relevant tweets
    * @param options - Optional configuration for the search
    * @param options.maxResults - Maximum number of tweets to return (default: 15)
+   * @param options.sinceId - Only return tweets newer than this ID
    * @returns {Promise<import('twitter-api-v2').TwitterApiV2.TweetSearchResults>} A promise that resolves to the search results
    */
   async searchTweets(
     query: string,
     options?: {
       maxResults?: number;
+      sinceId?: string;
     },
   ) {
     const fetchTweetOptions: Partial<Tweetv2FieldsParams> =
@@ -483,6 +485,7 @@ export class TwitterClient {
     const tweets = await this.twitterClient.v2.search(query, {
       ...fetchTweetOptions,
       max_results: options?.maxResults || 15,
+      since_id: options?.sinceId,
     });
     return tweets;
   }

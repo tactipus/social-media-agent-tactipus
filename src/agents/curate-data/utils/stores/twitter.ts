@@ -4,8 +4,8 @@ export const NAMESPACE = ["saved_data", "twitter"];
 export const IDS_KEY = "ids";
 export const IDS_OBJECT_KEY = "data";
 
-export const DATE_KEY = "date";
-export const DATE_OBJECT_KEY = "data";
+export const ID_KEY = "id";
+export const ID_OBJECT_KEY = "data";
 
 export async function putTweetIds(
   tweetIds: string[],
@@ -34,29 +34,29 @@ export async function getTweetIds(
   return tweetIds.value?.[IDS_OBJECT_KEY] || [];
 }
 
-export async function putLastIngestedTweetDate(
-  date: string,
+export async function putLastIngestedTweetId(
+  id: string,
   config: LangGraphRunnableConfig,
 ) {
   const store = config.store;
   if (!store) {
     throw new Error("No store provided");
   }
-  await store.put(NAMESPACE, DATE_KEY, {
-    [DATE_OBJECT_KEY]: date,
+  await store.put(NAMESPACE, ID_KEY, {
+    [ID_OBJECT_KEY]: id,
   });
 }
 
-export async function getLastIngestedTweetDate(
+export async function getLastIngestedTweetId(
   config: LangGraphRunnableConfig,
 ): Promise<string> {
   const store = config.store;
   if (!store) {
     throw new Error("No store provided");
   }
-  const date = await store.get(NAMESPACE, DATE_KEY);
-  if (!date) {
+  const idData = await store.get(NAMESPACE, ID_KEY);
+  if (!idData) {
     return "";
   }
-  return date.value?.[DATE_OBJECT_KEY] || "";
+  return idData.value?.[ID_OBJECT_KEY] || "";
 }

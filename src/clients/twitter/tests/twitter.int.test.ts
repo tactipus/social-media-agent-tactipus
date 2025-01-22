@@ -67,7 +67,7 @@ describe("Basic Twitter Auth", () => {
     expect(result).toBeDefined();
   });
 
-  it.only("Can fetch a thread using the original tweet", async () => {
+  it("Can fetch a thread using the original tweet", async () => {
     const baseThreadTweet: TweetV2 = {
       created_at: "2025-01-17T15:03:15.000Z",
       edit_history_tweet_ids: ["1880269659070689496"],
@@ -85,5 +85,15 @@ describe("Basic Twitter Auth", () => {
     console.dir(validatedThread, { depth: null });
     expect(validatedThread).toBeDefined();
     expect(validatedThread?.length).toBe(9);
+  });
+
+  it("Can search tweets", async () => {
+    const query = `@LangChainAI -is:reply -is:retweet -is:quote has:links`;
+    const langchainTweets = await client.searchTweets(query, {
+      maxResults: 10, // Twitter API v2 limits to 60 req/15 min
+    });
+    expect(langchainTweets.data).toBeDefined();
+    expect(langchainTweets.data.data).toBeDefined();
+    expect(langchainTweets.data.data.length).toBe(10);
   });
 });

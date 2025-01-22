@@ -1,4 +1,4 @@
-import { END, Send, START, StateGraph } from "@langchain/langgraph";
+import { Annotation, END, Send, START, StateGraph } from "@langchain/langgraph";
 import {
   CurateDataAnnotation,
   CurateDataConfigurableAnnotation,
@@ -68,7 +68,7 @@ function reGroupOrContinue(state: CurateDataState) {
 }
 
 const curateDataWorkflow = new StateGraph(
-  CurateDataAnnotation,
+  { stateSchema: CurateDataAnnotation, input: Annotation.Root({}) },
   CurateDataConfigurableAnnotation,
 )
   .addNode("ingestData", ingestData)
