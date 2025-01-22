@@ -31,7 +31,7 @@ export async function backfill() {
       configurable: {
         // slackChannelId: "ADD_SLACK_CHANNEL_ID_HERE",
         // maxDaysHistory: 10, // Or change to desired number of days
-        sources: ["twitter", "github", "reddit"],
+        sources: ["twitter"],
       },
     },
     input: {},

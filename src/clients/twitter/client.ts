@@ -326,26 +326,21 @@ export class TwitterClient {
   /**
    * Get a tweet by ID using the basic Twitter API. Will return undefined if an error occurs.
    * @param id The tweet ID
-   * @returns {Promise<TweetV2SingleResult | undefined>} The tweet or undefined if an error occurs
+   * @returns {Promise<TweetV2SingleResult>} The tweet
    */
   private async getTweetBasicAuth(
     id: string,
     tweetOptions?: Partial<Tweetv2FieldsParams>,
   ): Promise<TweetV2SingleResult | undefined> {
-    try {
-      const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
-        ...BASE_FETCH_TWEET_OPTIONS,
-        ...(tweetOptions || {}),
-      };
-      const tweetContent = await this.twitterClient.v2.singleTweet(
-        id,
-        fetchTweetOptions,
-      );
-      return tweetContent;
-    } catch (e) {
-      console.error("Failed to get tweet:", e);
-      return undefined;
-    }
+    const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
+      ...BASE_FETCH_TWEET_OPTIONS,
+      ...(tweetOptions || {}),
+    };
+    const tweetContent = await this.twitterClient.v2.singleTweet(
+      id,
+      fetchTweetOptions,
+    );
+    return tweetContent;
   }
 
   /**
@@ -472,7 +467,7 @@ export class TwitterClient {
    * @param options - Optional configuration for the search
    * @param options.maxResults - Maximum number of tweets to return (default: 15)
    * @param options.sinceId - Only return tweets newer than this ID
-   * @returns {Promise<import('twitter-api-v2').TwitterApiV2.TweetSearchResults>} A promise that resolves to the search results
+   * @returns {Promise<TweetSearchRecentV2Paginator>} A promise that resolves to the search results
    */
   async searchTweets(
     query: string,

@@ -73,8 +73,13 @@ export async function extractAINewsletterContent(
       console.warn("Failed to extract tweet ID from URL:", twitterURL);
       continue;
     }
-    const tweetContent = await twitterClient.getTweet(tweetId);
-    tweets.push(tweetContent.data);
+    try {
+      const tweetContent = await twitterClient.getTweet(tweetId);
+      tweets.push(tweetContent.data);
+    } catch (e) {
+      console.error("Failed to fetch tweet:", e);
+      continue;
+    }
   }
 
   const redditPosts: SimpleRedditPostWithComments[] = [];

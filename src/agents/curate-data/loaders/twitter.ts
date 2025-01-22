@@ -82,7 +82,11 @@ export async function twitterLoaderWithLangChain(
 ) {
   const lastIngestedTweetId = await getLastIngestedTweetId(config);
   const client = TwitterClient.fromBasicTwitterAuth();
-  const query = `@LangChainAI -is:reply -is:retweet -is:quote has:links`;
+  // Don't return tweets from the LangChain account, or active LangChain employees since these
+  // are likely to have already been sent to the agent/are duplicates.
+  const excludeUsers =
+    "-from:LangChainAI -from:hwchase17 -from:bracesproul -from:Hacubu";
+  const query = `@LangChainAI -is:reply -is:retweet -is:quote has:links ${excludeUsers}`;
   const langchainTweets = await client.searchTweets(query, {
     maxResults: 60, // Twitter API v2 limits to 60 req/15 min,
     sinceId: lastIngestedTweetId || undefined,
