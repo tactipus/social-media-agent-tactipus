@@ -62,11 +62,5 @@ export async function getLangChainRedditPosts(config: LangGraphRunnableConfig) {
   const processedPostIds = await getRedditPostIds(config);
   const postIds = data.map((post) => post.post.id);
   const uniquePostIds = getUniqueArrayItems(processedPostIds, postIds);
-  const allPostIds = Array.from(
-    new Set([...processedPostIds, ...uniquePostIds]),
-  );
-
-  await putRedditPostIds(allPostIds, config);
-
   return data.filter((post) => uniquePostIds.includes(post.post.id));
 }
