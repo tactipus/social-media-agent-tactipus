@@ -60,7 +60,9 @@ const verifyLinksWorkflow = new StateGraph(VerifyLinksGraphAnnotation)
     "verifyGeneralContent",
     "verifyGitHubContent",
     "verifyTweetSubGraph",
+    "verifyRedditContent",
   ])
+  .addEdge("verifyRedditContent", END)
   .addEdge("verifyYouTubeContent", END)
   .addEdge("verifyGeneralContent", END)
   .addEdge("verifyGitHubContent", END)

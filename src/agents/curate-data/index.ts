@@ -1,5 +1,9 @@
 import { END, Send, START, StateGraph } from "@langchain/langgraph";
-import { CurateDataAnnotation, CurateDataState } from "./state.js";
+import {
+  CurateDataAnnotation,
+  CurateDataConfigurableAnnotation,
+  CurateDataState,
+} from "./state.js";
 import { ingestData } from "./nodes/ingest-data.js";
 import { verifyGitHubWrapper } from "./nodes/verify-github-wrapper.js";
 import { verifyRedditWrapper } from "./nodes/verify-reddit-wrapper.js";
@@ -63,7 +67,10 @@ function reGroupOrContinue(state: CurateDataState) {
   return "generateReports";
 }
 
-const curateDataWorkflow = new StateGraph(CurateDataAnnotation)
+const curateDataWorkflow = new StateGraph(
+  CurateDataAnnotation,
+  CurateDataConfigurableAnnotation,
+)
   .addNode("ingestData", ingestData)
   .addNode("verifyGitHubContent", verifyGitHubWrapper)
   .addNode("verifyRedditPost", verifyRedditWrapper)
