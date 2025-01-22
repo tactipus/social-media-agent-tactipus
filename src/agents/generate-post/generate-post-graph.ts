@@ -7,6 +7,7 @@ import {
 import {
   GeneratePostAnnotation,
   GeneratePostConfigurableAnnotation,
+  GeneratePostInputAnnotation,
 } from "./generate-post-state.js";
 import { generateContentReport } from "./nodes/generate-report/index.js";
 import { generatePost } from "./nodes/geterate-post/index.js";
@@ -72,7 +73,7 @@ function generateReportOrEndConditionalEdge(
 }
 
 const generatePostBuilder = new StateGraph(
-  GeneratePostAnnotation,
+  { stateSchema: GeneratePostAnnotation, input: GeneratePostInputAnnotation },
   GeneratePostConfigurableAnnotation,
 )
   .addNode("authSocialsPassthrough", authSocialsPassthrough)

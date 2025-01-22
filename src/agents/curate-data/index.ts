@@ -84,7 +84,10 @@ const curateDataWorkflow = new StateGraph(CurateDataAnnotation)
     "verifyGitHubContent",
     "verifyRedditPost",
     "verifyBulkTweets",
+    "generatePostsSubgraph",
   ])
+  // If generatePostsSubgraph is called, we should end.
+  .addEdge("generatePostsSubgraph", END)
   .addEdge("verifyGeneralContent", "generateReports")
   .addEdge("verifyGitHubContent", "generateReports")
   .addEdge("verifyRedditPost", "generateReports")

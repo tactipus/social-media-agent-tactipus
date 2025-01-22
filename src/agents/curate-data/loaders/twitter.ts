@@ -1,6 +1,12 @@
 import { TweetV2, TweetV2ListTweetsPaginator } from "twitter-api-v2";
 import { TwitterClient } from "../../../clients/twitter/client.js";
 import { createdAtAfter } from "../utils/created-at-after.js";
+import { LangGraphRunnableConfig } from "@langchain/langgraph";
+import {
+  getLastIngestedTweetDate,
+  putLastIngestedTweetDate,
+} from "../utils/stores/twitter.js";
+import { format } from "date-fns";
 
 const LIST_ID = "1585430245762441216";
 
@@ -72,35 +78,32 @@ export async function twitterLoader(): Promise<TweetV2[]> {
   return allTweets;
 }
 
-export async function twitterLoaderWithLangChain() {
+export async function twitterLoaderWithLangChain(
+  config: LangGraphRunnableConfig,
+) {
+  const lastIngestedTweetDate = await getLastIngestedTweetDate(config);
+  const filterSince = lastIngestedTweetDate
+    ? `since:${lastIngestedTweetDate}`
+    : "";
   const client = TwitterClient.fromBasicTwitterAuth();
 
-  let totalReqCount = 40;
   const langchainTweets = await client.searchTweets(
-    "(@LangChainAI) -filter:replies",
+    `(@LangChainAI) -filter:replies ${filterSince}`,
     {
-      maxResults: 40,
+      maxResults: 60, // Twitter API v2 limits to 60 req/15 min
     },
   );
   const tweets = langchainTweets.data.data;
 
-  for await (const tweet of tweets) {
-    // Twitter API has a limit of 60 requests per 15 minutes
-    if (totalReqCount >= 60) {
-      break;
-    }
-    try {
-      const thread = await client.getThreadFromId(tweet);
-      const threadWithoutOriginal = thread.filter((t) => t.id !== tweet.id);
-      tweets.push(...threadWithoutOriginal);
-      totalReqCount += threadWithoutOriginal.length;
-      for await (const t of thread) {
-        console.log(t);
-      }
-    } catch (e) {
-      console.error("Failed to call Twitter API:", e);
-      break;
-    }
+  const mostRecentTweetDate = tweets
+    .map((tweet) => tweet.created_at)
+    .sort()
+    .pop();
+
+  if (mostRecentTweetDate) {
+    // Format into YYYY-MM-DD using `format` from date-fns
+    const formattedDate = format(new Date(mostRecentTweetDate), "yyyy-MM-dd");
+    await putLastIngestedTweetDate(formattedDate, config);
   }
 
   return tweets;
