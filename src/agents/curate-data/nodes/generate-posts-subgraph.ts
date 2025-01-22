@@ -67,7 +67,7 @@ export async function generatePostsSubgraph(
   const afterSecondsList = getAfterSecondsFromLinks(
     [...twitterURLs, ...redditURLs, ...state.rawTrendingRepos],
     {
-      baseDelaySeconds: 60,
+      baseDelaySeconds: 30,
     },
   );
 
