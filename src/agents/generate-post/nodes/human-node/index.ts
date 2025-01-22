@@ -28,7 +28,7 @@ function constructDescription({
   imageOptions,
   isTextOnlyMode,
 }: ConstructDescriptionArgs): string {
-  const linksText = `### Relevant URLs:\n- ${relevantLinks.join("\n- ")}\nOriginal URL: ${originalLink}`;
+  const linksText = `### Relevant URLs:\nOriginal URL: ${originalLink}\n\n- ${relevantLinks.join("\n- ")}\n`;
   const imageOptionsText =
     imageOptions?.length && !isTextOnlyMode
       ? `## Image Options\n\nThe following image options are available. Select one by copying and pasting the URL into the 'image' field.\n\n${imageOptions.map((url) => `URL: ${url}\nImage: <details><summary>Click to view image</summary>\n\n![](${url})\n</details>\n`).join("\n")}`

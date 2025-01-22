@@ -84,8 +84,7 @@ export async function twitterLoaderWithLangChain(
   const client = TwitterClient.fromBasicTwitterAuth();
   const query = `@LangChainAI -is:reply -is:retweet -is:quote has:links`;
   const langchainTweets = await client.searchTweets(query, {
-    // maxResults: 60, // Twitter API v2 limits to 60 req/15 min,
-    maxResults: 10, // Twitter API v2 limits to 60 req/15 min,
+    maxResults: 60, // Twitter API v2 limits to 60 req/15 min,
     sinceId: lastIngestedTweetId || undefined,
   });
   const tweets = langchainTweets.data.data;
