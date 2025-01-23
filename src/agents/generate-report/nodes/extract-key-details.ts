@@ -32,6 +32,11 @@ ${tweetGroupText}`;
 export async function extractKeyDetails(
   state: GenerateReportState,
 ): Promise<Partial<GenerateReportState>> {
+  if (!state.pageContents?.length) {
+    throw new Error(
+      "No page contents found. pageContents must be defined to extract key details.",
+    );
+  }
   const keyDetailsPrompt = formatKeyDetailsPrompt(
     state.pageContents,
     state.tweetGroup,

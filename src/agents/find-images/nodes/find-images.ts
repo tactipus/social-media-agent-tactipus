@@ -34,7 +34,10 @@ function checkIsGitHubImageUrl(url: string): boolean {
 
 export async function findImages(state: typeof FindImagesAnnotation.State) {
   const { pageContents, imageOptions, relevantLinks } = state;
-  const link = relevantLinks[0];
+  const link = relevantLinks?.[0] || undefined;
+  if (!link || !relevantLinks?.length) {
+    throw new Error("No relevant links passed to findImages.");
+  }
   const imageUrls = new Set<string>();
   const gitHubSubLinks = relevantLinks.filter(
     (rl) => getUrlType(rl) === "github" && rl !== link,

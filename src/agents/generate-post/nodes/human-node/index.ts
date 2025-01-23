@@ -152,7 +152,7 @@ export async function humanNode(
     description: constructDescription({
       report: state.report,
       originalLink: state.links[0],
-      relevantLinks: state.relevantLinks,
+      relevantLinks: state.relevantLinks || [],
       post: state.post,
       imageOptions: state.imageOptions,
       unknownResponseDescription,

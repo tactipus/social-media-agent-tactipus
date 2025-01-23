@@ -28,6 +28,11 @@ function parseGeneration(generation: string): string {
 export async function generateReport(
   state: GenerateReportState,
 ): Promise<Partial<GenerateReportState>> {
+  if (!state.pageContents?.length) {
+    throw new Error(
+      "No page contents found. pageContents must be defined to generate a report.",
+    );
+  }
   const prompt = formatReportPrompt(state.pageContents);
 
   const reportO1Model = new ChatOpenAI({

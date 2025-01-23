@@ -20,27 +20,30 @@ export const VerifyRedditPostAnnotation = Annotation.Root({
   externalURLs: Annotation<string[]>,
   // REQUIRED DUE TO USING SHARED NODES
   relevantLinks: Annotation<string[] | undefined>({
-    reducer: (state, update) =>
-      !update || update.length === 0
-        ? undefined
-        : state
-          ? state.concat(update)
-          : update,
+    reducer: (state, update) => {
+      if (update === undefined) return undefined;
+      // Use a set to ensure no duplicate links are added.
+      const stateSet = new Set(state || []);
+      update.forEach((link) => stateSet.add(link));
+      return Array.from(stateSet);
+    },
+    default: () => [],
   }),
   pageContents: Annotation<string[] | undefined>({
-    reducer: (state, update) =>
-      !update || update.length === 0
-        ? undefined
-        : state
-          ? state.concat(update)
-          : update,
+    reducer: (state, update) => {
+      if (update === undefined) return undefined;
+      return (state || []).concat(update);
+    },
+    default: () => [],
   }),
   imageOptions: Annotation<string[] | undefined>({
-    reducer: (state, update) =>
-      !update || update.length === 0
-        ? undefined
-        : state
-          ? state.concat(update)
-          : update,
+    reducer: (state, update) => {
+      if (update === undefined) return undefined;
+      // Use a set to ensure no duplicate links are added.
+      const stateSet = new Set(state || []);
+      update.forEach((link) => stateSet.add(link));
+      return Array.from(stateSet);
+    },
+    default: () => [],
   }),
 });

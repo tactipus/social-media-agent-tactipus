@@ -39,6 +39,11 @@ ${pageContents.map((content, index) => `<Content index={${index + 1}}>\n${conten
 async function generateReportWithO1(
   state: typeof GeneratePostAnnotation.State,
 ) {
+  if (!state.pageContents?.length) {
+    throw new Error(
+      "No page contents found. pageContents must be defined to generate a report with o1.",
+    );
+  }
   const prompt = formatReportPrompt(state.pageContents);
   const keyDetailsPrompt = formatKeyDetailsPrompt(state.pageContents);
 
@@ -85,6 +90,12 @@ export async function generateContentReport(
   state: typeof GeneratePostAnnotation.State,
   _config: LangGraphRunnableConfig,
 ): Promise<Partial<typeof GeneratePostAnnotation.State>> {
+  if (!state.pageContents?.length) {
+    throw new Error(
+      "No page contents found. pageContents must be defined to generate a content report.",
+    );
+  }
+
   if (process.env.USE_O1_REPORT_GENERATION === "true") {
     return generateReportWithO1(state);
   }

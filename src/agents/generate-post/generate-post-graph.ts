@@ -66,7 +66,7 @@ function condenseOrHumanConditionalEdge(
 function generateReportOrEndConditionalEdge(
   state: typeof GeneratePostAnnotation.State,
 ): "generateContentReport" | typeof END {
-  if (state.pageContents.length) {
+  if (state.pageContents?.length) {
     return "generateContentReport";
   }
   return END;

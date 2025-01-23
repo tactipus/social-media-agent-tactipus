@@ -18,7 +18,7 @@ export async function generatePost(
   if (!state.report) {
     throw new Error("No report found");
   }
-  if (state.relevantLinks.length === 0) {
+  if (!state.relevantLinks?.length) {
     throw new Error("No relevant links found");
   }
   const postModel = new ChatAnthropic({

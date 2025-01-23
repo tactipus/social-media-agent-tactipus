@@ -18,7 +18,12 @@ export async function verifyGitHubWrapper(
       config,
     );
 
-    if (results.relevantLinks.length > 0 && results.pageContents.length > 0) {
+    if (
+      results.relevantLinks &&
+      results.relevantLinks.length > 0 &&
+      results.pageContents &&
+      results.pageContents.length > 0
+    ) {
       verifiedRepoData.push({
         repoURL,
         pageContent: results.pageContents[0], // Take first page content, as there should only be one

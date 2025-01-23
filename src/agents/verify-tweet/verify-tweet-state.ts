@@ -21,25 +21,28 @@ export const VerifyTweetAnnotation = Annotation.Root({
    * Page content used in the verification nodes. Will be used in the report
    * generation node.
    */
-  pageContents: Annotation<string[]>({
+  pageContents: Annotation<string[] | undefined>({
     reducer: (state, update) => {
+      if (update === undefined) return undefined;
+
       if (update[0]?.startsWith("The following is the content of the Tweet:")) {
         // This means the update is from validateTweetContent so we can remove
         // all other state fields.
         return update;
       }
 
-      return state.concat(update);
+      return (state || []).concat(update);
     },
     default: () => [],
   }),
   /**
    * Relevant links found in the message.
    */
-  relevantLinks: Annotation<string[]>({
+  relevantLinks: Annotation<string[] | undefined>({
     reducer: (state, update) => {
+      if (update === undefined) return undefined;
       // Use a set to ensure no duplicate links are added.
-      const stateSet = new Set(state);
+      const stateSet = new Set(state || []);
       update.forEach((link) => stateSet.add(link));
       return Array.from(stateSet);
     },

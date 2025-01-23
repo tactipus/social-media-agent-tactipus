@@ -23,6 +23,8 @@ import { Client } from "@langchain/langgraph-sdk";
 export async function backfill() {
   const client = new Client({
     // apiUrl: process.env.LANGGRAPH_API_URL,
+    apiUrl:
+      "https://ambient-sma-3a5696249a4e5cf79fc2b62e18e77664.us.langgraph.app",
   });
 
   const thread = await client.threads.create();
@@ -31,7 +33,7 @@ export async function backfill() {
       configurable: {
         // slackChannelId: "ADD_SLACK_CHANNEL_ID_HERE",
         // maxDaysHistory: 10, // Or change to desired number of days
-        sources: ["twitter"],
+        sources: ["twitter", "github", "reddit"],
       },
     },
     input: {},

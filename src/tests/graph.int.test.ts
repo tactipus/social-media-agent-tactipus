@@ -178,7 +178,7 @@ test("can generate summaries of youtube videos", async () => {
     {},
   );
   expect(result.pageContents).toBeDefined();
-  expect(result.pageContents[0].length).toBeGreaterThan(50); // Check character count
+  expect(result.pageContents?.[0].length).toBeGreaterThan(50); // Check character count
 });
 
 test("can interrupt and resume", async () => {

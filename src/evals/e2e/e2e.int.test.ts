@@ -36,7 +36,7 @@ const checkGeneratePostResult: SimpleEvaluator = ({ expected, actual }) => {
 
   if (
     !state.pageContents?.length &&
-    !state.relevantLinks.length &&
+    !state.relevantLinks?.length &&
     !state.imageOptions.length
   ) {
     // Likely did not pass the validation step. Fail.
@@ -60,7 +60,7 @@ const checkGeneratePostResult: SimpleEvaluator = ({ expected, actual }) => {
     }
   }
 
-  if (state.pageContents.length > 0) {
+  if (state.pageContents?.length) {
     pageContentsScore = 1;
   }
 
