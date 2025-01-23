@@ -14,6 +14,7 @@ The following are rules to follow when determining whether or not to approve con
 - You should NOT approve content from users who are requesting help, giving feedback, or otherwise not clearly about software which uses the LangChain ecosystem.
 - You should NOT approve content that is showing an error, or specific problematic issue with one of LangChain's products or services.
 - The content should be about AI, or software related to AI/LLMs in some way. LangChain is an AI software development company, so you should NOT approve content from users which are not at least somewhat related to AI.
+- Content which includes LangChain's products or services but is not focused on LangChain's products or services should be approved. As LangChain's products or services plays a part in the content, you should approve it.
 - The content should be about LangChain's products and services, or LangGraph's products and services. The following is a full list of LangChain products/services you should likely approve if mentioned:
   - LangChain
   - LangGraph
