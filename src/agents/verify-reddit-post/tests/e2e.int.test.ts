@@ -7,14 +7,10 @@ import { verifyRedditPostGraph } from "../verify-reddit-post-graph.js";
 import { VerifyRedditGraphState } from "../types.js";
 
 const checkVerifyPostResult: SimpleEvaluator = ({ expected, actual }) => {
-  const { pageContents, relevantLinks } = actual as VerifyRedditGraphState;
+  const { pageContents } = actual as VerifyRedditGraphState;
   const { relevant } = expected as { relevant: boolean };
 
-  const hasPageContentsAndLinks =
-    pageContents &&
-    pageContents?.length > 0 &&
-    relevantLinks &&
-    relevantLinks?.length > 0;
+  const hasPageContentsAndLinks = pageContents && pageContents?.length > 0;
 
   if (relevant) {
     return {

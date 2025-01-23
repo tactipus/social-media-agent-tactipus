@@ -36,7 +36,8 @@ export async function findImages(state: typeof FindImagesAnnotation.State) {
   const { pageContents, imageOptions, relevantLinks } = state;
   const link = relevantLinks?.[0] || undefined;
   if (!link || !relevantLinks?.length) {
-    throw new Error("No relevant links passed to findImages.");
+    console.warn("No relevant links passed to findImages.");
+    return {};
   }
   const imageUrls = new Set<string>();
   const gitHubSubLinks = relevantLinks.filter(

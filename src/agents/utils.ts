@@ -11,6 +11,7 @@ export const BLACKLISTED_MIME_TYPES = [
   "image/bmp",
   "text/",
 ];
+export const BLACKLISTED_GENERAL_URLS = ["vimeo.com"];
 
 /**
  * Extracts URLs from Slack-style message text containing links in the format:

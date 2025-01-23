@@ -17,7 +17,10 @@ export const VerifyRedditPostAnnotation = Annotation.Root({
   /**
    * The external URLs found in the body of the Reddit post.
    */
-  externalURLs: Annotation<string[]>,
+  externalURLs: Annotation<string[]>({
+    reducer: (state, update) => state.concat(update),
+    default: () => [],
+  }),
   // REQUIRED DUE TO USING SHARED NODES
   relevantLinks: Annotation<string[] | undefined>({
     reducer: (state, update) => {

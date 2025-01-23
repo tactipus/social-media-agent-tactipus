@@ -50,7 +50,7 @@ export async function getPost(
       simplePost.selftext += `\n\nLinked post:\n${linkedPost.title}\n${linkedPost.selftext}`;
       if (linkedPost.url) {
         // The original post URL was linking to this post, so replace it with the linked post URL, if exists
-        simplePost.url += linkedPost.url;
+        simplePost.url = linkedPost.url;
       }
 
       return {

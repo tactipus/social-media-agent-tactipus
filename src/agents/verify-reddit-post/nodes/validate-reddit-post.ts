@@ -88,7 +88,9 @@ export async function validateRedditPost(
 
   if (result.relevant) {
     // If true, return nothing so the state is not effected.
-    return {};
+    return {
+      relevantLinks: [...state.externalURLs],
+    };
   }
 
   // If the content is not relevant, reset the state so it contains empty values
