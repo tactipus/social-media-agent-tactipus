@@ -83,14 +83,14 @@ ${pageContents.map((content, index) => `<webpage-content key="${index}">\n${cont
 export async function validateTweetContent(
   state: typeof VerifyTweetAnnotation.State,
 ): Promise<Partial<typeof VerifyTweetAnnotation.State>> {
-  if (!state.pageContents?.length) {
+  if (!state.pageContents?.length && !state.tweetContent) {
     throw new Error(
-      "No page contents found. pageContents must be defined to verify the Tweet content.",
+      "Missing page contents and tweet contents. One of these must be defined to verify the Tweet content.",
     );
   }
   const context = constructContext({
     tweetContent: state.tweetContent,
-    pageContents: state.pageContents,
+    pageContents: state.pageContents || [],
   });
 
   const relevant = await verifyGeneralContentIsRelevant(context);

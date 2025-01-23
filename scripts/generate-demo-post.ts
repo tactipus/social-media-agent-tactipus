@@ -4,8 +4,7 @@ import { TEXT_ONLY_MODE } from "../src/agents/generate-post/constants.js";
 
 /**
  * Generate a post based on a LangChain blog post.
- * This is intended to be used as a demo, showing off how the
- * Social Media Agent works.
+ * This may be modified to generate posts for other content.
  */
 async function invokeGraph() {
   const link = "https://blog.langchain.dev/customers-appfolio/";

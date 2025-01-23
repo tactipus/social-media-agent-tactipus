@@ -23,22 +23,36 @@ ${tweetGroup.tweets
 `;
   }
 
-  return `The following text contains summaries, or entire pages from the content I submitted to you. Please review the content and extract ALL of the key details from it.
-${pageContents.map((content, index) => `<Content index={${index + 1}}>\n${content}\n</Content>`).join("\n\n")}
+  const pageContentsText =
+    pageContents.length > 0
+      ? pageContents
+          .map(
+            (content, index) =>
+              `<Content index={${index + 1}}>\n${content}\n</Content>`,
+          )
+          .join("\n\n")
+      : "";
+
+  if (pageContentsText.length > 0) {
+    return `The following text contains summaries, or entire pages from the content I submitted to you. Please review the content and extract ALL of the key details from it.
+${pageContentsText}
 
 ${tweetGroupText}`;
+  }
+
+  return tweetGroupText;
 };
 
 export async function extractKeyDetails(
   state: GenerateReportState,
 ): Promise<Partial<GenerateReportState>> {
-  if (!state.pageContents?.length) {
+  if (!state.pageContents?.length && !state.tweetGroup) {
     throw new Error(
-      "No page contents found. pageContents must be defined to extract key details.",
+      "Missing page contents and tweet group. One of these must be defined to extract key details.",
     );
   }
   const keyDetailsPrompt = formatKeyDetailsPrompt(
-    state.pageContents,
+    state.pageContents || [],
     state.tweetGroup,
   );
 

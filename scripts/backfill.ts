@@ -22,9 +22,7 @@ import { Client } from "@langchain/langgraph-sdk";
  */
 export async function backfill() {
   const client = new Client({
-    // apiUrl: process.env.LANGGRAPH_API_URL,
-    apiUrl:
-      "https://ambient-sma-3a5696249a4e5cf79fc2b62e18e77664.us.langgraph.app",
+    apiUrl: process.env.LANGGRAPH_API_URL,
   });
 
   const thread = await client.threads.create();
