@@ -10,20 +10,29 @@ const checkVerifyPostResult: SimpleEvaluator = ({ expected, actual }) => {
   const { pageContents, relevantLinks } = actual as VerifyRedditGraphState;
   const { relevant } = expected as { relevant: boolean };
 
-  const hasPageContentsAndLinks = Boolean(
-    pageContents?.length && relevantLinks?.length,
-  );
+  const hasPageContentsAndLinks =
+    pageContents &&
+    pageContents?.length > 0 &&
+    relevantLinks &&
+    relevantLinks?.length > 0;
+
+  if (relevant) {
+    return {
+      key: "validation_result_expected",
+      score: Number(hasPageContentsAndLinks),
+    };
+  }
 
   return {
     key: "validation_result_expected",
-    score: Number(hasPageContentsAndLinks === relevant),
+    score: Number(!hasPageContentsAndLinks),
   };
 };
 
 ls.describe("SMA - Verify Reddit Post - E2E", () => {
   ls.test.each(INPUTS)(
     "Evaluates the verify reddit post agent",
-    async ({ inputs, expected }) => {
+    async ({ inputs }) => {
       verifyRedditPostGraph.checkpointer = new MemorySaver();
       verifyRedditPostGraph.store = new InMemoryStore();
 
@@ -39,7 +48,8 @@ ls.describe("SMA - Verify Reddit Post - E2E", () => {
       await ls
         .expect(results)
         .evaluatedBy(checkVerifyPostResult)
-        .toBe(expected.relevant ? 1 : 0);
+        // Expect this to be 1, if it's 0 that means there's a discrepancy between the expected, and whether or not page contents and links were found
+        .toBe(1);
       return results;
     },
   );
