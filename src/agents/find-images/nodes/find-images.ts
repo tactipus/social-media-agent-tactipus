@@ -62,7 +62,7 @@ export async function findImages(state: typeof FindImagesAnnotation.State) {
     }
   }
 
-  if (imageOptions.length) {
+  if (imageOptions?.length) {
     imageOptions.forEach((urlOrPathname) => {
       imageUrls.add(urlOrPathname);
     });

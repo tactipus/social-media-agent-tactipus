@@ -59,7 +59,7 @@ export function parseResult(result: string): number[] {
 
 export async function reRankImages(state: typeof FindImagesAnnotation.State) {
   // No need to re-rank if less than 2 images
-  if (state.imageOptions.length < 2) {
+  if (state.imageOptions && state.imageOptions.length < 2) {
     return {
       imageOptions: state.imageOptions,
     };
@@ -71,7 +71,7 @@ export async function reRankImages(state: typeof FindImagesAnnotation.State) {
   });
 
   // Split images into chunks of 5
-  const imageChunks = chunkArray(state.imageOptions, 5);
+  const imageChunks = chunkArray(state.imageOptions || [], 5);
   let reRankedIndices: number[] = [];
   let baseIndex = 0;
 
@@ -123,7 +123,7 @@ export async function reRankImages(state: typeof FindImagesAnnotation.State) {
     baseIndex += imageChunk.length;
   }
 
-  if (reRankedIndices.length !== state.imageOptions.length) {
+  if (reRankedIndices.length !== state.imageOptions?.length) {
     console.warn(
       "Re-ranked indices length does not match image options length. Returning original image options.",
     );
@@ -133,7 +133,7 @@ export async function reRankImages(state: typeof FindImagesAnnotation.State) {
   }
 
   const imageOptionsInOrder = reRankedIndices.map(
-    (index) => state.imageOptions[index],
+    (index) => state.imageOptions?.[index],
   );
 
   return {

@@ -2,6 +2,7 @@ import { Annotation, END } from "@langchain/langgraph";
 import { IngestDataAnnotation } from "../ingest-data/ingest-data-state.js";
 import { POST_TO_LINKEDIN_ORGANIZATION, TEXT_ONLY_MODE } from "./constants.js";
 import { DateType } from "../types.js";
+import { VerifyLinksResultAnnotation } from "../verify-links/verify-links-state.js";
 
 export type LangChainProduct = "langchain" | "langgraph" | "langsmith";
 
@@ -26,30 +27,7 @@ export const GeneratePostAnnotation = Annotation.Root({
    * as context for generating the post.
    */
   report: IngestDataAnnotation.spec.report,
-  /**
-   * Page content used in the verification nodes. Will be used in the report
-   * generation node.
-   */
-  pageContents: Annotation<string[] | undefined>({
-    reducer: (state, update) => {
-      if (update === undefined) return undefined;
-      return (state || []).concat(update);
-    },
-    default: () => [],
-  }),
-  /**
-   * Relevant links found in the message.
-   */
-  relevantLinks: Annotation<string[] | undefined>({
-    reducer: (state, update) => {
-      if (update === undefined) return undefined;
-      // Use a set to ensure no duplicate links are added.
-      const stateSet = new Set(state || []);
-      update.forEach((link) => stateSet.add(link));
-      return Array.from(stateSet);
-    },
-    default: () => [],
-  }),
+  ...VerifyLinksResultAnnotation.spec,
   /**
    * The generated post for LinkedIn/Twitter.
    */
@@ -84,13 +62,6 @@ export const GeneratePostAnnotation = Annotation.Root({
       }
     | undefined
   >,
-  /**
-   * Image options to provide to the user.
-   */
-  imageOptions: Annotation<string[]>({
-    reducer: (_state, update) => update,
-    default: () => [],
-  }),
   /**
    * The number of times the post has been condensed. We should stop condensing after
    * 3 times to prevent an infinite loop.
