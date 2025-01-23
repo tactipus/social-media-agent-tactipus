@@ -10,31 +10,20 @@ const checkVerifyPostResult: SimpleEvaluator = ({ expected, actual }) => {
   const { pageContents, relevantLinks } = actual as VerifyRedditGraphState;
   const { relevant } = expected as { relevant: boolean };
 
-  const hasPageContentsAndLinks =
-    pageContents &&
-    pageContents?.length > 0 &&
-    relevantLinks &&
-    relevantLinks?.length > 0;
+  const hasPageContentsAndLinks = Boolean(
+    pageContents?.length && relevantLinks?.length,
+  );
 
-  if (relevant) {
-    // Expected post to be relevant.
-    return {
-      key: "relevant",
-      score: hasPageContentsAndLinks ? 1 : 0,
-    };
-  }
-
-  // Expected post to not be relevant.
   return {
-    key: "relevant",
-    score: hasPageContentsAndLinks ? 0 : 1,
+    key: "validation_result_expected",
+    score: Number(hasPageContentsAndLinks === relevant),
   };
 };
 
 ls.describe("SMA - Verify Reddit Post - E2E", () => {
   ls.test.each(INPUTS)(
     "Evaluates the verify reddit post agent",
-    async ({ inputs }) => {
+    async ({ inputs, expected }) => {
       verifyRedditPostGraph.checkpointer = new MemorySaver();
       verifyRedditPostGraph.store = new InMemoryStore();
 
@@ -47,7 +36,10 @@ ls.describe("SMA - Verify Reddit Post - E2E", () => {
 
       const results = await verifyRedditPostGraph.invoke(inputs, config);
       console.log("Finished invoking graph with URL", inputs.link);
-      await ls.expect(results).evaluatedBy(checkVerifyPostResult).toBe(1);
+      await ls
+        .expect(results)
+        .evaluatedBy(checkVerifyPostResult)
+        .toBe(expected.relevant ? 1 : 0);
       return results;
     },
   );
