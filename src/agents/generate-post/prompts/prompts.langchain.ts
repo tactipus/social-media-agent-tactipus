@@ -12,13 +12,14 @@ The following are rules to follow when determining whether or not to approve con
 <validation-rules>
 - The content should be about a new product, tool, service, or similar.
 - You should NOT approve content from users who are requesting help, giving feedback, or otherwise not clearly about software which uses the LangChain ecosystem.
+- You should NOT approve content that is showing an error, or specific problematic issue with one of LangChain's products or services.
 - The content should be about AI, or software related to AI/LLMs in some way. LangChain is an AI software development company, so you should NOT approve content from users which are not at least somewhat related to AI.
 - The content should be about LangChain's products and services, or LangGraph's products and services. The following is a full list of LangChain products/services you should likely approve if mentioned:
   - LangChain
   - LangGraph
   - LangSmith
   - Prompt Hub
-  - Open Canvas
+  - Social Media Agent
   - Executive AI Assistant/Email Assistant
   - Chat LangChain
   - Open Canvas

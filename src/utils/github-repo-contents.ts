@@ -58,22 +58,28 @@ export async function getRepoContents(repoUrl: string): Promise<RepoContent[]> {
     const [owner, repo] = pathSegments;
     const cleanRepo = repo.replace(".git", "");
 
-    const response = await octokit.repos.getContent({
-      owner,
-      repo: cleanRepo,
-      path: "", // empty path for root directory
-    });
+    try {
+      const response = await octokit.repos.getContent({
+        owner,
+        repo: cleanRepo,
+        path: "", // empty path for root directory
+      });
 
-    if (!Array.isArray(response.data)) {
-      throw new Error("Unexpected API response format");
+      if (!Array.isArray(response.data)) {
+        throw new Error("Unexpected API response format");
+      }
+
+      return response.data.map((item) => ({
+        name: item.name,
+        type: item.type as "file" | "dir",
+        path: item.path,
+        size: item.size,
+      }));
+    } catch (e) {
+      throw new Error(
+        "Failed to fetch repository contents for " + repoUrl + "\nError: " + e,
+      );
     }
-
-    return response.data.map((item) => ({
-      name: item.name,
-      type: item.type as "file" | "dir",
-      path: item.path,
-      size: item.size,
-    }));
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(

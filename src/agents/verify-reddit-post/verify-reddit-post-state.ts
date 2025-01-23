@@ -18,9 +18,29 @@ export const VerifyRedditPostAnnotation = Annotation.Root({
    * The external URLs found in the body of the Reddit post.
    */
   externalURLs: Annotation<string[]>,
-
   // REQUIRED DUE TO USING SHARED NODES
-  relevantLinks: Annotation<string[]>,
-  pageContents: Annotation<string[]>,
-  imageOptions: Annotation<string[]>,
+  relevantLinks: Annotation<string[] | undefined>({
+    reducer: (state, update) =>
+      !update || update.length === 0
+        ? undefined
+        : state
+          ? state.concat(update)
+          : update,
+  }),
+  pageContents: Annotation<string[] | undefined>({
+    reducer: (state, update) =>
+      !update || update.length === 0
+        ? undefined
+        : state
+          ? state.concat(update)
+          : update,
+  }),
+  imageOptions: Annotation<string[] | undefined>({
+    reducer: (state, update) =>
+      !update || update.length === 0
+        ? undefined
+        : state
+          ? state.concat(update)
+          : update,
+  }),
 });

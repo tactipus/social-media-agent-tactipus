@@ -94,9 +94,9 @@ export async function validateRedditPost(
   // If the content is not relevant, reset the state so it contains empty values
   return {
     redditPost: undefined,
-    externalURLs: [],
-    relevantLinks: [],
-    pageContents: [],
-    imageOptions: [],
+    externalURLs: undefined,
+    relevantLinks: undefined,
+    pageContents: undefined,
+    imageOptions: undefined,
   };
 }

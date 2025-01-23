@@ -18,12 +18,17 @@ export async function verifyRedditWrapper(
         config,
       );
 
-      if (result.relevantLinks.length > 0 && result.pageContents.length > 0) {
+      if (
+        result.relevantLinks &&
+        result.relevantLinks.length > 0 &&
+        result.pageContents &&
+        result.pageContents.length > 0
+      ) {
         verifiedRedditPosts.push({
           ...post,
           externalData: result.pageContents.map((pageContent, idx) => ({
             pageContent,
-            url: result.relevantLinks[idx],
+            url: result.relevantLinks?.[idx] || "",
           })),
         });
       }

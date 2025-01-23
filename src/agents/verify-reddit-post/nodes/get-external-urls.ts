@@ -9,6 +9,16 @@ export async function getExternalUrls(
   }
   const urls = extractUrls(state.redditPost.post.selftext);
   const filteredUrls = urls.filter((url) => getUrlType(url) !== "reddit");
+
+  const postUrl = state.redditPost.post.url;
+  if (
+    postUrl &&
+    getUrlType(postUrl) !== "reddit" &&
+    !filteredUrls.includes(postUrl)
+  ) {
+    filteredUrls.push(postUrl);
+  }
+
   return {
     externalURLs: filteredUrls,
   };

@@ -51,8 +51,21 @@ export function extractTweetId(url: string | URL): string | undefined {
  * @returns Array of URLs found in the text
  */
 export function extractUrls(text: string): string[] {
-  const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g;
-  return text.match(urlRegex) || [];
+  const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const urls = new Set<string>();
+
+  // First replace all markdown links with spaces to avoid double-matching
+  const processedText = text.replace(markdownLinkRegex, (match, _, url) => {
+    urls.add(url);
+    return " ".repeat(match.length); // Replace with spaces to preserve string length
+  });
+
+  // Then look for any remaining plain URLs in the text
+  const plainUrlRegex = /https?:\/\/[^\s<\]]+(?:[^<.,:;"'\]\s)]|(?=\s|$))/g;
+  const plainUrls = processedText.match(plainUrlRegex) || [];
+  plainUrls.forEach((url) => urls.add(url));
+
+  return Array.from(urls);
 }
 
 /**
@@ -368,7 +381,11 @@ export function getUrlType(
     return undefined;
   }
 
-  if (parsedUrl.hostname.includes("github")) {
+  if (
+    parsedUrl.hostname.includes("github") &&
+    // github.io sites should be considered general URLs
+    !parsedUrl.hostname.includes("github.io")
+  ) {
     return "github";
   }
 
