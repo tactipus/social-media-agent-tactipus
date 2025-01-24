@@ -10,11 +10,12 @@ import { verifyRedditWrapper } from "./nodes/verify-reddit-wrapper.js";
 import { verifyGeneralContent } from "../shared/nodes/verify-general.js";
 import { VerifyContentAnnotation } from "../shared/shared-state.js";
 import { validateBulkTweets } from "./nodes/validate-bulk-tweets.js";
-import { generateReports } from "./nodes/generate-reports.js";
+import { formatData } from "./nodes/format-data.js";
 import { groupTweetsByContent } from "./nodes/tweets/group-tweets-by-content.js";
 import { reflectOnTweetGroups } from "./nodes/tweets/reflect-tweet-groups.js";
 import { reGroupTweets } from "./nodes/tweets/re-group-tweets.js";
 import { generatePostsSubgraph } from "./nodes/generate-posts-subgraph.js";
+import { extractAINewsletterContent } from "./nodes/extract-ai-newsletter-content.js";
 
 function verifyContentWrapper(state: CurateDataState): Send[] {
   const useLangChain = process.env.USE_LANGCHAIN_PROMPTS === "true";
@@ -27,7 +28,7 @@ function verifyContentWrapper(state: CurateDataState): Send[] {
     ];
   }
 
-  const latentSpaceSends = state.latentSpacePosts.map((post) => {
+  const generalSends = state.generalUrls.map((post) => {
     return new Send("verifyGeneralContent", {
       link: post,
     });
@@ -57,7 +58,7 @@ function verifyContentWrapper(state: CurateDataState): Send[] {
       ]
     : [];
 
-  return [...latentSpaceSends, ...githubSends, ...redditSends, ...twitterSends];
+  return [...generalSends, ...githubSends, ...redditSends, ...twitterSends];
 }
 
 function reGroupOrContinue(state: CurateDataState) {
@@ -72,6 +73,7 @@ const curateDataWorkflow = new StateGraph(
   CurateDataConfigurableAnnotation,
 )
   .addNode("ingestData", ingestData)
+  .addNode("extractAINewsletterContent", extractAINewsletterContent)
   .addNode("verifyGitHubContent", verifyGitHubWrapper)
   .addNode("verifyRedditPost", verifyRedditWrapper)
   .addNode("verifyGeneralContent", verifyGeneralContent, {
@@ -84,30 +86,30 @@ const curateDataWorkflow = new StateGraph(
 
   .addNode("generatePostsSubgraph", generatePostsSubgraph)
 
-  .addNode("generateReports", generateReports)
+  .addNode("formatData", formatData)
   .addEdge(START, "ingestData")
-  .addConditionalEdges("ingestData", verifyContentWrapper, [
+  .addEdge("ingestData", "verifyBulkTweets")
+  .addEdge("verifyBulkTweets", "extractAINewsletterContent")
+
+  .addConditionalEdges("extractAINewsletterContent", verifyContentWrapper, [
     "verifyGeneralContent",
     "verifyGitHubContent",
     "verifyRedditPost",
-    "verifyBulkTweets",
+    "groupTweetsByContent",
     "generatePostsSubgraph",
   ])
   // If generatePostsSubgraph is called, we should end.
   .addEdge("generatePostsSubgraph", END)
-  .addEdge("verifyGeneralContent", "generateReports")
-  .addEdge("verifyGitHubContent", "generateReports")
-  .addEdge("verifyRedditPost", "generateReports")
-  .addEdge("verifyBulkTweets", "groupTweetsByContent")
+  .addEdge("verifyGeneralContent", "formatData")
+  .addEdge("verifyGitHubContent", "formatData")
+  .addEdge("verifyRedditPost", "formatData")
   .addEdge("groupTweetsByContent", "reflectOnTweetGroups")
   .addConditionalEdges("reflectOnTweetGroups", reGroupOrContinue, [
     "reGroupTweets",
-    "generateReports",
+    "formatData",
   ])
-  .addEdge("reGroupTweets", "generateReports")
-
-  // TODO: Will need to add a node & edge for routing to generate tweet/thread graphs
-  .addEdge("generateReports", END);
+  .addEdge("reGroupTweets", "formatData")
+  .addEdge("formatData", END);
 
 export const curateDataGraph = curateDataWorkflow.compile();
 curateDataGraph.name = "Curate Data Graph";

@@ -57,6 +57,11 @@ export async function generateReport(
   ]);
 
   return {
-    report: parseGeneration(report.content as string),
+    reports: [
+      {
+        report: parseGeneration(report.content as string),
+        keyDetails: state.keyReportDetails,
+      },
+    ],
   };
 }

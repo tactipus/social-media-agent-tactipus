@@ -1,64 +1,56 @@
-import { Annotation, END, START, StateGraph } from "@langchain/langgraph";
+import { END, START, StateGraph } from "@langchain/langgraph";
 import { generateThreadPlan } from "./nodes/generate-thread-plan.js";
 import { generateThreadPosts } from "./nodes/generate-thread-posts.js";
-import { ThreadPost } from "./types.js";
+import { GenerateThreadAnnotation, GenerateThreadState } from "./state.js";
+import { humanNode } from "./nodes/human-node/index.js";
+import { updateScheduledDate } from "../shared/nodes/update-scheduled-date.js";
+import { rewriteThread } from "./nodes/rewrite-thread.js";
+import { scheduleThread } from "./nodes/schedule-thread.js";
 
-export const GenerateThreadAnnotation = Annotation.Root({
-  /**
-   * The reports to use for generating the thread.
-   */
-  reports: Annotation<string[]>,
-  /**
-   * The total number of posts to generate.
-   */
-  totalPosts: Annotation<number>,
-  /**
-   * Whether or not to rewrite the posts.
-   */
-  shouldRewritePosts: Annotation<boolean>,
-  /**
-   * The number of times the posts have been rewritten.
-   */
-  rewritePostsCount: Annotation<number>({
-    reducer: (_state, update) => update,
-    default: () => 0,
-  }),
-  /**
-   * The plan generated for the thread.
-   */
-  threadPlan: Annotation<string>,
-  /**
-   * The posts generated for the thread.
-   */
-  threadPosts: Annotation<ThreadPost[]>,
-});
+function rewriteOrEndConditionalEdge(
+  state: GenerateThreadState,
+):
+  | "rewriteThread"
+  | "scheduleThread"
+  | "updateScheduleDate"
+  | "humanNode"
+  | typeof END {
+  if (state.next) {
+    if (state.next === "unknownResponse") {
+      // If the user's response is unknown, we should route back to the human node.
+      return "humanNode";
+    } else if (state.next === "rewritePost") {
+      return "rewriteThread";
+    } else if (state.next === "schedulePost") {
+      return "scheduleThread";
+    }
 
-// function reviewPostsOrEnd(state: typeof GenerateThreadAnnotation.State): "rewritePosts" | typeof END {
-//   if (state.shouldRewritePosts && state.rewritePostsCount < 3) {
-//     return "rewritePosts";
-//   }
-//   return END;
-// }
+    return state.next;
+  }
+  return END;
+}
 
 const generateThreadWorkflow = new StateGraph(GenerateThreadAnnotation)
-  // .addNode("generateThreadPlan", generateThreadPlan)
-  // .addNode("generateThreadPosts", generateThreadPosts)
-  // .addNode("reviewPosts", reviewPosts)
-  // .addNode("rewritePosts", rewritePosts)
-  // .addEdge(START, "generateThreadPlan")
-  // .addEdge("generateThreadPlan", "generateThreadPosts")
-  // .addEdge("generateThreadPosts", "reviewPosts")
-  // .addConditionalEdges("reviewPosts", reviewPostsOrEnd, [
-  //   "rewritePosts",
-  //   END,
-  // ])
-  // .addEdge("rewritePosts", "reviewPosts")
-
   .addNode("generateThreadPlan", generateThreadPlan)
   .addNode("generateThreadPosts", generateThreadPosts)
+  .addNode("humanNode", humanNode)
+  // Updated the scheduled date from the natural language response from the user.
+  .addNode("updateScheduleDate", updateScheduledDate)
+  .addNode("scheduleThread", scheduleThread)
+  .addNode("rewriteThread", rewriteThread)
   .addEdge(START, "generateThreadPlan")
   .addEdge("generateThreadPlan", "generateThreadPosts")
-  .addEdge("generateThreadPosts", END);
+  .addEdge("generateThreadPosts", "humanNode")
+  .addConditionalEdges("humanNode", rewriteOrEndConditionalEdge, [
+    "rewriteThread",
+    "scheduleThread",
+    "updateScheduleDate",
+    "humanNode",
+    END,
+  ])
+  .addEdge("rewriteThread", "humanNode")
+  .addEdge("updateScheduleDate", "humanNode")
+  .addEdge("scheduleThread", END);
 
 export const generateThreadGraph = generateThreadWorkflow.compile();
 generateThreadGraph.name = "Generate Thread Graph";

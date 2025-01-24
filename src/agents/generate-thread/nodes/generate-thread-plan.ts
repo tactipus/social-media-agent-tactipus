@@ -1,6 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { GenerateThreadAnnotation } from "../index.js";
 import { formatReportsForPrompt } from "../utils.js";
+import { GenerateThreadState } from "../state.js";
 
 const PROMPT = `You're an expert in social media and marketing. Your newest assignment is to create a detailed outline/plan for a Twitter thread.
 You're given a single/series of marketing reports on the subject of the thread.
@@ -72,8 +72,8 @@ function parseTotalPosts(generation: string): number | undefined {
 }
 
 export async function generateThreadPlan(
-  state: typeof GenerateThreadAnnotation.State,
-): Promise<Partial<typeof GenerateThreadAnnotation.State>> {
+  state: GenerateThreadState,
+): Promise<Partial<GenerateThreadState>> {
   const model = new ChatOpenAI({
     model: "o1",
     streaming: false,

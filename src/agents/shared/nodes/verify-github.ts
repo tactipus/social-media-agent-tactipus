@@ -8,7 +8,22 @@ import { RunnableConfig } from "@langchain/core/runnables";
 import {
   getRepoContents,
   getFileContents,
+  getOwnerRepoFromUrl,
 } from "../../../utils/github-repo-contents.js";
+import { Octokit } from "@octokit/rest";
+
+function getOctokit() {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) {
+    throw new Error("GITHUB_TOKEN environment variable is required");
+  }
+
+  const octokit = new Octokit({
+    auth: token,
+  });
+
+  return octokit;
+}
 
 type VerifyGitHubContentReturn = {
   relevantLinks: (typeof GeneratePostAnnotation.State)["relevantLinks"];
@@ -30,10 +45,10 @@ const RELEVANCY_SCHEMA = z
   })
   .describe("The relevancy of the content to your company's products.");
 
-const REPO_DEPENDENCY_PROMPT = `Here are the dependencies of the repository. Inspect this file contents to determine if the repository implements your company's products.
-<repository-dependencies file-name="{dependenciesFileName}">
-{repositoryDependencies}
-</repository-dependencies>`;
+const REPO_DEPENDENCY_PROMPT = `Here are the dependencies of the repository. You should use the dependencies listed to determine if the repository is relevant.
+<repository-dependency-files>
+{dependencyFiles}
+</repository-dependency-files>`;
 
 const VERIFY_LANGCHAIN_RELEVANT_CONTENT_PROMPT = `You are a highly regarded marketing employee at LangChain.
 You're given a {file_type} from a GitHub repository and need to verify the repository implements your company's products.
@@ -50,50 +65,45 @@ You should provide reasoning as to why or why not the repository implements your
 
 const getDependencies = async (
   githubUrl: string,
-): Promise<{ fileContents: string; fileName: string } | undefined> => {
-  const repoContents = await getRepoContents(githubUrl);
-  if (!repoContents) {
+): Promise<Array<{ fileContents: string; fileName: string }> | undefined> => {
+  const octokit = getOctokit();
+
+  const { owner, repo } = getOwnerRepoFromUrl(githubUrl);
+
+  const dependenciesCodeFileQuery = `filename:package.json OR filename:requirements.txt OR filename:pyproject.toml`;
+  const dependenciesCodeFiles = await octokit.search.code({
+    q: `${dependenciesCodeFileQuery} repo:${owner}/${repo}`,
+    limit: 5,
+  });
+  if (dependenciesCodeFiles.data.total_count === 0) {
     return undefined;
   }
-  const packageJson = repoContents.find(
-    (content) => content.name === "package.json" && content.type === "file",
-  );
-  const bowerJson = repoContents.find(
-    (content) => content.name === "bower.json" && content.type === "file",
-  );
-  const lernaJson = repoContents.find(
-    (content) => content.name === "lerna.json" && content.type === "file",
-  );
-  const nxJson = repoContents.find(
-    (content) => content.name === "nx.json" && content.type === "file",
-  );
-  const pyProject = repoContents.find(
-    (content) => content.name === "pyproject.toml" && content.type === "file",
-  );
-  const requirementsTxt = repoContents.find(
-    (content) => content.name === "requirements.txt" && content.type === "file",
-  );
-  const setupPy = repoContents.find(
-    (content) => content.name === "setup.py" && content.type === "file",
-  );
 
-  const file =
-    packageJson ??
-    bowerJson ??
-    lernaJson ??
-    nxJson ??
-    pyProject ??
-    requirementsTxt ??
-    setupPy;
+  const fileContents = (
+    await Promise.all(
+      dependenciesCodeFiles.data.items.flatMap(async (item) => {
+        const { data } = await octokit.repos.getContent({
+          owner,
+          repo,
+          path: item.path,
+        });
 
-  if (!file) {
-    return undefined;
-  }
-  const contents = await getFileContents(githubUrl, file.path);
-  return {
-    fileContents: contents.content,
-    fileName: file.name,
-  };
+        if (!("content" in data)) {
+          return undefined;
+        }
+
+        return {
+          fileName: item.name,
+          fileContents: Buffer.from(data.content, "base64").toString("utf-8"),
+        };
+      }),
+    )
+  ).filter((file) => file !== undefined) as Array<{
+    fileName: string;
+    fileContents: string;
+  }>;
+
+  return fileContents;
 };
 
 export async function getGitHubContentsAndTypeFromUrl(url: string): Promise<
@@ -121,32 +131,37 @@ export async function getGitHubContentsAndTypeFromUrl(url: string): Promise<
 interface VerifyGitHubContentParams {
   contents: string;
   fileType: string;
-  dependenciesString: string | undefined;
-  dependenciesFileName: string | undefined;
+  dependencyFiles:
+    | Array<{ fileContents: string; fileName: string }>
+    | undefined;
   config: LangGraphRunnableConfig;
 }
 
 export async function verifyGitHubContentIsRelevant({
   contents,
   fileType,
-  dependenciesString,
-  dependenciesFileName,
+  dependencyFiles,
   config,
 }: VerifyGitHubContentParams): Promise<boolean> {
   const relevancyModel = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0,
   }).withStructuredOutput(RELEVANCY_SCHEMA, {
     name: "relevancy",
   });
 
-  const dependenciesPrompt =
-    dependenciesString && dependenciesFileName
-      ? REPO_DEPENDENCY_PROMPT.replace(
-          "{dependenciesFileName}",
-          dependenciesFileName,
-        ).replace("{repositoryDependencies}", dependenciesString)
-      : "";
+  let dependenciesPrompt = "";
+  if (dependencyFiles) {
+    dependencyFiles.forEach((f) => {
+      // Format it as a markdown code block with the file name as the header.
+      dependenciesPrompt += `\`\`\`${f.fileName}\n${f.fileContents}\n\`\`\`\n`;
+    });
+
+    dependenciesPrompt = REPO_DEPENDENCY_PROMPT.replace(
+      "{dependencyFiles}",
+      dependenciesPrompt,
+    );
+  }
 
   const { relevant } = await relevancyModel
     .withConfig({
@@ -187,12 +202,11 @@ export async function verifyGitHubContent(
     };
   }
 
-  const dependencies = await getDependencies(state.link);
+  const dependencyFiles = await getDependencies(state.link);
   const relevant = await verifyGitHubContentIsRelevant({
     contents: contentsAndType.contents,
     fileType: contentsAndType.fileType,
-    dependenciesString: dependencies?.fileContents,
-    dependenciesFileName: dependencies?.fileName,
+    dependencyFiles,
     config,
   });
   if (relevant) {

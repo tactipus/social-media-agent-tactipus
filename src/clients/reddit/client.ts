@@ -3,7 +3,17 @@ import fs from "fs/promises";
 import path from "path";
 import { getRedditUserlessToken } from "./get-user-less-token.js";
 import { createDirIfNotExists } from "../../utils/create-dir.js";
-import { SimpleRedditPost, SimpleRedditComment } from "./types.js";
+import {
+  SimpleRedditPost,
+  SimpleRedditComment,
+  SimpleRedditPostWithComments,
+} from "./types.js";
+
+const REDDIT_POST_URL_REGEX = /^\/r\/[\w-]+\/comments\/[\w-]+\/.+/;
+
+function isRedditPostUrl(url: string): boolean {
+  return REDDIT_POST_URL_REGEX.test(url);
+}
 
 export class RedditClient {
   snoowrapClient: Snoowrap;
@@ -195,5 +205,66 @@ export class RedditClient {
     const postId = match[1];
     const submission = (await this.getPostById(postId)) as any;
     return submission as Submission;
+  }
+
+  async getSimplePostAndComments(
+    idOrUrl: string,
+  ): Promise<SimpleRedditPostWithComments> {
+    let post: Submission;
+    try {
+      const url = new URL(idOrUrl);
+      if (url) {
+        post = await this.getPostByURL(idOrUrl);
+      } else {
+        throw new Error("Invalid URL");
+      }
+    } catch (_) {
+      // Is an ID.
+      post = await this.getPostById(idOrUrl);
+    }
+
+    // Check if this post is linking to another Reddit post
+    if (post.url && isRedditPostUrl(post.url)) {
+      const linkedPost = await this.getPostByURL(
+        `https://reddit.com${post.url}`,
+      );
+      if (linkedPost) {
+        const [comments, linkedComments] = await Promise.all([
+          this.getPostComments(post.id, {
+            limit: 10,
+            depth: 3,
+          }),
+          this.getPostComments(linkedPost.id, {
+            limit: 10,
+            depth: 3,
+          }),
+        ]);
+
+        const simplePost = this.simplifyPost(post);
+        simplePost.selftext += `\n\nLinked post:\n${linkedPost.title}\n${linkedPost.selftext}`;
+        if (linkedPost.url) {
+          // The original post URL was linking to this post, so replace it with the linked post URL, if exists
+          simplePost.url = linkedPost.url;
+        }
+
+        return {
+          post: simplePost,
+          // Simply concatenate comments from both posts.
+          comments: comments
+            .map(this.simplifyComment)
+            .concat(linkedComments.map(this.simplifyComment)),
+        };
+      }
+    }
+
+    const comments = await this.getPostComments(post.id, {
+      limit: 10, // default
+      depth: 3, // default
+    });
+
+    return {
+      post: this.simplifyPost(post),
+      comments: comments.map(this.simplifyComment),
+    };
   }
 }

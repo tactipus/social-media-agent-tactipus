@@ -6,7 +6,19 @@ export const GenerateReportAnnotation = Annotation.Root({
   ...VerifyLinksResultAnnotation.spec,
   tweetGroup: Annotation<TweetsGroupedByContent>,
   keyReportDetails: Annotation<string>,
-  report: Annotation<string>,
+  /**
+   * Must be an array even though it will only contain a single report.
+   * This is due to its usage in a subgraph, and the shared key is `reports`.
+   */
+  reports: Annotation<
+    Array<{
+      report: string;
+      keyDetails: string;
+    }>
+  >({
+    reducer: (state, update) => state.concat(update),
+    default: () => [],
+  }),
 });
 
 export type GenerateReportState = typeof GenerateReportAnnotation.State;

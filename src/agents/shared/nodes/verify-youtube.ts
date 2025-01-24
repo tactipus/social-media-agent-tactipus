@@ -92,7 +92,7 @@ export async function verifyYouTubeContentIsRelevant(
   summary: string,
 ): Promise<boolean> {
   const relevancyModel = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0,
   }).withStructuredOutput(RELEVANCY_SCHEMA, {
     name: "relevancy",

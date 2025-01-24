@@ -18,8 +18,8 @@ import { condensePost } from "./nodes/condense-post.js";
 import { isTextOnly, removeUrls } from "../utils.js";
 import { verifyLinksGraph } from "../verify-links/verify-links-graph.js";
 import { authSocialsPassthrough } from "./nodes/auth-socials.js";
-import { updateScheduledDate } from "./nodes/update-scheduled-date.js";
 import { findImagesGraph } from "../find-images/find-images-graph.js";
+import { updateScheduledDate } from "../shared/nodes/update-scheduled-date.js";
 
 function routeAfterGeneratingReport(
   state: typeof GeneratePostAnnotation.State,

@@ -1,64 +1,49 @@
 import { END, LangGraphRunnableConfig, interrupt } from "@langchain/langgraph";
-import { GeneratePostAnnotation } from "../../generate-post-state.js";
-import { formatInTimeZone } from "date-fns-tz";
-import { HumanInterrupt, HumanResponse } from "../../../types.js";
-import { isTextOnly, processImageInput } from "../../../utils.js";
+import { ThreadPost } from "../../types.js";
+import { GenerateThreadState } from "../../state.js";
 import {
   getNextSaturdayDate,
   parseDateResponse,
 } from "../../../../utils/date.js";
+import { formatInTimeZone } from "date-fns-tz";
+import { HumanInterrupt, HumanResponse } from "../../../types.js";
+import { processImageInput } from "../../../utils.js";
 import { routeResponse } from "../../../shared/nodes/route-response.js";
 
 interface ConstructDescriptionArgs {
   unknownResponseDescription: string;
-  report: string;
-  originalLink: string;
-  relevantLinks: string[];
-  post: string;
+  threadPosts: ThreadPost[];
   imageOptions?: string[];
-  isTextOnlyMode: boolean;
 }
 
 function constructDescription({
   unknownResponseDescription,
-  report,
-  originalLink,
-  relevantLinks,
-  post,
   imageOptions,
-  isTextOnlyMode,
+  threadPosts,
 }: ConstructDescriptionArgs): string {
-  const linksText = `### Relevant URLs:\nOriginal URL: ${originalLink}\n\n- ${relevantLinks.join("\n- ")}\n`;
-  const imageOptionsText =
-    imageOptions?.length && !isTextOnlyMode
-      ? `## Image Options\n\nThe following image options are available. Select one by copying and pasting the URL into the 'image' field.\n\n${imageOptions.map((url) => `URL: ${url}\nImage: <details><summary>Click to view image</summary>\n\n![](${url})\n</details>\n`).join("\n")}`
-      : "";
+  const imageOptionsText = imageOptions?.length
+    ? `## Image Options\n\nThe following image options are available. Select one by copying and pasting the URL into the 'image' field.\n\n${imageOptions.map((url) => `URL: ${url}\nImage: <details><summary>Click to view image</summary>\n\n![](${url})\n</details>\n`).join("\n")}`
+    : "";
 
   const unknownResponseString = unknownResponseDescription
     ? `${unknownResponseDescription}\n\n`
     : "";
 
-  const imageInstructionsString =
-    imageOptions?.length && !isTextOnlyMode
-      ? `If you wish to attach an image to the post, please add a public image URL.
+  const imageInstructionsString = imageOptions?.length
+    ? `If you wish to attach an image to the post, please add a public image URL.
 
 You may remove the image by setting the 'image' field to 'remove', or by removing all text from the field
 To replace the image, simply add a new public image URL to the field.
 
 MIME types will be automatically extracted from the image.
 Supported image types: \`image/jpeg\` | \`image/gif\` | \`image/png\` | \`image/webp\``
-      : isTextOnlyMode
-        ? "Text only mode enabled. Image support has been disabled.\n"
-        : "No image options available.";
+    : "No image options available.";
 
   return `${unknownResponseString}# Schedule post
   
-Using these URL(s), a post was generated for Twitter/LinkedIn:
-${linksText}
-
 ### Post:
 \`\`\`
-${post}
+${threadPosts.map((p) => `${p.index}\n${p.text}`).join("\n---\n")}
 \`\`\`
 
 ${imageOptionsText}
@@ -86,16 +71,10 @@ The date the post will be scheduled for may be edited, but it must follow the fo
 ### Image
 
 ${imageInstructionsString}
-
-## Report
-
-Here is the report that was generated for the posts:\n${report}
 `;
 }
 
-const getUnknownResponseDescription = (
-  state: typeof GeneratePostAnnotation.State,
-) => {
+const getUnknownResponseDescription = (state: GenerateThreadState) => {
   if (state.next === "unknownResponse" && state.userResponse) {
     return `# <div style="color: red;">UNKNOWN/INVALID RESPONSE RECEIVED: '${state.userResponse}'</div>
 
@@ -108,14 +87,34 @@ const getUnknownResponseDescription = (
   return "";
 };
 
+function extractThreadPostsFromArgs(
+  args: Record<string, string>,
+): ThreadPost[] {
+  const posts: ThreadPost[] = [];
+
+  // Find all keys that match post_X pattern
+  Object.entries(args).forEach(([key, value]) => {
+    const match = key.match(/^post_(\d+)$/);
+    if (match) {
+      const index = parseInt(match[1], 10);
+      posts.push({
+        text: value,
+        index,
+      });
+    }
+  });
+
+  // Sort posts by index to maintain order
+  return posts.sort((a, b) => a.index - b.index);
+}
+
 export async function humanNode(
-  state: typeof GeneratePostAnnotation.State,
-  config: LangGraphRunnableConfig,
-): Promise<Partial<typeof GeneratePostAnnotation.State>> {
-  if (!state.post) {
-    throw new Error("No post found");
+  state: GenerateThreadState,
+  _config: LangGraphRunnableConfig,
+): Promise<Partial<GenerateThreadState>> {
+  if (!state.threadPosts.length) {
+    throw new Error("No thread found");
   }
-  const isTextOnlyMode = isTextOnly(config);
 
   const unknownResponseDescription = getUnknownResponseDescription(state);
   const defaultDate = state.scheduleDate || getNextSaturdayDate();
@@ -137,10 +136,12 @@ export async function humanNode(
     action_request: {
       action: "Schedule Twitter/LinkedIn posts",
       args: {
-        post: state.post,
+        ...Object.fromEntries(
+          state.threadPosts.map((p) => [`post_${p.index}`, p.text]),
+        ),
         date: defaultDateString,
         // Do not provide an image field if the mode is text only
-        ...(!isTextOnlyMode && { image: state.image?.imageUrl ?? "" }),
+        image: state.image?.imageUrl ?? "",
       },
     },
     config: {
@@ -150,13 +151,8 @@ export async function humanNode(
       allow_respond: true,
     },
     description: constructDescription({
-      report: state.report,
-      originalLink: state.links[0],
-      relevantLinks: state.relevantLinks || [],
-      post: state.post,
-      imageOptions: state.imageOptions,
+      threadPosts: state.threadPosts,
       unknownResponseDescription,
-      isTextOnlyMode,
     }),
   };
 
@@ -186,7 +182,7 @@ export async function humanNode(
     }
 
     const { route } = await routeResponse({
-      post: state.post,
+      post: state.threadPosts.map((p) => p.text).join("\n"),
       dateOrPriority: defaultDateString,
       userResponse: response.args,
     });
@@ -222,12 +218,9 @@ export async function humanNode(
   }
 
   const castArgs = response.args.args as unknown as Record<string, string>;
-
-  const responseOrPost = castArgs.post;
-  if (!responseOrPost) {
-    throw new Error(
-      `Unexpected response args value: ${responseOrPost}. Must be defined.\n\nResponse args:\n${JSON.stringify(response.args, null, 2)}`,
-    );
+  const threadPosts = extractThreadPostsFromArgs(castArgs);
+  if (!threadPosts.length) {
+    throw new Error("No thread posts found");
   }
 
   const postDateString = castArgs.date || defaultDateString;
@@ -241,21 +234,19 @@ export async function humanNode(
 
   let imageState: { imageUrl: string; mimeType: string } | undefined =
     undefined;
-  if (!isTextOnlyMode) {
-    const processedImage = await processImageInput(castArgs.image);
-    if (processedImage && processedImage !== "remove") {
-      imageState = processedImage;
-    } else if (processedImage === "remove") {
-      imageState = undefined;
-    } else {
-      imageState = state.image;
-    }
+  const processedImage = await processImageInput(castArgs.image);
+  if (processedImage && processedImage !== "remove") {
+    imageState = processedImage;
+  } else if (processedImage === "remove") {
+    imageState = undefined;
+  } else {
+    imageState = state.image;
   }
 
   return {
     next: "schedulePost",
     scheduleDate: postDate,
-    post: responseOrPost,
+    threadPosts,
     // TODO: Update so if the mime type is blacklisted, it re-routes to human node with an error message.
     image: imageState,
     userResponse: undefined,

@@ -1,7 +1,7 @@
 import { Annotation } from "@langchain/langgraph";
 import {
+  CuratedData,
   GitHubTrendingData,
-  PageContentData,
   ThreadRunId,
   TweetsGroupedByContent,
 } from "./types.js";
@@ -9,23 +9,15 @@ import { TweetV2 } from "twitter-api-v2";
 import { SimpleRedditPostWithComments } from "../../clients/reddit/types.js";
 import { RedditPostsWithExternalData } from "../verify-reddit-post/types.js";
 import { NUM_POSTS_PER_SUBREDDIT } from "./constants.js";
+import { Source } from "../supervisor/types.js";
+import { VerifyLinksResultAnnotation } from "../verify-links/verify-links-state.js";
 
 export const CurateDataAnnotation = Annotation.Root({
+  ...VerifyLinksResultAnnotation.spec,
   /**
-   * Array of page content data scraped from various sources.
-   * This data serves as the raw input for generating reports.
-   * Each item contains structured content extracted from a webpage.
+   * The final data object to be returned.
    */
-  pageContentData: Annotation<PageContentData[]>({
-    reducer: (_state, update) => update,
-    default: () => [],
-  }),
-  /**
-   * Collection of generated reports based on the analyzed content.
-   * Each report contains processed and summarized information from various sources.
-   */
-  reports: Annotation<Report[]>,
-
+  curatedData: Annotation<CuratedData>,
   /**
    * Collection of saved tweets from a Twitter list.
    * Each tweet contains metadata like ID, creation time, text content, and media references.
@@ -56,10 +48,6 @@ export const CurateDataAnnotation = Annotation.Root({
   githubTrendingData: Annotation<GitHubTrendingData[]>,
 
   /**
-   * A list of new Latent Space posts.
-   */
-  latentSpacePosts: Annotation<string[]>,
-  /**
    * A list of new AI Newsletter posts.
    */
   aiNewsPosts: Annotation<string[]>,
@@ -76,14 +64,11 @@ export const CurateDataAnnotation = Annotation.Root({
    * The thread & run IDs for runs kicked off after curating data.
    */
   threadRunIds: Annotation<ThreadRunId[]>,
+  /**
+   * General URLs to scrape content from.
+   */
+  generalUrls: Annotation<string[]>,
 });
-
-export type Source =
-  | "github"
-  | "twitter"
-  | "latent_space"
-  | "ai_news"
-  | "reddit";
 
 export const CurateDataConfigurableAnnotation = Annotation.Root({
   /**

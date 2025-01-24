@@ -26,7 +26,7 @@ export async function extractAINewsletterContent(
 ): Promise<Partial<CurateDataState>> {
   const relevantTwitterURLs: string[] = [];
   const relevantRedditURLs: string[] = [];
-  const arxivURLs: string[] = [];
+  const generalURLs: string[] = [];
 
   for await (const url of state.aiNewsPosts) {
     const loader = new FireCrawlLoader({
@@ -41,7 +41,34 @@ export async function extractAINewsletterContent(
 
     const docsText = docs.map((d) => d.pageContent).join("\n");
 
-    const urls = extractUrls(docsText);
+    const urls: string[] = [];
+    // Content between these sections are from the AI Twitter Recap
+    if (
+      docsText.includes("AI Twitter Recap") &&
+      docsText.includes("AI Reddit Recap")
+    ) {
+      const twitterRecap = docsText
+        .split("AI Twitter Recap")[1]
+        .split("AI Reddit Recap")[0];
+      if (twitterRecap.length > 0) {
+        const twitterURLs = extractUrls(twitterRecap);
+        urls.push(...twitterURLs);
+      }
+    }
+
+    // Content between these sections are from the AI Reddit Recap
+    if (
+      docsText.includes("AI Reddit Recap") &&
+      docsText.includes("AI Discord Recap")
+    ) {
+      const redditRecap = docsText
+        .split("AI Reddit Recap")[1]
+        .split("AI Discord Recap")[0];
+      if (redditRecap.length > 0) {
+        const redditURLs = extractUrls(redditRecap);
+        urls.push(...redditURLs);
+      }
+    }
 
     const twitterURLsInText = urls
       .filter((url) => getUrlType(url) === "twitter")
@@ -54,11 +81,9 @@ export async function extractAINewsletterContent(
       .filter((url) => !checkRedditURLExists(url, state.redditPosts));
     relevantRedditURLs.push(...redditURLsInText);
 
-    arxivURLs.push(
-      ...urls.filter(
-        (url) =>
-          getUrlType(url, { includeArxiv: true }) === "arxiv" &&
-          url.includes("arxiv.org/"),
+    generalURLs.push(
+      ...urls.filter((url) =>
+        ["general", "github", "youtube"].includes(getUrlType(url) || ""),
       ),
     );
   }
@@ -78,26 +103,21 @@ export async function extractAINewsletterContent(
       tweets.push(tweetContent.data);
     } catch (e) {
       console.error("Failed to fetch tweet:", e);
-      continue;
+      // Break on the first twitter error, as it's likely due to rate limits.
+      break;
     }
   }
 
   const redditPosts: SimpleRedditPostWithComments[] = [];
   const client = await RedditClient.fromUserless();
   for await (const redditURL of relevantRedditURLs) {
-    const post = await client.getPostByURL(redditURL);
-    const comments = await client.getPostComments(post.id, {
-      limit: 10, // default
-      depth: 3, // default
-    });
-    redditPosts.push({
-      post: client.simplifyPost(post),
-      comments: comments.map(client.simplifyComment),
-    });
+    const postAndComments = await client.getSimplePostAndComments(redditURL);
+    redditPosts.push(postAndComments);
   }
 
   return {
     validatedTweets: [...state.validatedTweets, ...tweets],
     rawRedditPosts: [...state.rawRedditPosts, ...redditPosts],
+    generalUrls: [...state.generalUrls, ...generalURLs],
   };
 }

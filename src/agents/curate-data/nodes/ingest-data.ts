@@ -109,7 +109,7 @@ export async function ingestData(
   return {
     rawTweets: tweets,
     rawTrendingRepos: trendingRepos,
-    latentSpacePosts,
+    generalUrls: latentSpacePosts,
     aiNewsPosts,
     rawRedditPosts: redditPosts,
   };

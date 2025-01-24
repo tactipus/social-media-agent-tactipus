@@ -61,7 +61,7 @@ export async function rewritePost(
   }
 
   const rewritePostModel = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0.5,
   });
 

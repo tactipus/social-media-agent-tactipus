@@ -22,7 +22,7 @@ export async function generatePost(
     throw new Error("No relevant links found");
   }
   const postModel = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0.5,
   });
 

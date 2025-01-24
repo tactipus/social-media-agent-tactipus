@@ -1,5 +1,4 @@
 import { ChatAnthropic } from "@langchain/anthropic";
-import { GenerateThreadAnnotation } from "../index.js";
 import {
   formatAllPostsForPrompt,
   formatBodyPostsForPrompt,
@@ -7,6 +6,7 @@ import {
   formatTweetExamplesForPrompt,
   parseTweetGeneration,
 } from "../utils.js";
+import { GenerateThreadState } from "../state.js";
 
 const STYLE_RULES = `- Ensure it's engaging and interesting.
 - Keep it under 280 characters to fit in a single Tweet.
@@ -143,8 +143,8 @@ Now, follow these steps to create your tweet:
 Once you've completed these steps, provide your tweet inside <tweet> tags. Do not include any explanation or commentary outside of the tweet itself. ALWAYS WRAP your tweet inside opening and closing <tweet> tags.`;
 
 export async function generateThreadPosts(
-  state: typeof GenerateThreadAnnotation.State,
-): Promise<Partial<typeof GenerateThreadAnnotation.State>> {
+  state: GenerateThreadState,
+): Promise<Partial<GenerateThreadState>> {
   const model = new ChatAnthropic({
     model: "claude-3-5-sonnet-latest",
     temperature: 0, // TODO: Eval different temperatures

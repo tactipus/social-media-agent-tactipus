@@ -2,10 +2,7 @@ import { ChatAnthropic } from "@langchain/anthropic";
 import { getPrompts } from "../../generate-post/prompts/index.js";
 import { VerifyRedditGraphState } from "../types.js";
 import { z } from "zod";
-import {
-  SimpleRedditComment,
-  SimpleRedditPostWithComments,
-} from "../../../clients/reddit/types.js";
+import { convertPostToString, formatComments } from "../utils.js";
 
 const VALIDATE_REDDIT_POST_PROMPT = `You are a highly regarded marketing employee.
 You're provided with a Reddit post, and some of the comments (not guaranteed, some Reddit posts don't have comments).
@@ -33,27 +30,6 @@ const RELEVANCY_SCHEMA = z
       ),
   })
   .describe("The relevancy of the content to your business context.");
-
-function formatComments(comments: SimpleRedditComment[]): string {
-  return comments
-    .map(
-      (c) =>
-        `${c.author}: ${c.body}${c.replies ? "\nReply:\n" + formatComments(c.replies) : ""}`,
-    )
-    .join("\n");
-}
-
-function convertPostToString(
-  redditPostWithComments: SimpleRedditPostWithComments,
-): string {
-  const mainPost = `${redditPostWithComments.post.title}
-${redditPostWithComments.post.selftext}
-${redditPostWithComments.post.url || ""}`;
-  const comments = redditPostWithComments.comments
-    ? formatComments(redditPostWithComments.comments)
-    : "";
-  return `${mainPost}${comments ? "\n\nComments:\n" + comments : ""}`;
-}
 
 function formatUserPrompt(state: VerifyRedditGraphState) {
   if (!state.redditPost) {
