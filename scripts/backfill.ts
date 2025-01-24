@@ -26,12 +26,11 @@ export async function backfill() {
   });
 
   const thread = await client.threads.create();
-  const res = await client.runs.create(thread.thread_id, "curate_data", {
+  const res = await client.runs.create(thread.thread_id, "ingest_data", {
     config: {
       configurable: {
-        // slackChannelId: "ADD_SLACK_CHANNEL_ID_HERE",
-        // maxDaysHistory: 10, // Or change to desired number of days
-        sources: ["twitter", "github", "reddit"],
+        slackChannelId: "ADD_SLACK_CHANNEL_ID_HERE",
+        maxDaysHistory: 10, // Or change to desired number of days
       },
     },
     input: {},
@@ -40,7 +39,7 @@ export async function backfill() {
   console.log(res);
 }
 
-backfill().catch(console.error);
+// backfill().catch(console.error);
 
 /**
  * Backfill with links instead of ingesting from Slack.

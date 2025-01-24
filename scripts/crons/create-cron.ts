@@ -20,16 +20,15 @@ import { Client } from "@langchain/langgraph-sdk";
  */
 async function createCron() {
   const client = new Client({
-    // apiUrl: process.env.LANGGRAPH_API_URL,
+    apiUrl: process.env.LANGGRAPH_API_URL,
   });
 
-  const res = await client.crons.create("curate_data", {
-    schedule: "0 2 * * *",
+  const res = await client.crons.create("ingest_data", {
+    schedule: "0 0 * * *",
     config: {
       configurable: {
-        // slackChannelId: "ADD_SLACK_CHANNEL_ID_HERE",
-        // maxDaysHistory: 1,
-        sources: ["twitter", "github", "reddit"],
+        slackChannelId: "ADD_SLACK_CHANNEL_ID_HERE",
+        maxDaysHistory: 1,
       },
     },
     input: {},
