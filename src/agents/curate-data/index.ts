@@ -50,10 +50,10 @@ function verifyContentWrapper(state: CurateDataState): Send[] {
       ]
     : [];
 
-  const twitterSends = state.rawTweets?.length
+  const twitterSends = state.validatedTweets?.length
     ? [
-        new Send("verifyBulkTweets", {
-          rawTweets: state.rawTweets,
+        new Send("groupTweetsByContent", {
+          validatedTweets: state.validatedTweets,
         }),
       ]
     : [];
@@ -61,11 +61,13 @@ function verifyContentWrapper(state: CurateDataState): Send[] {
   return [...generalSends, ...githubSends, ...redditSends, ...twitterSends];
 }
 
-function reGroupOrContinue(state: CurateDataState) {
-  if (state.similarGroupIndices.length > 0) {
+function reGroupOrContinue(
+  state: CurateDataState,
+): "reGroupTweets" | "formatData" {
+  if (state.similarGroupIndices && state.similarGroupIndices.length > 0) {
     return "reGroupTweets";
   }
-  return "generateReports";
+  return "formatData";
 }
 
 const curateDataWorkflow = new StateGraph(

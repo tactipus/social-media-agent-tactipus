@@ -134,7 +134,7 @@ export async function humanNode(
 
   const interruptValue: HumanInterrupt = {
     action_request: {
-      action: "Schedule Twitter/LinkedIn posts",
+      action: "Schedule Twitter/LinkedIn thread",
       args: {
         ...Object.fromEntries(
           state.threadPosts.map((p) => [`post_${p.index}`, p.text]),

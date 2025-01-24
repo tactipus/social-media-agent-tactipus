@@ -299,6 +299,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@cfworker/json-schema@^4.0.2":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@cfworker/json-schema/-/json-schema-4.1.0.tgz#cc114da98c23b12f4cd4673ce8a076be24e0233c"
+  integrity sha512-/vYKi/qMxwNsuIJ9WGWwM2rflY40ZenK3Kh4uR5vB9/Nz12Y7IUN/Xf4wDA7vzPfw0VNh3b/jz4+MjcVgARKJg==
+
 "@esbuild/aix-ppc64@0.23.1":
   version "0.23.1"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.23.1.tgz#51299374de171dbd80bb7d838e1cfce9af36f353"
@@ -763,16 +768,17 @@
     zod "^3.22.3"
     zod-to-json-schema "^3.22.5"
 
-"@langchain/core@^0.3.22":
-  version "0.3.22"
-  resolved "https://registry.yarnpkg.com/@langchain/core/-/core-0.3.22.tgz#22064eca45a1f506e554c30537de62dc742c67f8"
-  integrity sha512-9rwEbxJi3Fgs8XuealNYxB6s0FCOnvXLnpiV5/oKgmEJtCRS91IqgJCWA8d59s4YkaEply/EsZVc2azNPK6Wjw==
+"@langchain/core@^0.3.34":
+  version "0.3.34"
+  resolved "https://registry.yarnpkg.com/@langchain/core/-/core-0.3.34.tgz#3b0c6cc56aae053eb63b81ae0ccd901a5e009380"
+  integrity sha512-gBa2UbnBsf+TmoCbV6VuQDvZTsD3nDFtRrAam2BKim/Criy0BTPyGy4PCFpDkZ2KqKHCXXa0BlPZFDfcE/uwLQ==
   dependencies:
+    "@cfworker/json-schema" "^4.0.2"
     ansi-styles "^5.0.0"
     camelcase "6"
     decamelize "1.2.0"
     js-tiktoken "^1.0.12"
-    langsmith "^0.2.8"
+    langsmith ">=0.2.8 <0.4.0"
     mustache "^4.2.0"
     p-queue "^6.6.2"
     p-retry "4"
@@ -820,10 +826,10 @@
     p-retry "4"
     uuid "^9.0.0"
 
-"@langchain/langgraph@^0.2.39":
-  version "0.2.39"
-  resolved "https://registry.yarnpkg.com/@langchain/langgraph/-/langgraph-0.2.39.tgz#5198884a0ccdc207333810c5281192006a454972"
-  integrity sha512-zoQT5LViPlB5hRS7RNwixcAonUBAHcW+IzVkGR/4vcKoE49z5rPBdZsWjJ6b1YIV1K2bdSDJWl5KSEHilvnR1Q==
+"@langchain/langgraph@^0.2.41":
+  version "0.2.41"
+  resolved "https://registry.yarnpkg.com/@langchain/langgraph/-/langgraph-0.2.41.tgz#bb753dd64231ad8b91d53a3e8f8e738ae5a4faac"
+  integrity sha512-NeNizWP4k9voEwJxuFtfopF02Lx1isuEsdZKYCN3ueJpOnkVg0iGx8woPBsQpYcrWcySkIt3zOkgtUsrNHqo3g==
   dependencies:
     "@langchain/langgraph-checkpoint" "~0.0.13"
     "@langchain/langgraph-sdk" "~0.0.32"
@@ -1897,7 +1903,7 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
 
-chalk@^4.0.0, chalk@^4.0.2:
+chalk@^4.0.0, chalk@^4.0.2, chalk@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
   integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
@@ -1996,6 +2002,13 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
+
+console-table-printer@^2.12.1:
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/console-table-printer/-/console-table-printer-2.12.1.tgz#4a9646537a246a6d8de57075d4fae1e08abae267"
+  integrity sha512-wKGOQRRvdnd89pCeH96e2Fn4wkbenSP6LMHfjfyNLMbGuHEFbMqQNuxXqd0oXG9caIOQ1FTvc5Uijp9/4jujnQ==
+  dependencies:
+    simple-wcswidth "^1.0.1"
 
 content-disposition@0.5.4:
   version "0.5.4"
@@ -4202,6 +4215,19 @@ langsmith@0.2.15-rc.6:
     semver "^7.6.3"
     uuid "^10.0.0"
 
+"langsmith@>=0.2.8 <0.4.0":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/langsmith/-/langsmith-0.3.3.tgz#fcb61454842cf2f85c937f536fa0729544c7c467"
+  integrity sha512-B9B0ThaPYwNdTg9ck6bWF2Mjd1TJvVKLfLedufIudmO8aPDslcc2uVlyPEtskZFEdmfjfVHEqDnhnuAhyifrZQ==
+  dependencies:
+    "@types/uuid" "^10.0.0"
+    chalk "^4.1.2"
+    console-table-printer "^2.12.1"
+    p-queue "^6.6.2"
+    p-retry "4"
+    semver "^7.6.3"
+    uuid "^10.0.0"
+
 langsmith@^0.2.0:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/langsmith/-/langsmith-0.2.8.tgz#926a857df206a67fd912f9a201a08cdffa8870e2"
@@ -5185,6 +5211,11 @@ signal-exit@^3.0.3, signal-exit@^3.0.7:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.7.tgz#a9a1767f8af84155114eaabd73f99273c8f59ad9"
   integrity sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==
+
+simple-wcswidth@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/simple-wcswidth/-/simple-wcswidth-1.0.1.tgz#8ab18ac0ae342f9d9b629604e54d2aa1ecb018b2"
+  integrity sha512-xMO/8eNREtaROt7tJvWJqHBDTMFN4eiQ5I4JRMuilwfnFcV5W9u7RUkueNkdw0jPqGMX36iCywelS5yilTuOxg==
 
 sisteransi@^1.0.5:
   version "1.0.5"

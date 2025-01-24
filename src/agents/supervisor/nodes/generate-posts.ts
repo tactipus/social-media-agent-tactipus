@@ -87,5 +87,7 @@ ${idsAndTypes
 
   await slackClient.sendMessage(messageText);
 
-  return {};
+  return {
+    idsAndTypes,
+  };
 }

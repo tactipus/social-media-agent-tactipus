@@ -46,7 +46,9 @@ const responseSchema = z
         "A list of objects, each containing an array of indices of similar reports",
       ),
   })
-  .describe("A tool schema to call when grouping similar reports.");
+  .describe(
+    "A tool schema to call when grouping similar reports. Ensure this tool is ALWAYS CALLED NO MATTER WHAT.",
+  );
 
 function processGroupedReports(
   reports: Array<{ report: string; keyDetails: string }>,

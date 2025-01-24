@@ -40,6 +40,19 @@ export const SupervisorAnnotation = Annotation.Root({
       type: "thread" | "post";
     }>
   >,
+  /**
+   * Thread and run IDs, along with the type of post to generate.
+   */
+  idsAndTypes: Annotation<
+    Array<{
+      type: "thread" | "post";
+      thread_id: string;
+      run_id: string;
+    }>
+  >({
+    reducer: (state, update) => state.concat(update),
+    default: () => [],
+  }),
 });
 
 export const SupervisorConfigurableAnnotation = Annotation.Root({

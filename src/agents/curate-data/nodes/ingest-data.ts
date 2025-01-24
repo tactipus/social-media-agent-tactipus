@@ -22,7 +22,6 @@ export async function ingestData(
   if (!sources) {
     throw new Error("No sources provided");
   }
-
   if (!process.env.PORT) {
     throw new Error("PORT environment variable not set");
   }

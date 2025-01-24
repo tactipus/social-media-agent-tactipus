@@ -135,7 +135,7 @@ export async function humanNode(
 
   const interruptValue: HumanInterrupt = {
     action_request: {
-      action: "Schedule Twitter/LinkedIn posts",
+      action: "Schedule Twitter/LinkedIn post",
       args: {
         post: state.post,
         date: defaultDateString,
