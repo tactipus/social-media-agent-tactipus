@@ -1,12 +1,7 @@
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { GeneratePostAnnotation } from "../../generate-post-state.js";
 import { ChatAnthropic } from "@langchain/anthropic";
-import { ChatOpenAI } from "@langchain/openai";
-import {
-  EXTRACT_KEY_DETAILS_PROMPT,
-  GENERATE_REPORT_PROMPT,
-  GENERATE_REPORT_PROMPT_O1,
-} from "./prompts.js";
+import { GENERATE_REPORT_PROMPT } from "./prompts.js";
 
 /**
  * Parse the LLM generation to extract the report from inside the <report> tag.
@@ -31,61 +26,6 @@ const formatReportPrompt = (pageContents: string[]): string => {
 ${pageContents.map((content, index) => `<Content index={${index + 1}}>\n${content}\n</Content>`).join("\n\n")}`;
 };
 
-const formatKeyDetailsPrompt = (pageContents: string[]): string => {
-  return `The following text contains summaries, or entire pages from the content I submitted to you. Please review the content and extract ALL of the key details from it.
-${pageContents.map((content, index) => `<Content index={${index + 1}}>\n${content}\n</Content>`).join("\n\n")}`;
-};
-
-async function generateReportWithO1(
-  state: typeof GeneratePostAnnotation.State,
-) {
-  if (!state.pageContents?.length) {
-    throw new Error(
-      "No page contents found. pageContents must be defined to generate a report with o1.",
-    );
-  }
-  const prompt = formatReportPrompt(state.pageContents);
-  const keyDetailsPrompt = formatKeyDetailsPrompt(state.pageContents);
-
-  const reportO1Model = new ChatOpenAI({
-    model: "o1",
-    streaming: false,
-  });
-
-  const keyDetails = (
-    await reportO1Model.invoke([
-      {
-        role: "system",
-        content: EXTRACT_KEY_DETAILS_PROMPT,
-      },
-      {
-        role: "user",
-        content: keyDetailsPrompt,
-      },
-    ])
-  ).content as string;
-
-  const formattedReportPrompt = GENERATE_REPORT_PROMPT_O1.replace(
-    "{keyDetails}",
-    keyDetails,
-  );
-
-  const report = await reportO1Model.invoke([
-    {
-      role: "system",
-      content: formattedReportPrompt,
-    },
-    {
-      role: "user",
-      content: prompt,
-    },
-  ]);
-
-  return {
-    report: parseGeneration(report.content as string),
-  };
-}
-
 export async function generateContentReport(
   state: typeof GeneratePostAnnotation.State,
   _config: LangGraphRunnableConfig,
@@ -94,10 +34,6 @@ export async function generateContentReport(
     throw new Error(
       "No page contents found. pageContents must be defined to generate a content report.",
     );
-  }
-
-  if (process.env.USE_O1_REPORT_GENERATION === "true") {
-    return generateReportWithO1(state);
   }
 
   const reportModel = new ChatAnthropic({
