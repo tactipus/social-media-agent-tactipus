@@ -7,6 +7,7 @@ import {
 import {
   GeneratePostAnnotation,
   GeneratePostConfigurableAnnotation,
+  GeneratePostInputAnnotation,
 } from "./generate-post-state.js";
 import { generateContentReport } from "./nodes/generate-report/index.js";
 import { generatePost } from "./nodes/geterate-post/index.js";
@@ -71,17 +72,8 @@ function generateReportOrEndConditionalEdge(
   return END;
 }
 
-function startOrInterrupt(
-  state: typeof GeneratePostAnnotation.State,
-): "humanNode" | "authSocialsPassthrough" {
-  if (state.post && state.relevantLinks?.length && state.pageContents?.length) {
-    return "humanNode";
-  }
-  return "authSocialsPassthrough";
-}
-
 const generatePostBuilder = new StateGraph(
-  { stateSchema: GeneratePostAnnotation, input: GeneratePostAnnotation },
+  { stateSchema: GeneratePostAnnotation, input: GeneratePostInputAnnotation },
   GeneratePostConfigurableAnnotation,
 )
   .addNode("authSocialsPassthrough", authSocialsPassthrough)
@@ -106,11 +98,7 @@ const generatePostBuilder = new StateGraph(
   .addNode("updateScheduleDate", updateScheduledDate)
 
   // Start node
-  // .addEdge(START, "authSocialsPassthrough")
-  .addConditionalEdges(START, startOrInterrupt, [
-    "authSocialsPassthrough",
-    "humanNode",
-  ])
+  .addEdge(START, "authSocialsPassthrough")
   .addEdge("authSocialsPassthrough", "verifyLinksSubGraph")
 
   // After verifying the different content types, we should generate a report on them.
