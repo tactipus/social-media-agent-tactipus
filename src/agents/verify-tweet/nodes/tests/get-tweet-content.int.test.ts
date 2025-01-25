@@ -94,7 +94,7 @@ ls.describe("SMA - Verify Tweet - Get Tweet Content", () => {
     "Should get the full content, urls and attachments",
     async ({ inputs }) => {
       // Import and run your app, or some part of it here
-      const result = await getTweetContent(inputs as any, {});
+      const result = await getTweetContent(inputs as any);
       const evalResult = ls
         .expect(result)
         .evaluatedBy(checkCorrectTweetContents);
