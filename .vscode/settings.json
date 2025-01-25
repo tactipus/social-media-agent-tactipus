@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["agentinbox", "checkpointer", "reranked", "Supabase"]
+  "cSpell.words": [
+    "agentinbox",
+    "checkpointer",
+    "reranked",
+    "subreddits",
+    "Supabase",
+    "Userless"
+  ]
 }

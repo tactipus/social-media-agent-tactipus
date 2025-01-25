@@ -61,7 +61,7 @@ const YOUTUBE_THUMBNAIL_URL = "https://i.ytimg.com/";
 export async function validateImages(
   state: typeof FindImagesAnnotation.State,
 ): Promise<{
-  imageOptions: string[];
+  imageOptions: string[] | undefined;
 }> {
   const { imageOptions, report, post } = state;
 
@@ -70,21 +70,21 @@ export async function validateImages(
     temperature: 0,
   });
 
-  const imagesWithoutProtected = imageOptions.filter(
+  const imagesWithoutProtected = imageOptions?.filter(
     (fileUri) =>
       (!process.env.SUPABASE_URL ||
         !fileUri.startsWith(process.env.SUPABASE_URL)) &&
       !fileUri.startsWith(YOUTUBE_THUMBNAIL_URL),
   );
 
-  if (imagesWithoutProtected.length === 0) {
+  if (imagesWithoutProtected?.length === 0) {
     return {
       imageOptions,
     };
   }
 
   // Split images into chunks of 10
-  const imageChunks = chunkArray(imagesWithoutProtected, 10);
+  const imageChunks = chunkArray(imagesWithoutProtected || [], 10);
   let allIrrelevantIndices: number[] = [];
   let baseIndex = 0;
 
@@ -136,7 +136,7 @@ export async function validateImages(
     baseIndex += imageChunk.length;
   }
 
-  const protectedUrls = imageOptions.filter(
+  const protectedUrls = imageOptions?.filter(
     (fileUri) =>
       (process.env.SUPABASE_URL &&
         fileUri.startsWith(process.env.SUPABASE_URL)) ||
@@ -146,8 +146,8 @@ export async function validateImages(
   // Keep only the relevant images (those whose indices are in allIrrelevantIndices)
   return {
     imageOptions: [
-      ...protectedUrls,
-      ...imagesWithoutProtected.filter((_, index) =>
+      ...(protectedUrls || []),
+      ...(imagesWithoutProtected || []).filter((_, index) =>
         allIrrelevantIndices.includes(index),
       ),
     ],

@@ -25,6 +25,8 @@ You're doing this to ensure the content is relevant to your company, and it can 
 
 ${getPrompts().businessContext}
 
+${getPrompts().contentValidationPrompt}
+
 Given this context, examine the entire Tweet plus webpage content closely, and determine if the content implements your company's products.
 You should provide reasoning as to why or why not the content implements your company's products, then a simple true or false for whether or not it implements some.`;
 
@@ -32,7 +34,7 @@ async function verifyGeneralContentIsRelevant(
   content: string,
 ): Promise<boolean> {
   const relevancyModel = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0,
   }).withStructuredOutput(RELEVANCY_SCHEMA, {
     name: "relevancy",
@@ -81,9 +83,14 @@ ${pageContents.map((content, index) => `<webpage-content key="${index}">\n${cont
 export async function validateTweetContent(
   state: typeof VerifyTweetAnnotation.State,
 ): Promise<Partial<typeof VerifyTweetAnnotation.State>> {
+  if (!state.pageContents?.length && !state.tweetContent) {
+    throw new Error(
+      "Missing page contents and tweet contents. One of these must be defined to verify the Tweet content.",
+    );
+  }
   const context = constructContext({
     tweetContent: state.tweetContent,
-    pageContents: state.pageContents,
+    pageContents: state.pageContents || [],
   });
 
   const relevant = await verifyGeneralContentIsRelevant(context);
@@ -97,7 +104,7 @@ export async function validateTweetContent(
   }
 
   return {
-    relevantLinks: [state.link],
+    relevantLinks: [state.link, ...state.tweetContentUrls],
     pageContents: [context],
   };
 }

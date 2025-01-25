@@ -34,18 +34,35 @@ function checkIsGitHubImageUrl(url: string): boolean {
 
 export async function findImages(state: typeof FindImagesAnnotation.State) {
   const { pageContents, imageOptions, relevantLinks } = state;
-  const link = relevantLinks[0];
+  const link = relevantLinks?.[0] || undefined;
+  if (!link || !relevantLinks?.length) {
+    console.warn("No relevant links passed to findImages.");
+    return {};
+  }
   const imageUrls = new Set<string>();
+  const gitHubSubLinks = relevantLinks.filter(
+    (rl) => getUrlType(rl) === "github" && rl !== link,
+  );
 
   let screenshotUrl: string | undefined;
-  if (getUrlType(link) !== "youtube") {
+  if (!["youtube", "twitter"].includes(getUrlType(link) || "")) {
     screenshotUrl = await takeScreenshotAndUpload(link);
     if (screenshotUrl) {
       imageUrls.add(screenshotUrl);
     }
   }
 
-  if (imageOptions.length) {
+  // Take screenshots of all GitHub links (excluding parent link)
+  if (gitHubSubLinks.length) {
+    for await (const ghLink of gitHubSubLinks) {
+      const ghScreenshotUrl = await takeScreenshotAndUpload(ghLink);
+      if (ghScreenshotUrl) {
+        imageUrls.add(ghScreenshotUrl);
+      }
+    }
+  }
+
+  if (imageOptions?.length) {
     imageOptions.forEach((urlOrPathname) => {
       imageUrls.add(urlOrPathname);
     });

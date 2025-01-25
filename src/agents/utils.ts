@@ -11,6 +11,7 @@ export const BLACKLISTED_MIME_TYPES = [
   "image/bmp",
   "text/",
 ];
+export const BLACKLISTED_GENERAL_URLS = ["vimeo.com"];
 
 /**
  * Extracts URLs from Slack-style message text containing links in the format:
@@ -51,8 +52,21 @@ export function extractTweetId(url: string | URL): string | undefined {
  * @returns Array of URLs found in the text
  */
 export function extractUrls(text: string): string[] {
-  const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g;
-  return text.match(urlRegex) || [];
+  const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const urls = new Set<string>();
+
+  // First replace all markdown links with spaces to avoid double-matching
+  const processedText = text.replace(markdownLinkRegex, (match, _, url) => {
+    urls.add(url);
+    return " ".repeat(match.length); // Replace with spaces to preserve string length
+  });
+
+  // Then look for any remaining plain URLs in the text
+  const plainUrlRegex = /https?:\/\/[^\s<\]]+(?:[^<.,:;"'\]\s)]|(?=\s|$))/g;
+  const plainUrls = processedText.match(plainUrlRegex) || [];
+  plainUrls.forEach((url) => urls.add(url));
+
+  return Array.from(urls);
 }
 
 /**
@@ -364,7 +378,11 @@ export function getUrlType(url: string): UrlType {
     return undefined;
   }
 
-  if (parsedUrl.hostname.includes("github")) {
+  if (
+    parsedUrl.hostname.includes("github") &&
+    // github.io sites should be considered general URLs
+    !parsedUrl.hostname.includes("github.io")
+  ) {
     return "github";
   }
 
@@ -382,7 +400,11 @@ export function getUrlType(url: string): UrlType {
     return "twitter";
   }
 
-  if (parsedUrl.hostname.includes("reddit")) {
+  if (
+    parsedUrl.hostname.includes("reddit") ||
+    parsedUrl.hostname.includes("np.reddit") ||
+    parsedUrl.hostname.includes("redd.it")
+  ) {
     return "reddit";
   }
 
@@ -456,6 +478,7 @@ export function removeQueryParams(url: string): string {
  * @template T - The type of elements in the array
  */
 export function chunkArray<T>(arr: T[], size: number): T[][] {
+  if (!arr.length) return [];
   return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
     arr.slice(i * size, i * size + size),
   );
@@ -479,4 +502,47 @@ export function shouldPostToLinkedInOrg(
       ? postToOrgConfig
       : process.env.POST_TO_LINKEDIN_ORGANIZATION === "true";
   return postToOrg;
+}
+
+export async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Calculates delay times for processing a list of URLs to prevent rate limiting.
+ * Each URL gets a minimum 30-second delay from the previous URL's processing time.
+ * Twitter URLs receive an additional 30-second delay due to stricter rate limits.
+ *
+ * @param links - Array of URLs to process
+ * @param baseDelaySeconds - The base delay time in seconds (default: 30)
+ * @returns Array of objects containing the original URL and its calculated delay time
+ * @example
+ * // For URLs: ['https://example.com', 'https://twitter.com/user', 'https://github.com']
+ * // Returns:
+ * // [
+ * //   { link: 'https://example.com', afterSeconds: 0 },
+ * //   { link: 'https://twitter.com/user', afterSeconds: 60 }, // 30 (base) + 30 (twitter)
+ * //   { link: 'https://github.com', afterSeconds: 60 } // 30 * 2 (third position)
+ * // ]
+ */
+export function getAfterSecondsFromLinks(
+  links: string[],
+  options?: {
+    baseDelaySeconds?: number;
+  },
+): {
+  link: string;
+  afterSeconds: number;
+}[] {
+  const baseDelaySeconds =
+    options?.baseDelaySeconds != null ? options.baseDelaySeconds : 30;
+  return links.map((link, index) => {
+    const isTwitterUrl = getUrlType(link) === "twitter";
+    const additionalDelay = isTwitterUrl ? baseDelaySeconds : 0;
+    const afterSeconds = index * baseDelaySeconds + additionalDelay;
+    return {
+      link,
+      afterSeconds,
+    };
+  });
 }

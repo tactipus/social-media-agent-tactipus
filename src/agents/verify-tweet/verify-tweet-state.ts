@@ -1,5 +1,6 @@
 import { Annotation } from "@langchain/langgraph";
 import { VerifyContentAnnotation } from "../shared/shared-state.js";
+import { VerifyLinksResultAnnotation } from "../verify-links/verify-links-state.js";
 
 export const VerifyTweetAnnotation = Annotation.Root({
   /**
@@ -17,39 +18,26 @@ export const VerifyTweetAnnotation = Annotation.Root({
     reducer: (state, update) => state.concat(update),
     default: () => [],
   }),
+  ...VerifyLinksResultAnnotation.spec,
   /**
    * Page content used in the verification nodes. Will be used in the report
    * generation node.
+   *
+   * pageContents is defined in the VerifyLinksResultAnnotation spec, so
+   *  we spread it above this to ensure it uses this custom reducer.
    */
-  pageContents: Annotation<string[]>({
+  pageContents: Annotation<string[] | undefined>({
     reducer: (state, update) => {
+      if (update === undefined) return undefined;
+
       if (update[0]?.startsWith("The following is the content of the Tweet:")) {
         // This means the update is from validateTweetContent so we can remove
         // all other state fields.
         return update;
       }
 
-      return state.concat(update);
+      return (state || []).concat(update);
     },
-    default: () => [],
-  }),
-  /**
-   * Relevant links found in the message.
-   */
-  relevantLinks: Annotation<string[]>({
-    reducer: (state, update) => {
-      // Use a set to ensure no duplicate links are added.
-      const stateSet = new Set(state);
-      update.forEach((link) => stateSet.add(link));
-      return Array.from(stateSet);
-    },
-    default: () => [],
-  }),
-  /**
-   * Image options to provide to the user.
-   */
-  imageOptions: Annotation<string[]>({
-    reducer: (_state, update) => update,
     default: () => [],
   }),
 });

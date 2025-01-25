@@ -10,24 +10,27 @@ import { verifyGeneralContent } from "../shared/nodes/verify-general.js";
 import { verifyGitHubContent } from "../shared/nodes/verify-github.js";
 import { VerifyContentAnnotation } from "../shared/shared-state.js";
 import { VerifyRedditPostAnnotation } from "./verify-reddit-post-state.js";
-import { getRedditPostContent } from "./nodes/get-reddit-content.js";
 import { validateRedditPost } from "./nodes/validate-reddit-post.js";
+import { getExternalUrls } from "./nodes/get-external-urls.js";
+import { getUrlType } from "../utils.js";
+import { getPost } from "./nodes/get-post.js";
 
 /**
  * This conditional edge will iterate over all the links in a Reddit post.
  * It creates a `Send` for each link, which will invoke a node specific to that website.
  */
 function routePostUrls(state: typeof VerifyRedditPostAnnotation.State) {
-  if (!state.redditPostUrls.length) {
+  if (!state.externalURLs.length) {
     return "validateRedditPost";
   }
 
-  return state.redditPostUrls.map((link) => {
-    if (link.includes("youtube.com")) {
+  return state.externalURLs.map((link) => {
+    const urlType = getUrlType(link);
+    if (urlType === "youtube") {
       return new Send("verifyYouTubeContent", {
         link,
       });
-    } else if (link.includes("github.com")) {
+    } else if (urlType === "github") {
       return new Send("verifyGitHubContent", {
         link,
       });
@@ -40,7 +43,8 @@ function routePostUrls(state: typeof VerifyRedditPostAnnotation.State) {
 }
 
 const verifyRedditPostBuilder = new StateGraph(VerifyRedditPostAnnotation)
-  .addNode("getRedditPostContent", getRedditPostContent)
+  .addNode("getPost", getPost)
+  .addNode("getExternalUrls", getExternalUrls)
 
   // Validates any GitHub, YouTube, or other URLs found in the Reddit post content.
   .addNode("verifyYouTubeContent", verifyYouTubeContent, {
@@ -58,10 +62,11 @@ const verifyRedditPostBuilder = new StateGraph(VerifyRedditPostAnnotation)
   .addNode("validateRedditPost", validateRedditPost)
 
   // Start node
-  .addEdge(START, "getRedditPostContent")
+  .addEdge(START, "getPost")
+  .addEdge("getPost", "getExternalUrls")
   // After getting the content & nested URLs, route to either the nodes, or go
   // straight to validation if no URLs found.
-  .addConditionalEdges("getRedditPostContent", routePostUrls, [
+  .addConditionalEdges("getExternalUrls", routePostUrls, [
     "verifyYouTubeContent",
     "verifyGeneralContent",
     "verifyGitHubContent",

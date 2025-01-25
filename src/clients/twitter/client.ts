@@ -1,12 +1,34 @@
 import Arcade from "@arcadeai/arcadejs";
 import { CreateTweetRequest, TwitterClientArgs } from "./types.js";
 import {
+  TweetV2,
   Tweetv2FieldsParams,
+  TweetV2ListTweetsPaginator,
+  TweetV2PaginableListParams,
   TweetV2SingleResult,
   TwitterApi,
   TwitterApiReadWrite,
 } from "twitter-api-v2";
 import { AuthorizeUserResponse } from "../types.js";
+import { getThreadTweets, isTweetSelfReply } from "./utils.js";
+
+const BASE_FETCH_TWEET_OPTIONS: Partial<TweetV2PaginableListParams> = {
+  "tweet.fields": [
+    "note_tweet",
+    "created_at",
+    "id",
+    "author_id",
+    "in_reply_to_user_id",
+    "referenced_tweets",
+  ],
+  "user.fields": ["username"],
+  expansions: [
+    "referenced_tweets.id",
+    "referenced_tweets.id.author_id",
+    "attachments.media_keys",
+  ],
+  "media.fields": ["type", "url"],
+};
 
 type MediaIdStringArray =
   | [string]
@@ -304,41 +326,21 @@ export class TwitterClient {
   /**
    * Get a tweet by ID using the basic Twitter API. Will return undefined if an error occurs.
    * @param id The tweet ID
-   * @param fields
-   * @param fields.includeMedia Whether to include media attachments in the response
-   * @returns {Promise<TweetV2SingleResult | undefined>} The tweet or undefined if an error occurs
+   * @returns {Promise<TweetV2SingleResult>} The tweet
    */
   private async getTweetBasicAuth(
     id: string,
-    fields?: {
-      /**
-       * @default true
-       */
-      includeMedia?: boolean;
-    },
+    tweetOptions?: Partial<Tweetv2FieldsParams>,
   ): Promise<TweetV2SingleResult | undefined> {
-    const includeMedia =
-      fields?.includeMedia !== undefined ? fields?.includeMedia : true;
-    try {
-      const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
-        // This allows us to access the full text of the Tweet.
-        // Access via `response.data.note_tweet.text`
-        "tweet.fields": ["note_tweet"],
-      };
-      if (includeMedia) {
-        fetchTweetOptions.expansions = ["attachments.media_keys"];
-        fetchTweetOptions["media.fields"] = ["type", "url"];
-      }
-
-      const tweetContent = await this.twitterClient.v2.singleTweet(
-        id,
-        fetchTweetOptions,
-      );
-      return tweetContent;
-    } catch (e) {
-      console.error("Failed to get tweet:", e);
-      return undefined;
-    }
+    const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
+      ...BASE_FETCH_TWEET_OPTIONS,
+      ...(tweetOptions || {}),
+    };
+    const tweetContent = await this.twitterClient.v2.singleTweet(
+      id,
+      fetchTweetOptions,
+    );
+    return tweetContent;
   }
 
   /**
@@ -392,52 +394,145 @@ export class TwitterClient {
    * const tweet = await client.getTweet("1234567890", { twitterUserId: "user123" });
    *
    * // Without media attachments
-   * const tweet = await client.getTweet("1234567890", { includeMedia: false });
+   * const tweet = await client.getTweet("1234567890");
    * ```
    */
   async getTweet(
     id: string,
     fields?: {
       twitterUserId?: string;
-      /**
-       * @default true
-       */
-      includeMedia?: boolean;
     },
   ): Promise<TweetV2SingleResult> {
-    const fieldsWithDefaults = {
-      includeMedia: true,
-      ...fields,
-    };
     const useArcadeAuth = process.env.USE_ARCADE_AUTH;
     const useTwitterApiOnly = process.env.USE_TWITTER_API_ONLY;
 
     if (useTwitterApiOnly === "true" || useArcadeAuth !== "true") {
       // Use the developer API account for reading tweets, not Arcade.
-      const fetchTweetOptions: Partial<Tweetv2FieldsParams> = {
-        // This allows us to access the full text of the Tweet.
-        // Access via `response.data.note_tweet.text`
-        "tweet.fields": ["note_tweet"],
-      };
-      if (fieldsWithDefaults.includeMedia) {
-        fetchTweetOptions.expansions = ["attachments.media_keys"];
-        fetchTweetOptions["media.fields"] = ["type", "url"];
-      }
+      const fetchTweetOptions: Partial<Tweetv2FieldsParams> =
+        BASE_FETCH_TWEET_OPTIONS;
 
-      const tweetContent = await this.getTweetBasicAuth(id, {
-        includeMedia: fieldsWithDefaults.includeMedia,
-      });
+      const tweetContent = await this.getTweetBasicAuth(id, fetchTweetOptions);
 
       // If tweetContent is defined, return it. Otherwise fallback to Arcade.
       if (tweetContent) {
         return tweetContent;
       }
+
+      throw new Error("Tweet not found");
     }
 
-    if (!fieldsWithDefaults.twitterUserId) {
+    if (!fields?.twitterUserId) {
       throw new Error("Must provide Twitter User ID when using Arcade auth.");
     }
 
-    return this.getTweetArcade(id, fieldsWithDefaults.twitterUserId);
+    return this.getTweetArcade(id, fields.twitterUserId);
+  }
+
+  /**
+   * Get tweets from a Twitter list.
+   * @param listId The ID of the Twitter list
+   * @param fields
+   * @param fields.maxResults The maximum number of tweets to fetch
+   * @returns {Promise<TweetV2ListTweetsPaginator>} A paginator for the list of tweets
+   */
+  async getListTweets(
+    listId: string,
+    fields?: {
+      maxResults?: number;
+      paginationToken?: string;
+    },
+  ): Promise<TweetV2ListTweetsPaginator> {
+    const fieldsWithDefaults = {
+      maxResults: 100,
+      ...fields,
+    };
+    const fetchTweetOptions: Partial<TweetV2PaginableListParams> =
+      BASE_FETCH_TWEET_OPTIONS;
+
+    if (fieldsWithDefaults.paginationToken) {
+      fetchTweetOptions.pagination_token = fieldsWithDefaults.paginationToken;
+    }
+
+    const listTweets = await this.twitterClient.v2.listTweets(listId, {
+      max_results: fieldsWithDefaults.maxResults,
+      ...fetchTweetOptions,
+    });
+
+    return listTweets;
+  }
+
+  /**
+   * Searches for tweets using the Twitter API v2 endpoint
+   * @param query - The search query string to find relevant tweets
+   * @param options - Optional configuration for the search
+   * @param options.maxResults - Maximum number of tweets to return (default: 15)
+   * @param options.sinceId - Only return tweets newer than this ID
+   * @returns {Promise<TweetSearchRecentV2Paginator>} A promise that resolves to the search results
+   */
+  async searchTweets(
+    query: string,
+    options?: {
+      maxResults?: number;
+      sinceId?: string;
+    },
+  ) {
+    const fetchTweetOptions: Partial<Tweetv2FieldsParams> =
+      BASE_FETCH_TWEET_OPTIONS;
+
+    const tweets = await this.twitterClient.v2.search(query, {
+      ...fetchTweetOptions,
+      max_results: options?.maxResults || 15,
+      since_id: options?.sinceId,
+    });
+    return tweets;
+  }
+
+  /**
+   * Retrieves all tweets in a thread starting from a given tweet ID.
+   * A thread is defined as a series of tweets where the author replies to their own tweets.
+   *
+   * @param {string} tweetId - The ID of the initial tweet in the thread
+   * @param {string} authorId - The ID of the author who created the thread
+   * @returns {Promise<TweetV2[]>} An array of tweets in chronological order.
+   */
+  async getThreadFromId(initialTweet: TweetV2): Promise<TweetV2[]> {
+    const authorId = initialTweet.author_id;
+    if (!initialTweet.author_id) {
+      throw new Error(
+        "Failed to get tweet author from input:" + JSON.stringify(initialTweet),
+      );
+    }
+
+    const fetchTweetOptions: Partial<Tweetv2FieldsParams> =
+      BASE_FETCH_TWEET_OPTIONS;
+
+    const thread: TweetV2[] = [initialTweet];
+
+    // Search for replies by the same author, to the same author. This must result in a thread, or the author is replying to themselves.
+    const replies = await this.twitterClient.v2.search(
+      `conversation_id:${initialTweet.id} from:${authorId} to:${authorId}`,
+      {
+        ...fetchTweetOptions,
+        max_results: 15, // Limit to 15 replies as most threads will not be longer than this.
+      },
+    );
+
+    if (!replies.data || !replies.data.data) {
+      return thread;
+    }
+    // Filter replies to only include those that form a thread (author replying to themselves)
+    const threadReplies = replies.data.data.filter((tweet) =>
+      isTweetSelfReply(tweet, authorId as string),
+    );
+
+    if (threadReplies.length === 0) return thread;
+
+    const formattedThreads: TweetV2[] = threadReplies.sort((a, b) => {
+      return (
+        new Date(a.created_at!).getTime() - new Date(b.created_at!).getTime()
+      );
+    });
+
+    return getThreadTweets(initialTweet, formattedThreads);
   }
 }

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { GeneratePostAnnotation } from "../generate-post-state.js";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { toZonedTime } from "date-fns-tz";
 import { DateType } from "../../types.js";
@@ -39,13 +38,13 @@ const scheduleDateSchema = z.object({
 });
 
 export async function updateScheduledDate(
-  state: typeof GeneratePostAnnotation.State,
-): Promise<Partial<typeof GeneratePostAnnotation.State>> {
+  state: Record<string, any>,
+): Promise<Record<string, any>> {
   if (!state.userResponse) {
     throw new Error("No user response found");
   }
   const model = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0.5,
   }).withStructuredOutput(scheduleDateSchema, {
     name: "scheduleDate",

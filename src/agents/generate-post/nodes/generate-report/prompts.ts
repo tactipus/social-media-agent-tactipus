@@ -6,12 +6,16 @@ This is the introduction and summary of the content. This must include key detai
 - what the content/product/service does, and/or the problems it solves.
 - unique selling points or interesting facts about the content.
 - a high level summary of the content/product/service.
+
+Ensure this is section packed with details and engaging.
 </part>
 
 <part key="2">
-This section should focus on how the content implements any of the business context outlined above. It should include:
-- the product(s) or service(s) used in the content.
-- how these products are used in the content.
+This section should focus on how the content implements, or related to any of the business context outlined above. It should include:
+- key details about how it relates to the context.
+- any product(s) or service(s) used in the content.
+- why the content is relevant to the business context.
+- how the content is used, implemented, or related.
 - why these products are important to the application.
 </part>
 
@@ -20,6 +24,9 @@ This section should cover any additional details about the content that the firs
 - a detailed technical overview of the content.
 - interesting facts about the content.
 - any other relevant information that may be engaging to readers.
+
+This is the section where you should include any relevant parts of the content which you were unable to include in the first two sections.
+Ensure you do NOT leave out any relevant details in the report. You want your report to be extensive and detailed. Remember, it's better to overdo it than underdo it.
 </part>`;
 
 const REPORT_RULES = `- Focus on the subject of the content, and how it uses or relates to the business context outlined above.

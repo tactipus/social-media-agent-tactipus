@@ -1,5 +1,4 @@
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
-import { GeneratePostAnnotation } from "../../generate-post/generate-post-state.js";
 import { z } from "zod";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { FireCrawlLoader } from "@langchain/community/document_loaders/web/firecrawl";
@@ -7,12 +6,8 @@ import { getPrompts } from "../../generate-post/prompts/index.js";
 import { VerifyContentAnnotation } from "../shared-state.js";
 import { RunnableLambda } from "@langchain/core/runnables";
 import { getPageText } from "../../utils.js";
-
-type VerifyGeneralContentReturn = {
-  relevantLinks: (typeof GeneratePostAnnotation.State)["relevantLinks"];
-  pageContents: (typeof GeneratePostAnnotation.State)["pageContents"];
-  imageOptions?: (typeof GeneratePostAnnotation.State)["imageOptions"];
-};
+import { getImagesFromFireCrawlMetadata } from "../../../utils/firecrawl.js";
+import { CurateDataState } from "../../curate-data/state.js";
 
 const RELEVANCY_SCHEMA = z
   .object({
@@ -30,25 +25,15 @@ const RELEVANCY_SCHEMA = z
   .describe("The relevancy of the content to your company's products.");
 
 const VERIFY_COMPANY_RELEVANT_CONTENT_PROMPT = `You are a highly regarded marketing employee.
-You're provided with a webpage containing content a third party submitted to you claiming it's relevant and implements your company's products.
-Your task is to carefully read over the entire page, and determine whether or not the content actually implements and is relevant to your company's products.
-You're doing this to ensure the content is relevant to your company, and it can be used as marketing material to promote your company.
+You're provided with a webpage containing content a third party submitted to you claiming it's relevant to your business context.
+Your task is to carefully read over the entire page, and determine whether or not the content is actually relevant to your context.
 
 ${getPrompts().businessContext}
 
-Given this context, examine the webpage content closely, and determine if the content implements your company's products.
-You should provide reasoning as to why or why not the content implements your company's products, then a simple true or false for whether or not it implements some.`;
+${getPrompts().contentValidationPrompt}
 
-const getImagesFromFireCrawlMetadata = (
-  metadata: any,
-): string[] | undefined => {
-  const image = metadata.image || [];
-  const ogImage = metadata.ogImage ? [metadata.ogImage] : [];
-  if (image?.length || ogImage?.length) {
-    return [...ogImage, ...image];
-  }
-  return undefined;
-};
+Given this context, examine the webpage content closely, and determine if the content is relevant to your context.
+You should provide reasoning as to why or why not the content is relevant to your context, then a simple true or false for whether or not it is relevant.`;
 
 type UrlContents = {
   content: string;
@@ -88,7 +73,7 @@ export async function verifyGeneralContentIsRelevant(
   content: string,
 ): Promise<boolean> {
   const relevancyModel = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0,
   }).withStructuredOutput(RELEVANCY_SCHEMA, {
     name: "relevancy",
@@ -112,9 +97,6 @@ export async function verifyGeneralContentIsRelevant(
 }
 
 /**
- * Verifies the content provided is relevant to your company's products.
- */
-/**
  * Verifies if the general content from a provided URL is relevant to your company's products.
  *
  * @param state - The current state containing the link to verify.
@@ -125,7 +107,7 @@ export async function verifyGeneralContentIsRelevant(
 export async function verifyGeneralContent(
   state: typeof VerifyContentAnnotation.State,
   _config: LangGraphRunnableConfig,
-): Promise<VerifyGeneralContentReturn> {
+): Promise<Partial<CurateDataState>> {
   const urlContents = await new RunnableLambda<string, UrlContents>({
     func: getUrlContents,
   })

@@ -1,52 +1,27 @@
 import { Annotation } from "@langchain/langgraph";
-import { VerifyContentAnnotation } from "../shared/shared-state.js";
+import { SimpleRedditPostWithComments } from "../../clients/reddit/types.js";
+import { VerifyLinksResultAnnotation } from "../verify-links/verify-links-state.js";
 
 export const VerifyRedditPostAnnotation = Annotation.Root({
   /**
-   * The link to the Reddit post to verify.
+   * The reddit post to verify. Optional, if not provided then a `link`, or `postID` must be provided.
    */
-  link: VerifyContentAnnotation.spec.link,
+  redditPost: Annotation<SimpleRedditPostWithComments | undefined>,
   /**
-   * A stringified version of the Reddit post, and up to the main 10 replies.
+   * A link to a Reddit post. Optional, if not provided then a `redditPost` or `postID` must be provided.
    */
-  redditContent: Annotation<string>,
+  link: Annotation<string | undefined>,
   /**
-   * URLs which were found in the Reddit post
+   * The ID of a Reddit post. Optional, if not provided then a `redditPost` or `link` must be provided.
    */
-  redditPostUrls: Annotation<string[]>({
+  postID: Annotation<string | undefined>,
+  /**
+   * The external URLs found in the body of the Reddit post.
+   */
+  externalURLs: Annotation<string[]>({
     reducer: (state, update) => state.concat(update),
     default: () => [],
   }),
-  /**
-   * Page content used in the verification nodes. Will be used in the report
-   * generation node.
-   */
-  pageContents: Annotation<string[]>({
-    reducer: (state, update) => {
-      if (
-        update[0]?.startsWith(
-          "The following is the content of the Reddit post:",
-        )
-      ) {
-        // This means the update is from validateRedditPostContent so we can remove
-        // all other state fields.
-        return update;
-      }
-
-      return state.concat(update);
-    },
-    default: () => [],
-  }),
-  /**
-   * Relevant links found in the message.
-   */
-  relevantLinks: Annotation<string[]>({
-    reducer: (state, update) => {
-      // Use a set to ensure no duplicate links are added.
-      const stateSet = new Set(state);
-      update.forEach((link) => stateSet.add(link));
-      return Array.from(stateSet);
-    },
-    default: () => [],
-  }),
+  // REQUIRED DUE TO USING SHARED NODES
+  ...VerifyLinksResultAnnotation.spec,
 });

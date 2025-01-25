@@ -7,6 +7,7 @@ import {
 import {
   GeneratePostAnnotation,
   GeneratePostConfigurableAnnotation,
+  GeneratePostInputAnnotation,
 } from "./generate-post-state.js";
 import { generateContentReport } from "./nodes/generate-report/index.js";
 import { generatePost } from "./nodes/geterate-post/index.js";
@@ -17,8 +18,8 @@ import { condensePost } from "./nodes/condense-post.js";
 import { isTextOnly, removeUrls } from "../utils.js";
 import { verifyLinksGraph } from "../verify-links/verify-links-graph.js";
 import { authSocialsPassthrough } from "./nodes/auth-socials.js";
-import { updateScheduledDate } from "./nodes/update-scheduled-date.js";
 import { findImagesGraph } from "../find-images/find-images-graph.js";
+import { updateScheduledDate } from "../shared/nodes/update-scheduled-date.js";
 
 function routeAfterGeneratingReport(
   state: typeof GeneratePostAnnotation.State,
@@ -65,14 +66,14 @@ function condenseOrHumanConditionalEdge(
 function generateReportOrEndConditionalEdge(
   state: typeof GeneratePostAnnotation.State,
 ): "generateContentReport" | typeof END {
-  if (state.pageContents.length) {
+  if (state.pageContents?.length) {
     return "generateContentReport";
   }
   return END;
 }
 
 const generatePostBuilder = new StateGraph(
-  GeneratePostAnnotation,
+  { stateSchema: GeneratePostAnnotation, input: GeneratePostInputAnnotation },
   GeneratePostConfigurableAnnotation,
 )
   .addNode("authSocialsPassthrough", authSocialsPassthrough)

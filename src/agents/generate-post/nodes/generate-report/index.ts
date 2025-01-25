@@ -30,12 +30,16 @@ export async function generateContentReport(
   state: typeof GeneratePostAnnotation.State,
   _config: LangGraphRunnableConfig,
 ): Promise<Partial<typeof GeneratePostAnnotation.State>> {
+  if (!state.pageContents?.length) {
+    throw new Error(
+      "No page contents found. pageContents must be defined to generate a content report.",
+    );
+  }
+
   const reportModel = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0,
   });
-
-  const prompt = formatReportPrompt(state.pageContents);
 
   const result = await reportModel.invoke([
     {
@@ -44,7 +48,7 @@ export async function generateContentReport(
     },
     {
       role: "user",
-      content: prompt,
+      content: formatReportPrompt(state.pageContents),
     },
   ]);
 

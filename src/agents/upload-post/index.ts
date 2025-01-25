@@ -115,49 +115,44 @@ export async function uploadPost(
   const isTextOnlyMode = isTextOnly(config);
   const postToLinkedInOrg = shouldPostToLinkedInOrg(config);
 
-  const twitterUserId = process.env.TWITTER_USER_ID;
-  const linkedInUserId = process.env.LINKEDIN_USER_ID;
-
-  if (!twitterUserId && !linkedInUserId) {
-    throw new Error("One of twitterUserId or linkedInUserId must be provided");
-  }
-
   try {
-    if (twitterUserId) {
-      let twitterClient: TwitterClient;
+    let twitterClient: TwitterClient;
+    const useArcadeAuth = process.env.USE_ARCADE_AUTH;
+    const useTwitterApiOnly = process.env.USE_TWITTER_API_ONLY;
 
-      const useArcadeAuth = process.env.USE_ARCADE_AUTH;
-      if (useArcadeAuth === "true") {
-        const twitterToken = process.env.TWITTER_USER_TOKEN;
-        const twitterTokenSecret = process.env.TWITTER_USER_TOKEN_SECRET;
-
-        twitterClient = await TwitterClient.fromArcade(
-          twitterUserId,
-          {
-            twitterToken,
-            twitterTokenSecret,
-          },
-          {
-            textOnlyMode: isTextOnlyMode,
-          },
-        );
-      } else {
-        twitterClient = TwitterClient.fromBasicTwitterAuth();
-      }
-
-      let mediaBuffer: CreateMediaRequest | undefined = undefined;
-      if (!isTextOnlyMode) {
-        mediaBuffer = await getMediaFromImage(state.image);
-      }
-
-      await twitterClient.uploadTweet({
-        text: state.post,
-        ...(mediaBuffer && { media: mediaBuffer }),
-      });
-      console.log("✅ Successfully uploaded Tweet ✅");
+    if (useTwitterApiOnly === "true" || useArcadeAuth !== "true") {
+      twitterClient = TwitterClient.fromBasicTwitterAuth();
     } else {
-      console.log("❌ Not uploading Tweet ❌");
+      const twitterUserId = process.env.TWITTER_USER_ID;
+      if (!twitterUserId) {
+        throw new Error("Twitter user ID not found in configurable fields.");
+      }
+
+      const twitterToken = process.env.TWITTER_USER_TOKEN;
+      const twitterTokenSecret = process.env.TWITTER_USER_TOKEN_SECRET;
+
+      twitterClient = await TwitterClient.fromArcade(
+        twitterUserId,
+        {
+          twitterToken,
+          twitterTokenSecret,
+        },
+        {
+          textOnlyMode: isTextOnlyMode,
+        },
+      );
     }
+
+    let mediaBuffer: CreateMediaRequest | undefined = undefined;
+    if (!isTextOnlyMode) {
+      mediaBuffer = await getMediaFromImage(state.image);
+    }
+
+    await twitterClient.uploadTweet({
+      text: state.post,
+      ...(mediaBuffer && { media: mediaBuffer }),
+    });
+    console.log("✅ Successfully uploaded Tweet ✅");
   } catch (e: any) {
     console.error("Failed to upload post:", e);
     let errorString = "";
@@ -177,42 +172,58 @@ export async function uploadPost(
   }
 
   try {
-    if (linkedInUserId) {
-      let linkedInClient: LinkedInClient;
+    let linkedInClient: LinkedInClient;
 
-      const useArcadeAuth = process.env.USE_ARCADE_AUTH;
-      if (useArcadeAuth === "true") {
-        linkedInClient = await LinkedInClient.fromArcade(linkedInUserId, {
-          postToOrganization: postToLinkedInOrg,
-        });
-      } else {
-        linkedInClient = new LinkedInClient({
-          accessToken: config.configurable?.[LINKEDIN_ACCESS_TOKEN],
-          personUrn: config.configurable?.[LINKEDIN_PERSON_URN],
-          organizationId: config.configurable?.[LINKEDIN_ORGANIZATION_ID],
-        });
+    const useArcadeAuth = process.env.USE_ARCADE_AUTH;
+    if (useArcadeAuth === "true") {
+      const linkedInUserId = process.env.LINKEDIN_USER_ID;
+      if (!linkedInUserId) {
+        throw new Error("LinkedIn user ID not found in configurable fields.");
       }
 
-      if (!isTextOnlyMode && state.image) {
-        await linkedInClient.createImagePost(
-          {
-            text: state.post,
-            imageUrl: state.image.imageUrl,
-          },
-          {
-            postToOrganization: postToLinkedInOrg,
-          },
-        );
-      } else {
-        await linkedInClient.createTextPost(state.post, {
-          postToOrganization: postToLinkedInOrg,
-        });
-      }
-
-      console.log("✅ Successfully uploaded post to LinkedIn ✅");
+      linkedInClient = await LinkedInClient.fromArcade(linkedInUserId, {
+        postToOrganization: postToLinkedInOrg,
+      });
     } else {
-      console.log("❌ Not uploading post to LinkedIn ❌");
+      const accessToken =
+        process.env.LINKEDIN_ACCESS_TOKEN ||
+        config.configurable?.[LINKEDIN_ACCESS_TOKEN];
+      if (!accessToken) {
+        throw new Error(
+          "LinkedIn access token not found in environment or configurable fields. Either set it, or use Arcade Auth.",
+        );
+      }
+
+      const personUrn =
+        process.env.LINKEDIN_PERSON_URN ||
+        config.configurable?.[LINKEDIN_PERSON_URN];
+      const organizationId =
+        process.env.LINKEDIN_ORGANIZATION_ID ||
+        config.configurable?.[LINKEDIN_ORGANIZATION_ID];
+      linkedInClient = new LinkedInClient({
+        accessToken: accessToken,
+        personUrn: personUrn,
+        organizationId: organizationId,
+      });
     }
+
+    if (!isTextOnlyMode && state.image) {
+      await linkedInClient.createImagePost(
+        {
+          text: state.post,
+          imageUrl: state.image.imageUrl,
+        },
+        {
+          postToOrganization: postToLinkedInOrg,
+        },
+      );
+    } else {
+      await linkedInClient.createTextPost(state.post, {
+        postToOrganization: postToLinkedInOrg,
+      });
+    }
+
+    console.log("✅ Successfully uploaded post to LinkedIn ✅");
   } catch (e: any) {
     console.error("Failed to upload post:", e);
     let errorString = "";

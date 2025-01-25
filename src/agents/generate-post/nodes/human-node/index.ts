@@ -7,7 +7,7 @@ import {
   getNextSaturdayDate,
   parseDateResponse,
 } from "../../../../utils/date.js";
-import { routeResponse } from "./route-response.js";
+import { routeResponse } from "../../../shared/nodes/route-response.js";
 
 interface ConstructDescriptionArgs {
   unknownResponseDescription: string;
@@ -28,7 +28,7 @@ function constructDescription({
   imageOptions,
   isTextOnlyMode,
 }: ConstructDescriptionArgs): string {
-  const linksText = `### Relevant URLs:\n- ${relevantLinks.join("\n- ")}\nOriginal URL: ${originalLink}`;
+  const linksText = `### Relevant URLs:\nOriginal URL: ${originalLink}\n\n- ${relevantLinks.join("\n- ")}\n`;
   const imageOptionsText =
     imageOptions?.length && !isTextOnlyMode
       ? `## Image Options\n\nThe following image options are available. Select one by copying and pasting the URL into the 'image' field.\n\n${imageOptions.map((url) => `URL: ${url}\nImage: <details><summary>Click to view image</summary>\n\n![](${url})\n</details>\n`).join("\n")}`
@@ -135,7 +135,7 @@ export async function humanNode(
 
   const interruptValue: HumanInterrupt = {
     action_request: {
-      action: "Schedule Twitter/LinkedIn posts",
+      action: "Schedule Twitter/LinkedIn post",
       args: {
         post: state.post,
         date: defaultDateString,
@@ -152,7 +152,7 @@ export async function humanNode(
     description: constructDescription({
       report: state.report,
       originalLink: state.links[0],
-      relevantLinks: state.relevantLinks,
+      relevantLinks: state.relevantLinks || [],
       post: state.post,
       imageOptions: state.imageOptions,
       unknownResponseDescription,

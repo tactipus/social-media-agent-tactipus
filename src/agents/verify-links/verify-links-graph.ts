@@ -6,6 +6,8 @@ import { verifyGitHubContent } from "../shared/nodes/verify-github.js";
 import { verifyTweetGraph } from "../verify-tweet/verify-tweet-graph.js";
 import { VerifyLinksGraphAnnotation } from "./verify-links-state.js";
 import { getUrlType } from "../utils.js";
+import { verifyRedditPostGraph } from "../verify-reddit-post/verify-reddit-post-graph.js";
+import { VerifyRedditPostAnnotation } from "../verify-reddit-post/verify-reddit-post-state.js";
 
 function routeLinkTypes(state: typeof VerifyLinksGraphAnnotation.State) {
   return state.links.map((link) => {
@@ -22,6 +24,11 @@ function routeLinkTypes(state: typeof VerifyLinksGraphAnnotation.State) {
     }
     if (type === "github") {
       return new Send("verifyGitHubContent", {
+        link,
+      });
+    }
+    if (type === "reddit") {
+      return new Send("verifyRedditContent", {
         link,
       });
     }
@@ -44,13 +51,18 @@ const verifyLinksWorkflow = new StateGraph(VerifyLinksGraphAnnotation)
   .addNode("verifyTweetSubGraph", verifyTweetGraph, {
     input: VerifyContentAnnotation,
   })
+  .addNode("verifyRedditContent", verifyRedditPostGraph, {
+    input: VerifyRedditPostAnnotation,
+  })
   // Start node
   .addConditionalEdges(START, routeLinkTypes, [
     "verifyYouTubeContent",
     "verifyGeneralContent",
     "verifyGitHubContent",
     "verifyTweetSubGraph",
+    "verifyRedditContent",
   ])
+  .addEdge("verifyRedditContent", END)
   .addEdge("verifyYouTubeContent", END)
   .addEdge("verifyGeneralContent", END)
   .addEdge("verifyGitHubContent", END)

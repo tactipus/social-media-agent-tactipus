@@ -5,7 +5,6 @@ import {
   TWITTER_NESTED_GITHUB_MESSAGE,
 } from "./states.js";
 import { TwitterApi } from "twitter-api-v2";
-import { resolveTwitterUrl } from "../agents/verify-tweet/utils.js";
 import { EXPECTED_README } from "./expected.js";
 import { getPageText } from "../agents/utils.js";
 import { generatePostGraph } from "../agents/generate-post/generate-post-graph.js";
@@ -18,6 +17,7 @@ import {
   POST_TO_LINKEDIN_ORGANIZATION,
   TEXT_ONLY_MODE,
 } from "../agents/generate-post/constants.js";
+import { resolveTwitterUrl } from "../clients/twitter/utils.js";
 
 const BASE_CONFIG = {
   [POST_TO_LINKEDIN_ORGANIZATION]: undefined,
@@ -178,7 +178,7 @@ test("can generate summaries of youtube videos", async () => {
     {},
   );
   expect(result.pageContents).toBeDefined();
-  expect(result.pageContents[0].length).toBeGreaterThan(50); // Check character count
+  expect(result.pageContents?.[0].length).toBeGreaterThan(50); // Check character count
 });
 
 test("can interrupt and resume", async () => {

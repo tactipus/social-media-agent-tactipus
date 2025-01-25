@@ -29,9 +29,11 @@ Ensure to include in your report if this video is relevant to your company's pro
 
 const VERIFY_RELEVANT_CONTENT_PROMPT = `You are a highly regarded marketing employee.
 You're given a summary/report on some content a third party submitted to you in hopes of having it promoted by you.
-You need to verify if the content is relevant to your company's products before approving or denying the request.
+You need to verify if the content is relevant to the following context before approving or denying the request.
 
 ${getPrompts().businessContext}
+
+${getPrompts().contentValidationPrompt}
 
 Given this context, examine the summary/report closely, and determine if the content is relevant to your company's products.
 You should provide reasoning as to why or why not the content is relevant to your company's products, then a simple true or false for whether or not it's relevant.
@@ -90,7 +92,7 @@ export async function verifyYouTubeContentIsRelevant(
   summary: string,
 ): Promise<boolean> {
   const relevancyModel = new ChatAnthropic({
-    model: "claude-3-5-sonnet-20241022",
+    model: "claude-3-5-sonnet-latest",
     temperature: 0,
   }).withStructuredOutput(RELEVANCY_SCHEMA, {
     name: "relevancy",

@@ -21,6 +21,31 @@ interface FileContent {
   download_url: string | null;
 }
 
+export function getOwnerRepoFromUrl(repoUrl: string): {
+  owner: string;
+  repo: string;
+} {
+  const url = new URL(repoUrl);
+
+  if (url.hostname !== "github.com") {
+    throw new Error("URL must be a GitHub repository URL");
+  }
+
+  // Remove leading slash and split path segments
+  const pathSegments = url.pathname.slice(1).split("/");
+
+  if (pathSegments.length < 2) {
+    throw new Error(
+      "Invalid GitHub repository URL: missing owner or repository name",
+    );
+  }
+
+  const [owner, repo] = pathSegments;
+  const cleanRepo = repo.replace(".git", "");
+
+  return { owner, repo: cleanRepo };
+}
+
 /**
  * Fetches the contents of a GitHub repository's root directory
  * @param repoUrl - The full GitHub repository URL (e.g., 'https://github.com/owner/repo')
@@ -40,43 +65,35 @@ export async function getRepoContents(repoUrl: string): Promise<RepoContent[]> {
   });
 
   try {
-    const url = new URL(repoUrl);
+    const { owner, repo } = getOwnerRepoFromUrl(repoUrl);
 
-    if (url.hostname !== "github.com") {
-      throw new Error("URL must be a GitHub repository URL");
-    }
+    try {
+      const response = await octokit.repos.getContent({
+        owner,
+        repo,
+        path: "", // empty path for root directory
+      });
 
-    // Remove leading slash and split path segments
-    const pathSegments = url.pathname.slice(1).split("/");
+      if (!Array.isArray(response.data)) {
+        throw new Error("Unexpected API response format");
+      }
 
-    if (pathSegments.length < 2) {
+      return response.data.map((item) => ({
+        name: item.name,
+        type: item.type as "file" | "dir",
+        path: item.path,
+        size: item.size,
+      }));
+    } catch (e) {
       throw new Error(
-        "Invalid GitHub repository URL: missing owner or repository name",
+        "Failed to fetch repository contents for " + repoUrl + "\nError: " + e,
       );
     }
-
-    const [owner, repo] = pathSegments;
-    const cleanRepo = repo.replace(".git", "");
-
-    const response = await octokit.repos.getContent({
-      owner,
-      repo: cleanRepo,
-      path: "", // empty path for root directory
-    });
-
-    if (!Array.isArray(response.data)) {
-      throw new Error("Unexpected API response format");
-    }
-
-    return response.data.map((item) => ({
-      name: item.name,
-      type: item.type as "file" | "dir",
-      path: item.path,
-      size: item.size,
-    }));
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to fetch repository contents: ${error.message}`);
+      throw new Error(
+        `Failed to fetch repository contents: ${error.message}\n\nRepo URL: ${repoUrl}`,
+      );
     }
     throw error;
   }
