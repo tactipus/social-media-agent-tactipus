@@ -97,9 +97,6 @@ export async function verifyGeneralContentIsRelevant(
 }
 
 /**
- * Verifies the content provided is relevant to your company's products.
- */
-/**
  * Verifies if the general content from a provided URL is relevant to your company's products.
  *
  * @param state - The current state containing the link to verify.
@@ -122,6 +119,9 @@ export async function verifyGeneralContent(
     return {
       relevantLinks: [state.link],
       pageContents: [urlContents.content],
+      ...(urlContents.imageUrls?.length
+        ? { imageOptions: urlContents.imageUrls }
+        : {}),
     };
   }
 
