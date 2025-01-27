@@ -307,7 +307,7 @@ describe("Priority P3 get scheduled date", () => {
   });
 });
 
-describe.skip("Get scheduled dates", () => {
+describe("Get scheduled dates", () => {
   // Reset the timer after each test, but individual tests may set their own timers
   afterEach(() => {
     jest.useRealTimers();
