@@ -1,19 +1,24 @@
-import { jest, describe, it, expect } from "@jest/globals";
+import { jest, describe, it, expect, afterAll, afterEach } from "@jest/globals";
 import { InMemoryStore } from "@langchain/langgraph";
 
 import {
   getScheduledDateSeconds,
   getTakenScheduleDates,
+  putTakenScheduleDates,
+  TakenScheduleDates,
 } from "../find-date.js";
 
-// Define MOCK_CURRENT_DATE in UTC or as per the mocked timezone
-const MOCK_CURRENT_DATE = new Date("2025-01-03T12:00:00.000Z"); // This aligns with 'America/Los_Angeles'
-// const MOCK_CURRENT_DATE = new Date()
-
-jest.useFakeTimers();
-jest.setSystemTime(MOCK_CURRENT_DATE);
-
 describe("Priority P1 get scheduled date", () => {
+  // Define MOCK_CURRENT_DATE in UTC or as per the mocked timezone
+  const MOCK_CURRENT_DATE = new Date("2025-01-03T12:00:00.000Z"); // This aligns with 'America/Los_Angeles'
+
+  jest.useFakeTimers();
+  jest.setSystemTime(MOCK_CURRENT_DATE);
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   const EXPECTED_DATE_TIMES = [
     "2025-01-04T16:00:00.000Z",
     "2025-01-04T17:00:00.000Z",
@@ -101,6 +106,16 @@ describe("Priority P1 get scheduled date", () => {
 });
 
 describe("Priority P2 get scheduled date", () => {
+  // Define MOCK_CURRENT_DATE in UTC or as per the mocked timezone
+  const MOCK_CURRENT_DATE = new Date("2025-01-03T12:00:00.000Z"); // This aligns with 'America/Los_Angeles'
+
+  jest.useFakeTimers();
+  jest.setSystemTime(MOCK_CURRENT_DATE);
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   const EXPECTED_DATE_TIMES = [
     // Monday/Friday
     "2025-01-03T16:00:00.000Z",
@@ -200,6 +215,16 @@ describe("Priority P2 get scheduled date", () => {
 });
 
 describe("Priority P3 get scheduled date", () => {
+  // Define MOCK_CURRENT_DATE in UTC or as per the mocked timezone
+  const MOCK_CURRENT_DATE = new Date("2025-01-03T12:00:00.000Z"); // This aligns with 'America/Los_Angeles'
+
+  jest.useFakeTimers();
+  jest.setSystemTime(MOCK_CURRENT_DATE);
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   const EXPECTED_DATE_TIMES = [
     // Weekend 1
     "2025-01-04T21:00:00.000Z",
@@ -253,7 +278,6 @@ describe("Priority P3 get scheduled date", () => {
     "2025-01-27T00:00:00.000Z",
     "2025-01-27T01:00:00.000Z",
   ];
-  console.log("EXPECTED_DATE_TIMES", EXPECTED_DATE_TIMES.length);
 
   it("can properly find and schedule dates", async () => {
     const store = new InMemoryStore();
@@ -268,7 +292,6 @@ describe("Priority P3 get scheduled date", () => {
     }
 
     const scheduledDates = await getTakenScheduleDates(config);
-    console.log("scheduledDates", scheduledDates.p3);
     expect(scheduledDates.p3.length).toBe(40);
 
     // Convert both arrays to ISO strings and sort them for comparison
@@ -281,5 +304,61 @@ describe("Priority P3 get scheduled date", () => {
     expect(normalizedScheduledDates.sort()).toEqual(
       normalizedExpectedDates.sort(),
     );
+  });
+});
+
+describe("Get scheduled dates", () => {
+  // Reset the timer after each test, but individual tests may set their own timers
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it("Can schedule for under an hour from the current time", async () => {
+    const defaultTakenDates: TakenScheduleDates = {
+      p1: [
+        new Date("2025-01-18T16:00:00.000Z"),
+        new Date("2025-01-18T17:00:00.000Z"),
+        new Date("2025-01-18T18:00:00.000Z"),
+        new Date("2025-01-19T16:00:00.000Z"),
+        new Date("2025-01-19T17:00:00.000Z"),
+        new Date("2025-01-19T18:00:00.000Z"),
+      ],
+      p2: [
+        new Date("2025-01-17T17:00:00.000Z"),
+        new Date("2025-01-17T18:00:00.000Z"),
+        new Date("2025-01-18T19:00:00.000Z"),
+        new Date("2025-01-18T20:00:00.000Z"),
+        new Date("2025-01-18T21:00:00.000Z"),
+        new Date("2025-01-19T19:00:00.000Z"),
+        new Date("2025-01-19T20:00:00.000Z"),
+        new Date("2025-01-19T21:00:00.000Z"),
+        new Date("2025-01-20T16:00:00.000Z"),
+      ],
+      p3: [
+        new Date("2025-01-18T21:00:00.000Z"),
+        new Date("2025-01-18T22:00:00.000Z"),
+      ],
+    };
+    const store = new InMemoryStore();
+    const config = {
+      store,
+    };
+    await putTakenScheduleDates(defaultTakenDates, config);
+
+    // This is 8:04 AM PST (16:04 UTC)
+    const mockCurrentDate = new Date("2025-01-25T16:04:00.000Z");
+    jest.useFakeTimers();
+    jest.setSystemTime(mockCurrentDate);
+
+    const scheduledDate = await getScheduledDateSeconds(
+      "p1",
+      config,
+      mockCurrentDate,
+    );
+    expect(scheduledDate).toBeDefined();
+    // It should be 9AM, so check it's more than 3300 sec (55 min) and less than 3600 sec (1 hour)
+    // If this is true, then it means the post was likely scheduled for 9AM.
+    expect(scheduledDate).toBeGreaterThan(3300);
+    expect(scheduledDate).toBeLessThan(3600);
   });
 });
