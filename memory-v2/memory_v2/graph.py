@@ -1,13 +1,25 @@
-from typing import Any, Dict, Optional
+"""The reflection graph."""
+
+from typing import Any, Dict
 
 from langchain_anthropic import ChatAnthropic
-from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph
+from langgraph.store.base import BaseStore
+from langmem.prompts.looping import (
+    Prompt,
+    create_prompt_optimizer,
+)
 
 from memory_v2.state import State
-from langmem.prompts.looping import create_prompt_optimizer, MetapromptOptimizerConfig
 
-REFLECTION_PROMPT = """You are an AI assistant tasked with analyzing social media post revisions and user feedback to determine if a new rule should be created for future post modifications.
+REFLECTION_PROMPT = """You are helping an AI assistant learn by optimizing its prompt.
+
+<context>
+You are provided with two social media posts: the original, and the revised version.
+The post was revised based on user feedback, which is also provided to you.
+</context>
+
+You are an AI assistant tasked with analyzing social media post revisions and user feedback to determine if a new rule should be created for future post modifications.
 Your goal is to identify patterns in the changes requested by the user and decide if these changes should be applied automatically in the future.
 
 You will be given three pieces of information:
@@ -56,40 +68,74 @@ If applicable, call the 'new_rule' tool to create the new rule. If no new rule i
 Remember to be thorough in your analysis, clear in your decision-making, and precise in your rule formulation if one is needed."""
 
 
-async def reflection(state: State, config: RunnableConfig) -> Dict[str, Any]:
+REFLECTIONS_NAMESPACE = ("reflection_rules",)
+REFLECTIONS_KEY = "rules"
+RULESET_KEY = "ruleset"
+
+
+async def aget_reflections(store: BaseStore) -> str:
+    """Get reflections from the store."""
+    reflections = await store.aget(REFLECTIONS_NAMESPACE, REFLECTIONS_KEY)
+
+    if not reflections:
+        return "No prompt rules have been created yet."
+
+    ruleset = reflections.value.get(
+        RULESET_KEY, "No prompt rules have been created yet."
+    )
+
+    return ruleset
+
+
+async def aput_reflections(store: BaseStore, reflections: str) -> None:
+    """Put reflections in the store."""
+    await store.aput(REFLECTIONS_NAMESPACE, REFLECTIONS_KEY, {RULESET_KEY: reflections})
+
+
+async def reflection(state: State, store: BaseStore) -> Dict[str, Any]:
     """Process reflection and update rules based on user interaction."""
-    if not config.get("store"):
-        raise ValueError("No store provided")
+    model = ChatAnthropic(model="claude-3-5-sonnet-latest", temperature=0)
 
-    model = ChatAnthropic(
-        model="claude-3-sonnet-20240229",
-        temperature=0
+    current_reflections_prompt = await aget_reflections(store)
+
+    update_instructions = """Analyze the following to determine if rules prompt updates are needed:
+1. Current rules prompt (current_prompt)
+2. Generated social media post (session)
+3. User feedback on the post (feedback)
+
+If the user's feedback explicitly requests changes:
+1. Create or update rules that directly address the feedback
+2. Keep each rule clear, specific, and concise
+3. If a new rule conflicts with an existing one, use the new rule
+4. Only add rules that are explicitly mentioned in the user's feedback
+
+Guidelines for updates:
+- Do not infer or assume rules beyond what's explicitly stated
+- Do not add rules based on implicit feedback
+- Do not overgeneralize the feedback
+- Combine existing rules if it improves clarity without losing specificity
+
+Output only the updated rules prompt, with no additional context or instructions."""
+
+    feedback = state.user_response
+
+    prompt = Prompt(
+        name="Update Prompt",
+        prompt=current_reflections_prompt,
+        update_instructions=update_instructions,
+        feedback=feedback,
     )
 
-    # Format the reflection prompt
-    formatted_prompt = (
-        REFLECTION_PROMPT.replace("{ORIGINAL_POST}", state.original_post)
-        .replace("{NEW_POST}", state.new_post)
-        .replace("{USER_RESPONSE}", state.user_response)
-    )
+    sessions = state.original_post
 
-    optimizer_config = MetapromptOptimizerConfig(
-        # TODO: Update reflection prompt to replace variables with values before passing.
-        metaprompt=REFLECTION_PROMPT,
-        max_reflection_steps=3,
-        min_reflection_steps=1,
-    )
+    optimizer = create_prompt_optimizer(model, kind="metaprompt")
 
-    optimizer = create_prompt_optimizer(model, kind="metaprompt", config=optimizer_config)
+    result = await optimizer(sessions, prompt)
 
-    result = await optimizer.ainvoke([{
-        "role": "user",
-        "content": formatted_prompt
-    }])
-
-    # TODO: SAVE RESULTS TO STORE!!
+    await aput_reflections(store, result)
 
     return {}
+
 
 # Define a new graph
 workflow = StateGraph(State)
