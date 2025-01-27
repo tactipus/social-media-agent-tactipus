@@ -5,9 +5,8 @@ import { GENERATE_POST_PROMPT } from "./prompts.js";
 import { formatPrompt, parseGeneration } from "./utils.js";
 import { ALLOWED_TIMES } from "../../constants.js";
 import {
-  getReflections,
+  getReflectionsPrompt,
   REFLECTIONS_PROMPT,
-  RULESET_KEY,
 } from "../../../../utils/reflections.js";
 import { getNextSaturdayDate } from "../../../../utils/date.js";
 
@@ -28,18 +27,11 @@ export async function generatePost(
 
   const prompt = formatPrompt(state.report, state.relevantLinks[0]);
 
-  const reflections = await getReflections(config);
-  let reflectionsPrompt = "";
-  if (
-    reflections?.value?.[RULESET_KEY]?.length &&
-    Array.isArray(reflections?.value?.[RULESET_KEY])
-  ) {
-    const rulesetString = `- ${reflections.value[RULESET_KEY].join("\n- ")}`;
-    reflectionsPrompt = REFLECTIONS_PROMPT.replace(
-      "{reflections}",
-      rulesetString,
-    );
-  }
+  const reflections = await getReflectionsPrompt(config);
+  const reflectionsPrompt = REFLECTIONS_PROMPT.replace(
+    "{reflections}",
+    reflections,
+  );
 
   const generatePostPrompt = GENERATE_POST_PROMPT.replace(
     "{reflectionsPrompt}",

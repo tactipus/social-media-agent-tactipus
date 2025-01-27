@@ -70,7 +70,7 @@ Remember to be thorough in your analysis, clear in your decision-making, and pre
 
 REFLECTIONS_NAMESPACE = ("reflection_rules",)
 REFLECTIONS_KEY = "rules"
-RULESET_KEY = "ruleset"
+PROMPT_KEY = "prompt"
 
 
 async def aget_reflections(store: BaseStore) -> str:
@@ -81,7 +81,7 @@ async def aget_reflections(store: BaseStore) -> str:
         return "No prompt rules have been created yet."
 
     ruleset = reflections.value.get(
-        RULESET_KEY, "No prompt rules have been created yet."
+        PROMPT_KEY, "No prompt rules have been created yet."
     )
 
     return ruleset
@@ -89,7 +89,7 @@ async def aget_reflections(store: BaseStore) -> str:
 
 async def aput_reflections(store: BaseStore, reflections: str) -> None:
     """Put reflections in the store."""
-    await store.aput(REFLECTIONS_NAMESPACE, REFLECTIONS_KEY, {RULESET_KEY: reflections})
+    await store.aput(REFLECTIONS_NAMESPACE, REFLECTIONS_KEY, {PROMPT_KEY: reflections})
 
 
 async def reflection(state: State, store: BaseStore) -> Dict[str, Any]:
