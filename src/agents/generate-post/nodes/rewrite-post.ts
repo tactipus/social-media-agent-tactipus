@@ -21,6 +21,7 @@ Listen to your boss closely, and make the necessary changes to the post. You sho
 
 interface RunReflectionsArgs {
   originalPost: string;
+  newPost: string;
   userResponse: string;
 }
 
@@ -30,6 +31,7 @@ interface RunReflectionsArgs {
  */
 async function runReflections({
   originalPost,
+  newPost,
   userResponse,
 }: RunReflectionsArgs) {
   const client = new Client({
@@ -37,10 +39,13 @@ async function runReflections({
   });
 
   const thread = await client.threads.create();
-  await client.runs.create(thread.thread_id, "memory", {
+  await client.runs.create(thread.thread_id, "reflection", {
     input: {
-      original_post: originalPost,
-      user_response: userResponse,
+      // original_post: originalPost,
+      // user_response: userResponse,
+      originalPost,
+      newPost,
+      userResponse,
     },
   });
 }
@@ -85,6 +90,7 @@ export async function rewritePost(
 
   await runReflections({
     originalPost: state.post,
+    newPost: revisePostResponse.content as string,
     userResponse: state.userResponse,
   });
 

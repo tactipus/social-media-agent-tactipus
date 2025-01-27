@@ -23,6 +23,26 @@ export async function getReflectionsPrompt(
 }
 
 /**
+ * Stores reflection rules in the store
+ * @param {LangGraphRunnableConfig} config - Configuration object containing the store
+ * @param {string} reflections - The reflection rules to store
+ * @throws {Error} When no store is provided in the config
+ * @returns {Promise<void>}
+ */
+export async function putReflectionsPrompt(
+  config: LangGraphRunnableConfig,
+  reflections: string,
+): Promise<void> {
+  const { store } = config;
+  if (!store) {
+    throw new Error("No store provided");
+  }
+  await store.put(NAMESPACE, KEY, {
+    [PROMPT_KEY]: reflections,
+  });
+}
+
+/**
  * Retrieves reflection rules from the store
  * @param {LangGraphRunnableConfig} config - Configuration object containing the store
  * @throws {Error} When no store is provided in the config

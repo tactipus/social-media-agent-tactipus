@@ -8,9 +8,8 @@ import {
 import { z } from "zod";
 import { ChatAnthropic } from "@langchain/anthropic";
 import {
-  getReflections,
-  putReflections,
-  RULESET_KEY,
+  getReflectionsPrompt,
+  putReflectionsPrompt,
 } from "../../utils/reflections.js";
 import { REFLECTION_PROMPT, UPDATE_RULES_PROMPT } from "./prompts.js";
 
@@ -20,7 +19,7 @@ const newRuleSchema = z.object({
 
 const updateRulesetSchema = z
   .object({
-    updatedRuleset: z.array(z.string()).describe("The updated ruleset."),
+    updatedRuleset: z.string().describe("The full updated ruleset."),
   })
   .describe("The updated ruleset.");
 
@@ -86,11 +85,11 @@ async function reflection(
     return {};
   }
 
-  const existingRules = await getReflections(config);
+  const existingRules = await getReflectionsPrompt(config);
 
-  if (!existingRules?.value?.[RULESET_KEY]?.length) {
+  if (!existingRules?.length) {
     // No rules exist yet. Create and return early.
-    await putReflections(config, [newRule]);
+    await putReflectionsPrompt(config, newRule);
     return {};
   }
 
@@ -99,7 +98,7 @@ async function reflection(
   });
   const updateRulesetPrompt = UPDATE_RULES_PROMPT.replace(
     "{EXISTING_RULES}",
-    existingRules?.value[RULESET_KEY].join("\n") || "",
+    existingRules
   ).replace("{NEW_RULE}", newRule);
   const updateRulesetResult = await updateRulesetModel.invoke([
     {
@@ -108,7 +107,7 @@ async function reflection(
     },
   ]);
 
-  await putReflections(config, updateRulesetResult.updatedRuleset);
+  await putReflectionsPrompt(config, updateRulesetResult.updatedRuleset);
 
   return {};
 }
