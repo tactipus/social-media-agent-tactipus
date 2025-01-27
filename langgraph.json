@@ -1,5 +1,6 @@
 {
   "node_version": "20",
+  "python_version": "3.12",
   "graphs": {
     "ingest_data": "./src/agents/ingest-data/ingest-data-graph.ts:graph",
     "generate_post": "./src/agents/generate-post/generate-post-graph.ts:generatePostGraph",
