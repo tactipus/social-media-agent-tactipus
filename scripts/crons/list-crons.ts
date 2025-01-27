@@ -24,7 +24,7 @@ async function listCrons() {
 
   const crons = await client.crons.search();
   console.log("Crons");
-  console.log(crons);
+  console.dir(crons, { depth: null });
 }
 
 listCrons().catch(console.error);
