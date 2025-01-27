@@ -98,7 +98,7 @@ async function reflection(
   });
   const updateRulesetPrompt = UPDATE_RULES_PROMPT.replace(
     "{EXISTING_RULES}",
-    existingRules
+    existingRules,
   ).replace("{NEW_RULE}", newRule);
   const updateRulesetResult = await updateRulesetModel.invoke([
     {
