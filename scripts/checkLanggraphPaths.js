@@ -9,6 +9,8 @@ function fileExists(filePath) {
 
 // Function to check if an object is exported from a file
 function isObjectExported(filePath, objectName) {
+  if (filePath.endsWith(".py")) return true;
+
   try {
     const fileContent = fs.readFileSync(filePath, "utf8");
     const exportRegex = new RegExp(

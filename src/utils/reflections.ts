@@ -3,12 +3,31 @@ import { Item, LangGraphRunnableConfig } from "@langchain/langgraph";
 const NAMESPACE = ["reflection_rules"];
 const KEY = "rules";
 export const RULESET_KEY = "ruleset";
+export const PROMPT_KEY = "prompt";
 
 /**
  * Retrieves reflection rules from the store
  * @param {LangGraphRunnableConfig} config - Configuration object containing the store
  * @throws {Error} When no store is provided in the config
- * @returns {Promise<Item | undefined>} The reflection rules if they exist, undefined otherwise
+ * @returns {Promise<string>} The reflection rules prompt, or an empty string if not found
+ */
+export async function getReflectionsPrompt(
+  config: LangGraphRunnableConfig,
+): Promise<string> {
+  const { store } = config;
+  if (!store) {
+    throw new Error("No store provided");
+  }
+  const reflections = await store.get(NAMESPACE, KEY);
+  return reflections?.value?.[PROMPT_KEY] || "";
+}
+
+/**
+ * Retrieves reflection rules from the store
+ * @param {LangGraphRunnableConfig} config - Configuration object containing the store
+ * @throws {Error} When no store is provided in the config
+ * @returns {Promise<Item | undefined>} The reflection rules, or undefined if not found
+ * @deprecated - use `getReflectionsPrompt` instead.
  */
 export async function getReflections(
   config: LangGraphRunnableConfig,
@@ -24,9 +43,10 @@ export async function getReflections(
 /**
  * Stores reflection rules in the store
  * @param {LangGraphRunnableConfig} config - Configuration object containing the store
- * @param {Record<string, any>} value - The reflection rules to store
+ * @param {string[]} reflections - The reflection rules to store
  * @throws {Error} When no store is provided in the config
  * @returns {Promise<void>}
+ * @deprecated - use `memory` graph instead.
  */
 export async function putReflections(
   config: LangGraphRunnableConfig,

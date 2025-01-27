@@ -3,9 +3,8 @@ import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { GeneratePostAnnotation } from "../generate-post-state.js";
 import { ChatAnthropic } from "@langchain/anthropic";
 import {
-  getReflections,
+  getReflectionsPrompt,
   REFLECTIONS_PROMPT,
-  RULESET_KEY,
 } from "../../../utils/reflections.js";
 
 const REWRITE_POST_PROMPT = `You're a highly regarded marketing employee, working on crafting thoughtful and engaging content for the LinkedIn and Twitter pages.
@@ -22,7 +21,6 @@ Listen to your boss closely, and make the necessary changes to the post. You sho
 
 interface RunReflectionsArgs {
   originalPost: string;
-  newPost: string;
   userResponse: string;
 }
 
@@ -32,7 +30,6 @@ interface RunReflectionsArgs {
  */
 async function runReflections({
   originalPost,
-  newPost,
   userResponse,
 }: RunReflectionsArgs) {
   const client = new Client({
@@ -40,11 +37,10 @@ async function runReflections({
   });
 
   const thread = await client.threads.create();
-  await client.runs.create(thread.thread_id, "reflection", {
+  await client.runs.create(thread.thread_id, "memory", {
     input: {
-      originalPost,
-      newPost,
-      userResponse,
+      original_post: originalPost,
+      user_response: userResponse,
     },
   });
 }
@@ -65,18 +61,11 @@ export async function rewritePost(
     temperature: 0.5,
   });
 
-  const reflections = await getReflections(config);
-  let reflectionsPrompt = "";
-  if (
-    reflections?.value?.[RULESET_KEY]?.length &&
-    Array.isArray(reflections?.value?.[RULESET_KEY])
-  ) {
-    const rulesetString = `- ${reflections.value[RULESET_KEY].join("\n- ")}`;
-    reflectionsPrompt = REFLECTIONS_PROMPT.replace(
-      "{reflections}",
-      rulesetString,
-    );
-  }
+  const reflections = await getReflectionsPrompt(config);
+  const reflectionsPrompt = REFLECTIONS_PROMPT.replace(
+    "{reflections}",
+    reflections,
+  );
 
   const systemPrompt = REWRITE_POST_PROMPT.replace(
     "{originalPost}",
@@ -96,7 +85,6 @@ export async function rewritePost(
 
   await runReflections({
     originalPost: state.post,
-    newPost: revisePostResponse.content as string,
     userResponse: state.userResponse,
   });
 

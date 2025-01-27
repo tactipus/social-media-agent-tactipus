@@ -6,5 +6,6 @@
     "subreddits",
     "Supabase",
     "Userless"
-  ]
+  ],
+  "python.languageServer": "None"
 }

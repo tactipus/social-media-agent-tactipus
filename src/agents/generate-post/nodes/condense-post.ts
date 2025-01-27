@@ -3,9 +3,8 @@ import { GeneratePostAnnotation } from "../generate-post-state.js";
 import { parseGeneration } from "./geterate-post/utils.js";
 import { removeUrls } from "../../utils.js";
 import {
-  getReflections,
-  RULESET_KEY,
   REFLECTIONS_PROMPT,
+  getReflectionsPrompt,
 } from "../../../utils/reflections.js";
 import { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { getPrompts } from "../prompts/index.js";
@@ -72,18 +71,11 @@ export async function condensePost(
 
   const originalPostLength = removeUrls(state.post || "").length.toString();
 
-  const reflections = await getReflections(config);
-  let reflectionsPrompt = "";
-  if (
-    reflections?.value?.[RULESET_KEY]?.length &&
-    Array.isArray(reflections?.value?.[RULESET_KEY])
-  ) {
-    const rulesetString = `- ${reflections.value[RULESET_KEY].join("\n- ")}`;
-    reflectionsPrompt = REFLECTIONS_PROMPT.replace(
-      "{reflections}",
-      rulesetString,
-    );
-  }
+  const reflections = await getReflectionsPrompt(config);
+  const reflectionsPrompt = REFLECTIONS_PROMPT.replace(
+    "{reflections}",
+    reflections,
+  );
 
   const formattedSystemPrompt = CONDENSE_POST_PROMPT.replace(
     "{report}",
