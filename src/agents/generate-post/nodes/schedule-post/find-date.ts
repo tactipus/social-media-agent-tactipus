@@ -142,12 +142,7 @@ export const ALLOWED_P3_DAY_AND_TIMES_IN_UTC = [
   { day: 1, hour: 1 },
 ];
 
-// const FIRST_ALLOWED_P3_HOUR_WEEKEND = 21;
-// const LAST_ALLOWED_P3_HOUR_WEEKEND = 23;
-// const FIRST_ALLOWED_P3_HOUR_MONDAY = 0;
-// const LAST_ALLOWED_P3_HOUR_MONDAY = 1;
-
-type TakenScheduleDates = {
+export type TakenScheduleDates = {
   p1: Date[];
   p2: Date[];
   p3: Date[];
@@ -459,36 +454,47 @@ function getNextAvailableDate({
       ),
     );
     for (let i = 0; i < 14; i += 1) {
+      const day = tmp.getUTCDay();
+      const currentHour = tmp.getUTCHours();
       const allowedSlots =
         priority === "p1"
           ? ALLOWED_P1_DAY_AND_TIMES_IN_UTC
           : priority === "p2"
             ? ALLOWED_P2_DAY_AND_TIMES_IN_UTC
             : ALLOWED_P3_DAY_AND_TIMES_IN_UTC;
-      const day = tmp.getUTCDay();
-      const hr = tmp.getUTCHours();
-      // Find any slot on this day >= current hour
-      const sameDaySlots = allowedSlots
-        .filter((s) => s.day === day && s.hour >= hr)
+
+      // Only allow hours >= currentHour, but if we're exactly on currentHour, minutes must be 0
+      const validSlots = allowedSlots
+        .filter((s) => s.day === day)
+        .filter((s) => {
+          // skip all slots strictly less than current hour, or equal.
+          if (s.hour <= currentHour) return false;
+          return true;
+        })
         .sort((a, b) => a.hour - b.hour);
-      if (sameDaySlots.length) {
+
+      if (validSlots.length) {
         candidate = new Date(
           Date.UTC(
             tmp.getUTCFullYear(),
             tmp.getUTCMonth(),
             tmp.getUTCDate(),
-            sameDaySlots[0].hour,
+            validSlots[0].hour,
           ),
         );
+        // Now candidate is guaranteed >= dateToCheck
         break;
       }
-      // No valid slot today, move to next midnight
+
+      // move to next day at midnight
       tmp = new Date(
         Date.UTC(tmp.getUTCFullYear(), tmp.getUTCMonth(), tmp.getUTCDate() + 1),
       );
     }
     if (candidate < dateToCheck) {
-      throw new Error(`No valid future slot found for ${priority}.`);
+      throw new Error(
+        `No valid future slot found for ${priority} within 2 weeks of ${dateToCheck}`,
+      );
     }
   }
 
@@ -633,35 +639,49 @@ export async function getScheduledDateSeconds(
     }
   }
 
-  const nextAvailDate = getNextAvailableDate({
-    dateToCheck: currentTime,
-    priority,
-    takenDates: takenScheduleDates,
-  });
-  if (!nextAvailDate) {
-    throw new Error("Received no available times");
+  let nextAvailDate: Date | undefined;
+  try {
+    nextAvailDate = getNextAvailableDate({
+      dateToCheck: currentTime,
+      priority,
+      takenDates: takenScheduleDates,
+    });
+    if (!nextAvailDate) {
+      throw new Error("Received no available times");
+    }
+  } catch (e: any) {
+    if (
+      "message" in e &&
+      e.message.includes("No valid future slot found for")
+    ) {
+      // Send a message to slack
+      if (process.env.SLACK_CHANNEL_ID && process.env.SLACK_CHANNEL_ID) {
+        const slackClient = new SlackClient({
+          channelId: process.env.SLACK_CHANNEL_ID,
+        });
+
+        await slackClient.sendMessage(`**FAILED TO FIND DATE TO SCHEDULE POST**
+
+Error message:
+\`\`\`
+${e.message}
+\`\`\`
+
+Priority: ${priority}
+Base date: ${format(baseDate, "MM/dd/yyyy hh:mm a z")}
+
+Thread ID: ${config.configurable?.thread_id || "No thread ID found"}
+Run ID: ${config.configurable?.run_id || "No run ID found"}
+      `);
+      }
+    }
+
+    throw e;
   }
 
   const isValidDate = validateScheduleDate(nextAvailDate, baseDate);
 
   if (!isValidDate) {
-    // Send a message to slack
-    if (process.env.SLACK_CHANNEL_ID && process.env.SLACK_CHANNEL_ID) {
-      const slackClient = new SlackClient({
-        channelId: process.env.SLACK_CHANNEL_ID,
-      });
-
-      await slackClient.sendMessage(`**FAILED TO SCHEDULE POST**
-
-Priority: ${priority}
-Schedule date: ${format(nextAvailDate, "MM/dd/yyyy hh:mm a z")}
-Base date: ${format(baseDate, "MM/dd/yyyy hh:mm a z")}
-
-Thread ID: ${config.configurable?.thread_id || "No thread ID found"}
-Run ID: ${config.configurable?.run_id || "No run ID found"}
-`);
-    }
-
     throw new Error(`FAILED TO SCHEDULE POST
 
 Priority: ${priority}
