@@ -17,17 +17,18 @@ import { reGroupTweets } from "./nodes/tweets/re-group-tweets.js";
 import { generatePostsSubgraph } from "./nodes/generate-posts-subgraph.js";
 import { extractAINewsletterContent } from "./nodes/extract-ai-newsletter-content.js";
 
-function verifyContentWrapper(state: CurateDataState): Send[] {
+function generatePostOrContinue(
+  _state: CurateDataState,
+): "generatePostsSubgraph" | "verifyBulkTweets" {
   const useLangChain = process.env.USE_LANGCHAIN_PROMPTS === "true";
 
   if (useLangChain) {
-    return [
-      new Send("generatePostsSubgraph", {
-        ...state,
-      }),
-    ];
+    return "generatePostsSubgraph";
   }
+  return "verifyBulkTweets";
+}
 
+function verifyContentWrapper(state: CurateDataState): Send[] {
   const generalSends = state.generalUrls.map((post) => {
     return new Send("verifyGeneralContent", {
       link: post,
@@ -90,7 +91,10 @@ const curateDataWorkflow = new StateGraph(
 
   .addNode("formatData", formatData)
   .addEdge(START, "ingestData")
-  .addEdge("ingestData", "verifyBulkTweets")
+  .addConditionalEdges("ingestData", generatePostOrContinue, [
+    "generatePostsSubgraph",
+    "verifyBulkTweets",
+  ])
   .addEdge("verifyBulkTweets", "extractAINewsletterContent")
 
   .addConditionalEdges("extractAINewsletterContent", verifyContentWrapper, [
@@ -98,7 +102,6 @@ const curateDataWorkflow = new StateGraph(
     "verifyGitHubContent",
     "verifyRedditPost",
     "groupTweetsByContent",
-    "generatePostsSubgraph",
   ])
   // If generatePostsSubgraph is called, we should end.
   .addEdge("generatePostsSubgraph", END)
