@@ -110,15 +110,13 @@ export class TwitterClient {
     id: string,
     client: Arcade,
   ): Promise<AuthorizeUserResponse> {
-    const authRes = await client.auth.authorize({
-      user_id: id,
-      auth_requirement: {
-        provider_id: "x",
-        oauth2: {
-          scopes: ["tweet.write", "users.read", "tweet.read", "offline.access"],
-        },
-      },
-    });
+    const authRes = await client.auth.start(
+      id,
+      "x",
+      {
+        scopes: ["tweet.write", "users.read", "tweet.read", "offline.access"],
+      }
+    );
 
     if (authRes.status === "completed") {
       if (!authRes.context?.token) {
