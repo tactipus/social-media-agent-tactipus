@@ -79,7 +79,7 @@ async function reflection(
           update_instructions: UPDATE_INSTRUCTIONS,
         },
       ],
-      threads: threads,
+      threads,
     },
     config: {
       configurable: { model: "claude-3-5-sonnet-latest", kind: "metaprompt" },
