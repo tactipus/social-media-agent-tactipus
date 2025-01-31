@@ -159,7 +159,7 @@ To use all of the features of the Social Media Agent, you'll need the following:
 
 ## Setup Instructions
 
-### Clone the repository
+### Clone the repository:
 
 ```bash
 git clone https://github.com/langchain-ai/social-media-agent.git
@@ -169,13 +169,13 @@ git clone https://github.com/langchain-ai/social-media-agent.git
 cd social-media-agent
 ```
 
-### Install dependencies
+### Install dependencies:
 
 ```bash
 yarn install
 ```
 
-### Set environment variables
+### Set environment variables.
 
 Copy the values of the full env example file `.env.full.example` to `.env`, then update the values as needed.
 
