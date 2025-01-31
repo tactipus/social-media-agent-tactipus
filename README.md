@@ -206,14 +206,14 @@ The agent needs your authorization to read and write to social media platforms. 
 
 You can use either method, but not both.
 
-Regardless of the method you choose, you will need to set these environment variables in your `.env` file:
-
-- `TWITTER_USER_ID` - The ID/email of the Twitter account you want to use to post to Twitter.
-- `LINKEDIN_USER_ID` - The ID/email of the LinkedIn account you want to use to post to LinkedIn.
-
 #### Arcade setup
 
 Create an Arcade account [here](https://www.arcade.dev). After you register, [get an Arcade API key](https://docs.arcade.dev/home/quickstart?lang=typescript). Set this value as `ARCADE_API_KEY` in your `.env` file.
+
+Then, you will need to set these environment variables in your `.env` file:
+
+- `TWITTER_USER_ID` - The ID/email of the Twitter account you want to use to post to Twitter.
+- `LINKEDIN_USER_ID` - The ID/email of the LinkedIn account you want to use to post to LinkedIn.
 
 Make sure you have the `USE_ARCADE_AUTH` environment variable set to `true` to have the graph use Arcade authentication.
 
