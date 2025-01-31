@@ -286,13 +286,9 @@ export class LinkedInClient {
     },
   ): Promise<AuthorizeUserResponse> {
     const scopes = LinkedInClient.getScopes(fields?.postToOrganization);
-    const authRes = await client.auth.start(
-      id,
-      "linkedin",
-      {
-        scopes,
-      }
-    )
+    const authRes = await client.auth.start(id, "linkedin", {
+      scopes,
+    });
 
     if (authRes.status === "completed") {
       if (!authRes.context?.token) {
@@ -322,13 +318,9 @@ export class LinkedInClient {
       apiKey: process.env.ARCADE_API_KEY,
     });
     const scopes = LinkedInClient.getScopes(fields?.postToOrganization);
-    const authRes = await arcade.auth.start(
-      linkedInUserId,
-      "linkedin",
-      {
-        scopes,
-      }
-    )
+    const authRes = await arcade.auth.start(linkedInUserId, "linkedin", {
+      scopes,
+    });
 
     if (!authRes.context?.token || !authRes.context?.user_info?.sub) {
       throw new Error(
