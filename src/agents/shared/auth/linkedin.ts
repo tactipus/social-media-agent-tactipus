@@ -100,14 +100,8 @@ async function getArcadeLinkedInAuthOrInterrupt(
   const scopes = fields?.postToOrg
     ? ["w_member_social", "w_organization_social"]
     : ["w_member_social"];
-  const authResponse = await arcade.auth.authorize({
-    user_id: linkedInUserId,
-    auth_requirement: {
-      provider_id: "linkedin",
-      oauth2: {
-        scopes,
-      },
-    },
+  const authResponse = await arcade.auth.start(linkedInUserId, "linkedin", {
+    scopes,
   });
   const authUrl = authResponse.url;
 
