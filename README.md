@@ -93,6 +93,15 @@ FIRECRAWL_API_KEY=
 ARCADE_API_KEY=
 ```
 
+If you plan to post to LinkedIn as an organization (rather than as yourself), you'll also need to set:
+
+```bash
+# Get the organization ID from the URL of the company page when you're logged in as an admin.
+# For example, if the URL is `https://www.linkedin.com/company/12345678/admin/dashboard/`, the organization ID would be `12345678`.
+POST_TO_LINKEDIN_ORGANIZATION=true
+LINKEDIN_ORGANIZATION_ID=
+```
+
 ### Install LangGraph CLI
 
 ```bash
@@ -216,6 +225,15 @@ Regardless of the method you choose, you will need to set these environment vari
 Create an Arcade account [here](https://www.arcade.dev). After you register, [get an Arcade API key](https://docs.arcade.dev/home/quickstart?lang=typescript). Set this value as `ARCADE_API_KEY` in your `.env` file.
 
 Make sure you have the `USE_ARCADE_AUTH` environment variable set to `true` to have the graph use Arcade authentication.
+
+If you plan to post to LinkedIn as an organization (rather than as yourself), you'll also need to set:
+
+```bash
+# Get the organization ID from the URL of the company page when you're logged in as an admin.
+# For example, if the URL is `https://www.linkedin.com/company/12345678/admin/dashboard/`, the organization ID would be `12345678`.
+LINKEDIN_ORGANIZATION_ID=
+POST_TO_LINKEDIN_ORGANIZATION=true
+```
 
 > Note:
 >
