@@ -12,9 +12,7 @@ This repository contains an 'agent' which can take in a URL, and generate a Twit
 - [Full setup](#advanced-setup)
   - [Environment variables](#set-environment-variables-1)
   - [LangGraph Server](#install-langgraph-cli-1)
-  - [Twitter Auth](#twitter-developer-setup-instructions)
-  - [Arcade Auth](#arcade-setup-instructions)
-  - [LinkedIn Auth](#setup-linkedin-authentication)
+  - [Authentication](#setup-authentication)
   - [Supabase](#setup-supabase)
   - [Slack](#setup-slack)
   - [GitHub](#setup-github)
@@ -50,7 +48,7 @@ To get started, you'll need the following API keys/software:
 - [Anthropic API](https://console.anthropic.com/) - General LLM
 - [LangSmith](https://smith.langchain.com/) - LangSmith API key required to run the LangGraph server locally (free)
 - [FireCrawl API](https://www.firecrawl.dev/) - Web scraping. New users get 500 credits for free
-- [Arcade](https://www.arcade-ai.com/) - Social media authentication for reading & writing
+- [Arcade](https://www.arcade.dev/) - Easy authentication for reading & writing to social media platforms
 
 ## Setup Instructions
 
@@ -152,7 +150,7 @@ To use all of the features of the Social Media Agent, you'll need the following:
 - [Google Vertex AI](https://cloud.google.com/vertex-ai) - For dealing with YouTube video content
 - [LangSmith](https://smith.langchain.com/) - LangSmith API key required to run the LangGraph server locally (free)
 - [FireCrawl API](https://www.firecrawl.dev/) - Web scraping
-- [Arcade](https://www.arcade-ai.com/) - Social media authentication
+- [Arcade](https://www.arcade.dev) - Social media authentication and scheduling
 - [Twitter Developer Account](https://developer.twitter.com/en/portal/dashboard) - For uploading media to Twitter
 - [LinkedIn Developer Account](https://developer.linkedin.com/) - Posting to LinkedIn
 - [GitHub API](https://github.com/settings/personal-access-tokens) - Reading GitHub content
@@ -161,7 +159,7 @@ To use all of the features of the Social Media Agent, you'll need the following:
 
 ## Setup Instructions
 
-### Clone the repository:
+### Clone the repository
 
 ```bash
 git clone https://github.com/langchain-ai/social-media-agent.git
@@ -171,13 +169,13 @@ git clone https://github.com/langchain-ai/social-media-agent.git
 cd social-media-agent
 ```
 
-### Install dependencies:
+### Install dependencies
 
 ```bash
 yarn install
 ```
 
-### Set environment variables.
+### Set environment variables
 
 Copy the values of the full env example file `.env.full.example` to `.env`, then update the values as needed.
 
@@ -199,41 +197,57 @@ langgraph --version
 
 Click [here](https://langchain-ai.github.io/langgraph/cloud/reference/cli/) to read the full download instructions for the LangGraph CLI.
 
-### Setup Twitter
+### Setup authentication
 
-Setting up Twitter requires a Twitter developer account for uploading media to Twitter, and an Arcade account if you plan on using it for posting to Twitter. This however is optional, as you can use your own Twitter developer account for all reading & writing.
+The agent needs your authorization to read and write to social media platforms. There are two ways to authorize the agent:
 
-### Arcade Setup Instructions
+1. Use Arcade (quickest to set up)
+2. Use your own Twitter and LinkedIn developer accounts
 
-Create an Arcade account [here](https://www.arcade-ai.com/). Once done, setting up the account, ensure you have an Arcade API key. Set this value as `ARCADE_API_KEY` in your `.env` file.
+You can use either method, but not both.
+
+Regardless of the method you choose, you will need to set these environment variables in your `.env` file:
+
+- `TWITTER_USER_ID` - The ID/email of the Twitter account you want to use to post to Twitter.
+- `LINKEDIN_USER_ID` - The ID/email of the LinkedIn account you want to use to post to LinkedIn.
+
+#### Arcade setup
+
+Create an Arcade account [here](https://www.arcade.dev). After you register, [get an Arcade API key](https://docs.arcade.dev/home/quickstart?lang=typescript). Set this value as `ARCADE_API_KEY` in your `.env` file.
 
 Make sure you have the `USE_ARCADE_AUTH` environment variable set to `true` to have the graph use Arcade authentication.
 
-### Twitter Developer Setup Instructions
+> Note:
+>
+> If you want to upload media to Twitter, you will still need to set up your own Twitter developer account (below) in addition to using Arcade.
+>
+> If you are only planning to read/write text posts on Twitter, you can use Arcade without any additional setup.
 
-You'll need to follow these instructions if you plan on uploading media to Twitter, and/or want to use your own Twitter developer account for all reading & writing.
+#### Twitter app setup
 
-- Create a Twitter developer account
-- Create a new app and give it a name.
-- Copy the `API Key`, `API Key Secret` and `Bearer Token` and set them as `TWITTER_API_KEY`, `TWITTER_API_KEY_SECRET`, and `TWITTER_BEARER_TOKEN` in your `.env` file.
-- After saving, visit the App Dashboard. Find the `User authentication settings` section, and click the `Set up` button. This is how you will authorize users to use the Twitter API on their behalf.
-- Set the following fields:
-  - `App permissions`: `Read and write`
-  - `Type of App`: `Web App, Automated App or Bot`
-  - `App info`:
-    - `Callback URI/Redirect URL`: `http://localhost:3000/auth/twitter/callback`
-    - `Website URL`: Your website URL
-- Save. You'll then be given a `Client ID` and `Client Secret`. Set these as `TWITTER_CLIENT_ID` and `TWITTER_CLIENT_SECRET` in your `.env` file.
+You'll need to follow these instructions if you plan on uploading media to Twitter, and/or you are not using Arcade for authorization.
+
+1. Create a Twitter developer account
+2. Create a new app and give it a name.
+3. Copy the `API Key`, `API Key Secret` and `Bearer Token` and set them as `TWITTER_API_KEY`, `TWITTER_API_KEY_SECRET`, and `TWITTER_BEARER_TOKEN` in your `.env` file.
+4. After saving, visit the App Dashboard. Find the `User authentication settings` section, and click the `Set up` button. This is how you will authorize users to use the Twitter API on their behalf.
+5. Set the following fields:
+
+- `App permissions`: `Read and write`
+- `Type of App`: `Web App, Automated App or Bot`
+- `App info`:
+  - `Callback URI/Redirect URL`: `http://localhost:3000/auth/twitter/callback`
+  - `Website URL`: Your website URL
+
+6. Save. You'll then be given a `Client ID` and `Client Secret`. Set these as `TWITTER_CLIENT_ID` and `TWITTER_CLIENT_SECRET` in your `.env` file.
 
 Once done, run the `yarn start:auth` command to run the Twitter OAuth server. Open [http://localhost:3000](http://localhost:3000) in your browser, and click `Login with Twitter`.
 
 After authorizing your account with the app, navigate to your terminal where you'll see a JSON object logged. Copy the `token` and `tokenSecret` values and set them as `TWITTER_USER_TOKEN` and `TWITTER_USER_TOKEN_SECRET` in your `.env` file.
 
-After setting up Twitter/Arcade, set the `TWITTER_USER_ID` environment variable to the user ID of the account that you want to use to post to Twitter. (e.g `TWITTER_USER_ID="LangChainAI"`)
+#### LinkedIn app setup
 
-### Setup LinkedIn authentication:
-
-To authorize posting on LinkedIn, you'll need to:
+You'll need to follow these instructions if you plan on posting to LinkedIn and are not using Arcade for authorization.
 
 1. Create a new LinkedIn developer account, and app [here](https://developer.linkedin.com/)
 2. After creating your app, navigate to the `Auth` tab, and add a new authorized redirect URL for OAuth 2.0. Set it to `http://localhost:3000/auth/linkedin/callback`
@@ -270,8 +284,6 @@ To authorize posting on LinkedIn, you'll need to:
 6. After logging in, copy the `access_token` and `sub` values from the objects logged to the terminal. Set these values as `LINKEDIN_ACCESS_TOKEN` (`access_token`) and `LINKEDIN_PERSON_URN` (`sub`) in your `.env` file.
 
 </details>
-
-After setting up LinkedIn, set the `LINKEDIN_USER_ID` environment variable to the user ID of the account that you want to use to post to LinkedIn. (e.g `LINKEDIN_USER_ID="your_linkedin_email_address@example.com"`)
 
 ### Setup Supabase
 

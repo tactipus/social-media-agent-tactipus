@@ -17,7 +17,7 @@ describe.skip("Arcade", () => {
     it("Can load tweets by a user ID", async () => {
       const result = await arcade.tools.execute({
         tool_name: "X.SearchRecentTweetsByUsername",
-        inputs: {
+        input: {
           username,
           max_results: 1,
         },
@@ -32,7 +32,7 @@ describe.skip("Arcade", () => {
     it("Can load a single tweet by ID", async () => {
       const result = await arcade.tools.execute({
         tool_name: "X.LookupTweetById",
-        inputs: { tweet_id: tweetId },
+        input: { tweet_id: tweetId },
         user_id: userId,
       });
 

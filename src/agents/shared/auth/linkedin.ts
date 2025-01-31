@@ -109,7 +109,7 @@ async function getArcadeLinkedInAuthOrInterrupt(
       },
     },
   });
-  const authUrl = authResponse.authorization_url;
+  const authUrl = authResponse.url;
 
   if (authUrl) {
     const description = `# Authorization Required

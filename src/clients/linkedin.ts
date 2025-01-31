@@ -305,8 +305,8 @@ export class LinkedInClient {
       return { token: authRes.context.token };
     }
 
-    if (authRes.authorization_url) {
-      return { authorizationUrl: authRes.authorization_url };
+    if (authRes.url) {
+      return { authorizationUrl: authRes.url };
     }
 
     throw new Error(
