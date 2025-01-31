@@ -57,6 +57,7 @@ async function reflection(
   const langMemClient = new Client({
     apiUrl:
       "https://langmem-v0-544fccf4898a5e3c87bdca29b5f9ab21.us.langgraph.app",
+    apiKey: process.env.LANGCHAIN_API_KEY,
   });
 
   const existingRules = await getReflectionsPrompt(config);
@@ -67,9 +68,7 @@ async function reflection(
   };
   const threads = [[conversation, feedback]];
 
-  const { thread_id } = await langMemClient.threads.create();
-  console.log("BEFORE AWAITING RUN!");
-  const result = await langMemClient.runs.wait(thread_id, "prompt_optimizer", {
+  const result = await langMemClient.runs.wait(null, "optimize_prompts", {
     input: {
       prompts: [
         {
@@ -85,8 +84,6 @@ async function reflection(
       configurable: { model: "claude-3-5-sonnet-latest", kind: "metaprompt" },
     },
   });
-
-  console.dir(result, { depth: null });
 
   const updated = (result as Record<string, any>).updated_prompts[0].prompt;
 
