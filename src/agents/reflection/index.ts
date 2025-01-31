@@ -5,23 +5,11 @@ import {
   START,
   StateGraph,
 } from "@langchain/langgraph";
-import { z } from "zod";
-import { ChatAnthropic } from "@langchain/anthropic";
 import {
   getReflectionsPrompt,
   putReflectionsPrompt,
 } from "../../utils/reflections.js";
-import { REFLECTION_PROMPT, UPDATE_RULES_PROMPT } from "./prompts.js";
-
-const newRuleSchema = z.object({
-  newRule: z.string().describe("The new rule to create."),
-});
-
-const updateRulesetSchema = z
-  .object({
-    updatedRuleset: z.string().describe("The full updated ruleset."),
-  })
-  .describe("The updated ruleset.");
+import { Client } from "@langchain/langgraph-sdk";
 
 const ReflectionAnnotation = Annotation.Root({
   /**
@@ -39,6 +27,28 @@ const ReflectionAnnotation = Annotation.Root({
   userResponse: Annotation<string>,
 });
 
+const UPDATE_INSTRUCTIONS = `Analyze the following to determine if rules prompt updates are needed:
+1. Current rules prompt (current_prompt)
+2. Generated social media post (session)
+3. User feedback on the post (feedback)
+
+If the user's feedback explicitly requests changes:
+1. Create or update rules that directly address the feedback
+2. Keep each rule clear, specific, and concise
+3. If a new rule conflicts with an existing one, use the new rule
+4. Only add rules that are explicitly mentioned in the user's feedback
+
+Guidelines for updates:
+- Do not infer or assume rules beyond what's explicitly stated
+- Do not add rules based on implicit feedback
+- Do not overgeneralize the feedback
+- Combine existing rules if it improves clarity without losing specificity
+
+Output only the updated rules prompt, with no additional context or instructions.`;
+
+const WHEN_TO_UPDATE_INSTRUCTIONS = `You should update the prompt if the user's feedback is explicit, and can be generalized to apply to all future social media posts.
+You should not update the prompt if the user's feedback does not explicitly request changes, or if the changes are not clear and specific enough to be applied consistently.`;
+
 async function reflection(
   state: typeof ReflectionAnnotation.State,
   config: LangGraphRunnableConfig,
@@ -46,68 +56,41 @@ async function reflection(
   if (!config.store) {
     throw new Error("No store provided");
   }
-  const model = new ChatAnthropic({
-    model: "claude-3-5-sonnet-latest",
-    temperature: 0,
+
+  const langMemClient = new Client({
+    apiUrl:
+      "https://langmem-v0-544fccf4898a5e3c87bdca29b5f9ab21.us.langgraph.app",
+    apiKey: process.env.LANGCHAIN_API_KEY,
   });
-
-  const generateNewRuleModel = model.bindTools([
-    {
-      name: "new_rule",
-      description:
-        "Create a new rule based on the provided text. Only call this tool if a new rule is needed.",
-      schema: newRuleSchema,
-    },
-  ]);
-  const formattedPrompt = REFLECTION_PROMPT.replace(
-    "{ORIGINAL_POST}",
-    state.originalPost,
-  )
-    .replace("{NEW_POST}", state.newPost)
-    .replace("{USER_RESPONSE}", state.userResponse);
-
-  const result = await generateNewRuleModel.invoke([
-    {
-      role: "user",
-      content: formattedPrompt,
-    },
-  ]);
-
-  const toolCalls = result.tool_calls || [];
-  if (!toolCalls.length) {
-    // No new rule needed
-    return {};
-  }
-
-  const newRule = toolCalls[0].args.newRule as string;
-  if (!newRule) {
-    // Called tool but didn't return a rule
-    return {};
-  }
 
   const existingRules = await getReflectionsPrompt(config);
 
-  if (!existingRules?.length) {
-    // No rules exist yet. Create and return early.
-    await putReflectionsPrompt(config, newRule);
-    return {};
-  }
+  const conversation = [{ role: "assistant", content: state.originalPost }];
+  const feedback = {
+    user_feedback: state.userResponse,
+  };
+  const threads = [[conversation, feedback]];
 
-  const updateRulesetModel = model.withStructuredOutput(updateRulesetSchema, {
-    name: "update_ruleset",
-  });
-  const updateRulesetPrompt = UPDATE_RULES_PROMPT.replace(
-    "{EXISTING_RULES}",
-    existingRules,
-  ).replace("{NEW_RULE}", newRule);
-  const updateRulesetResult = await updateRulesetModel.invoke([
-    {
-      role: "user",
-      content: updateRulesetPrompt,
+  const result = await langMemClient.runs.wait(null, "optimize_prompts", {
+    input: {
+      prompts: [
+        {
+          name: "Update Prompt",
+          prompt: existingRules,
+          when_to_update: WHEN_TO_UPDATE_INSTRUCTIONS,
+          update_instructions: UPDATE_INSTRUCTIONS,
+        },
+      ],
+      threads,
     },
-  ]);
+    config: {
+      configurable: { model: "claude-3-5-sonnet-latest", kind: "metaprompt" },
+    },
+  });
 
-  await putReflectionsPrompt(config, updateRulesetResult.updatedRuleset);
+  const updated = (result as Record<string, any>).updated_prompts[0].prompt;
+
+  await putReflectionsPrompt(config, updated);
 
   return {};
 }
