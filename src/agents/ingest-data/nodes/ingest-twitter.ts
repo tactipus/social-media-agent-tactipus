@@ -53,7 +53,7 @@ export async function ingestTweets(
   let links: string[] = [];
   const result = await arcade.tools.execute({
     tool_name: "X.SearchRecentTweetsByUsername",
-    inputs: {
+    input: {
       username,
       // (integer, optional, Defaults to 10) The maximum number of results to return. Cannot be less than 10.
       // 15 since the rate limit is 15 req/15 min
